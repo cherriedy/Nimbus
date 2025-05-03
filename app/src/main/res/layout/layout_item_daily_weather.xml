@@ -4,189 +4,78 @@
 
     <data>
 
-        <import type="com.optlab.nimbus.data.model.common.TemperatureUnit" />
-
-        <import type="com.optlab.nimbus.data.model.common.PressureUnit" />
-
-        <import type="com.optlab.nimbus.data.model.common.WindSpeedUnit" />
+        <import type="java.time.format.TextStyle" />
 
         <variable
             name="response"
             type="com.optlab.nimbus.data.model.common.UnifiedWeatherResponse" />
 
+        <variable
+            name="userPrefs"
+            type="com.optlab.nimbus.data.preferences.UserPrefsManager" />
+
     </data>
 
-    <RelativeLayout
-        android:layout_width="185dp"
-        android:layout_height="160dp"
-        android:background="@drawable/day_block_bg">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <!--    <com.github.ybq.android.spinkit.SpinKitView-->
-        <!--        android:id="@+id/day_progress_bar"-->
-        <!--        style="@style/SpinKitView.FadingCircle"-->
-        <!--        android:layout_width="45dp"-->
-        <!--        android:layout_height="45dp"-->
-        <!--        android:layout_centerInParent="true"-->
-        <!--        android:visibility="visible"-->
-        <!--        app:SpinKit_Color="@color/textColor" />-->
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_middle"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            app:day="@{response.date}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:style="@{TextStyle.SHORT}" />
 
-        <RelativeLayout
-            android:id="@+id/rl_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="6dp"
-            android:paddingTop="6dp"
-            android:visibility="visible">
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="@dimen/spacing_xxlarge"
+            android:layout_height="@dimen/spacing_xxlarge"
+            android:layout_marginStart="@dimen/spacing_middle"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@id/tv_day"
+            app:layout_constraintStart_toEndOf="@id/tv_day"
+            app:layout_constraintTop_toTopOf="@id/tv_day"
+            app:weather_icon="@{response.weatherIcon}" />
 
-            <RelativeLayout
-                android:id="@+id/rl_day"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp">
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:text="@{response.weatherDescription}"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            app:layout_constraintBottom_toBottomOf="@id/iv_icon"
+            app:layout_constraintStart_toEndOf="@id/iv_icon"
+            app:layout_constraintTop_toTopOf="@id/iv_icon" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:fontFamily="@font/koho_regular"
-                    android:text="@string/day"
-                    android:textAllCaps="true"
-                    android:textColor="@color/textColor"
-                    android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_max_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_middle"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            app:layout_constraintBottom_toBottomOf="@id/tv_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_description"
+            app:temperature="@{response.temperatureMax}"
+            app:unit="@{userPrefs.getTemperatureUnit()}" />
 
-                <TextView
-                    android:id="@+id/tv_day_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:fontFamily="@font/koho_regular"
-                    android:textAllCaps="true"
-                    android:textColor="@color/textColor"
-                    android:textSize="14sp"
-                    app:day="@{response.date}" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/center_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rl_day"
-                android:layout_marginStart="4dp">
-
-                <TextView
-                    android:id="@+id/tv_min_temperature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/koho_regular"
-                    android:textAllCaps="true"
-                    android:textColor="@color/textColor"
-                    android:textSize="21sp"
-                    app:temperature="@{response.temperatureMin}"
-                    app:unit="@{TemperatureUnit.CELSIUS}" />
-
-                <ImageView
-                    android:id="@+id/iv_day"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_toStartOf="@id/tv_max_temperature"
-                    android:layout_toEndOf="@id/tv_min_temperature"
-                    app:weather_icon="@{response.weatherIcon}" />
-
-                <TextView
-                    android:id="@+id/tv_max_temperature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/koho_regular"
-                    android:textAllCaps="true"
-                    android:textColor="@color/textColor"
-                    android:textSize="21sp"
-                    app:temperature="@{response.temperatureMax}"
-                    app:unit="@{TemperatureUnit.CELSIUS}" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/center_layout"
-                android:layout_marginStart="4dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:fontFamily="@font/koho_regular"-->
-                    <!--                        android:text="@string/pressure"-->
-                    <!--                        android:textColor="@color/textColor"-->
-                    <!--                        android:textSize="14sp" />-->
-
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:fontFamily="@font/koho_regular"-->
-                    <!--                        android:text="@string/wind"-->
-                    <!--                        android:textColor="@color/textColor"-->
-                    <!--                        android:textSize="14sp" />-->
-
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:fontFamily="@font/koho_regular"-->
-                    <!--                        android:text="@string/humidity"-->
-                    <!--                        android:textColor="@color/textColor"-->
-                    <!--                        android:textSize="14sp" />-->
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_day_pressure"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/koho_regular"
-                        android:textColor="@color/textColor"
-                        android:textSize="14sp"
-                        app:pressure="@{response.pressure}"
-                        app:unit="@{PressureUnit.HECTOPASCAL}" />
-
-                    <TextView
-                        android:id="@+id/tv_day_wind"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/koho_regular"
-                        android:textColor="@color/textColor"
-                        android:textSize="14sp"
-                        app:unit="@{WindSpeedUnit.METERS_PER_SECOND}"
-                        app:wind_speed="@{response.windSpeed}" />
-
-                    <TextView
-                        android:id="@+id/tv_day_humidity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/koho_regular"
-                        android:textColor="@color/textColor"
-                        android:textSize="14sp"
-                        app:humidity="@{response.humidity}" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
+        <TextView
+            android:id="@+id/tv_min_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_middle"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            app:layout_constraintBottom_toBottomOf="@id/tv_max_temperature"
+            app:layout_constraintEnd_toStartOf="@id/tv_max_temperature"
+            app:layout_constraintTop_toTopOf="@id/tv_max_temperature"
+            app:temperature="@{response.temperatureMin}"
+            app:unit="@{userPrefs.getTemperatureUnit()}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.optlab.nimbus.data.model.common.UnifiedWeatherResponse;
+import com.optlab.nimbus.data.preferences.UserPrefsManager;
 import com.optlab.nimbus.databinding.LayoutItemDailyWeatherBinding;
 
 public class DailyForecastAdapter
@@ -30,8 +31,11 @@ public class DailyForecastAdapter
                 }
             };
 
-    public DailyForecastAdapter() {
+    private final UserPrefsManager userPrefs;
+
+    public DailyForecastAdapter(@NonNull UserPrefsManager userPrefs) {
         super(CALL_BACK);
+        this.userPrefs = userPrefs;
     }
 
     @NonNull
@@ -40,6 +44,7 @@ public class DailyForecastAdapter
         LayoutItemDailyWeatherBinding binding =
                 LayoutItemDailyWeatherBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false);
+        binding.setUserPrefs(userPrefs);
         return new ViewHolder(binding);
     }
 

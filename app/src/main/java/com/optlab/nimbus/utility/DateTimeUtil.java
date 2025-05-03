@@ -1,5 +1,7 @@
 package com.optlab.nimbus.utility;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import java.time.DayOfWeek;
@@ -7,6 +9,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import lombok.Getter;
@@ -23,13 +27,13 @@ public final class DateTimeUtil {
     /**
      * Get the day of the week from a date string.
      *
-     * @param date The date string in ISO format (yyyy-MM-dd).
-     * @return The day of the week as a string (e.g., MONDAY, TUESDAY).
+     * @param date The date string in ISO format (yyyy-MM-dd'T'HH:mm:ssZ).
+     * @param style The style of the day of the week (e.g., FULL, SHORT).
+     * @return The day of the week as a string (e.g., "MONDAY", "Mon").
      */
-    public static String getDayOfWeek(@NonNull String date) {
+    public static String getDayOfWeek(@NonNull String date, TextStyle style) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE_TIME);
-        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
-        return dayOfWeek.toString();
+        return localDate.getDayOfWeek().getDisplayName(style, Locale.ENGLISH);
     }
 
     /**

@@ -16,6 +16,7 @@ import com.optlab.nimbus.utility.convertor.PressureConvertor;
 import com.optlab.nimbus.utility.convertor.TemperatureConvertor;
 import com.optlab.nimbus.utility.convertor.WindSpeedConvertor;
 
+import java.time.format.TextStyle;
 import java.util.Locale;
 
 /**
@@ -86,9 +87,10 @@ public class UnitBindingAdapter {
      * @param view the TextView to set the day on
      * @param date the date string
      */
-    @BindingAdapter("day")
-    public static void setDay(@NonNull TextView view, @NonNull String date) {
-        view.setText(DateTimeUtil.getDayOfWeek(date));
+    @BindingAdapter(value = {"day", "style"})
+    public static void setDay(
+            @NonNull TextView view, @NonNull String date, @NonNull TextStyle style) {
+        view.setText(DateTimeUtil.getDayOfWeek(date, style));
     }
 
     /**

@@ -24,8 +24,7 @@ public class HomeViewModel extends ViewModel {
     private final WeatherRepository repository;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final MutableLiveData<List<UnifiedWeatherResponse>> current = new MutableLiveData<>();
-    private final MutableLiveData<List<UnifiedWeatherResponse>> hourlyWeathers =
-            new MutableLiveData<>();
+    private final MutableLiveData<List<UnifiedWeatherResponse>> hourly = new MutableLiveData<>();
 
     @Inject
     public HomeViewModel(@NonNull WeatherRepository repository) {
@@ -79,10 +78,8 @@ public class HomeViewModel extends ViewModel {
     private void onHourlyWeatherFetchSuccessful(
             List<UnifiedWeatherResponse> unifiedWeatherResponses) {
         if (unifiedWeatherResponses != null && !unifiedWeatherResponses.isEmpty()) {
-            hourlyWeathers.postValue(unifiedWeatherResponses);
+            hourly.postValue(unifiedWeatherResponses);
             Timber.d("onSuccess: %s", unifiedWeatherResponses.size());
-            unifiedWeatherResponses.forEach(
-                    weather -> Timber.d("onSuccess: %s", weather.toString()));
         } else {
             Timber.e("onSuccess: No data received");
         }
@@ -92,8 +89,8 @@ public class HomeViewModel extends ViewModel {
         Timber.e("onError: %s", throwable.getMessage());
     }
 
-    public LiveData<List<UnifiedWeatherResponse>> getHourlyWeathers() {
-        return hourlyWeathers;
+    public LiveData<List<UnifiedWeatherResponse>> getHourly() {
+        return hourly;
     }
 
     public LiveData<List<UnifiedWeatherResponse>> getCurrent() {

@@ -15,9 +15,11 @@ import androidx.annotation.RequiresPermission;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.common.Coordinates;
 import com.optlab.nimbus.data.preferences.UserPrefsManager;
 import com.optlab.nimbus.databinding.FragmentMainDashboardBinding;
@@ -34,11 +36,12 @@ import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
-    @Inject protected UserPrefsManager userPrefs;
     private FragmentMainDashboardBinding binding;
     private HomeViewModel viewModel;
     private HourlyForecastAdapater adapter;
     private FusedLocationProviderClient fusedLocationClient;
+
+    @Inject protected UserPrefsManager userPrefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +93,7 @@ public class HomeFragment extends Fragment {
                                         new Coordinates(
                                                 String.valueOf(location.getLatitude()),
                                                 String.valueOf(location.getLongitude()));
+                                userPrefs.setLocation(coordinates);
                                 viewModel.fetchCurrentWeatherByLocation(coordinates);
                                 viewModel.fetchHourlyWeathersByLocation(coordinates);
                             }
@@ -112,6 +116,7 @@ public class HomeFragment extends Fragment {
         binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
         binding.setUserPrefs(userPrefs);
+        binding.setFragment(this);
         return binding.getRoot();
     }
 
@@ -123,7 +128,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        viewModel.getHourlyWeathers().observe(getViewLifecycleOwner(), adapter::submitList);
+        viewModel.getHourly().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 
     private void initRecyclerView() {
@@ -132,5 +137,9 @@ public class HomeFragment extends Fragment {
 
         SpacingStrategy spacingStrategy = new LinearSpacingStrategy(requireContext(), 8, false);
         binding.rvHourlyWeather.addItemDecoration(new SpacingItemDecoration(spacingStrategy));
+    }
+
+    public void onMoreTextClick(@NonNull View view) {
+        Navigation.findNavController(view).navigate(R.id.dailyWeatherFragment);
     }
 }

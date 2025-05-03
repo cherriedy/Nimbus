@@ -12,14 +12,17 @@ import com.optlab.nimbus.data.model.common.PressureUnit;
 import com.optlab.nimbus.data.model.common.TemperatureUnit;
 import com.optlab.nimbus.data.model.common.WindSpeedUnit;
 
+import timber.log.Timber;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import timber.log.Timber;
-
 /**
+ * UserPrefsManager is a class that manages the user preferences for the application. It uses
+ * SharedPreferences to store the preferences and Gson to serialize and deserialize the data.
+ *
  * @noinspection rawtypes
  */
 public class UserPrefsManager {
@@ -41,6 +44,12 @@ public class UserPrefsManager {
         initUnits();
     }
 
+    /**
+     * Set the location in the list of locations. If the location already exists, it will not be
+     * added again.
+     *
+     * @param coordinates the location to be added
+     */
     public void setLocation(@NonNull Coordinates coordinates) {
         List<String> locations = getLocations();
         String json = gson.toJson(coordinates);
@@ -52,15 +61,26 @@ public class UserPrefsManager {
         }
     }
 
+    /**
+     * Get the location at the given position in the list of locations.
+     *
+     * @param position the position of the location in the list
+     * @return the location at the given position
+     */
     public Coordinates getLocation(int position) {
         List<String> locations = getLocations();
         if (locations.isEmpty()) {
             return null;
         }
-        Type type = new TypeToken<List<String>>() {}.getType();
+        Type type = new TypeToken<Coordinates>() {}.getType();
         return gson.fromJson(locations.get(position), type);
     }
 
+    /**
+     * Get the list of locations.
+     *
+     * @return the list of locations
+     */
     public List<String> getLocations() {
         String json = userPrefs.getString(LOCATIONS, null);
         if (json == null) {
@@ -70,6 +90,10 @@ public class UserPrefsManager {
         return gson.fromJson(json, type);
     }
 
+    /**
+     * Initialize the units in the shared preferences. If the units do not exist, they will be
+     * initialized to the default values.
+     */
     private void initUnits() {
         if (!userPrefs.contains(TEMPERATURE_UNIT)) {
             setUnit(TEMPERATURE_UNIT, TemperatureUnit.CELSIUS);
@@ -82,6 +106,13 @@ public class UserPrefsManager {
         }
     }
 
+    /**
+     * Set the unit for the given key. The key must be one of the following: TEMPERATURE_UNIT,
+     * WIND_SPEED_UNIT, PRESSURE_UNIT.
+     *
+     * @param key the key for the unit
+     * @param unit the unit to be set
+     */
     public void setUnit(@NonNull String key, @NonNull Enum unit) {
         assertValidKey(key);
         if (unit == null) {
@@ -90,6 +121,12 @@ public class UserPrefsManager {
         userPrefs.edit().putString(key, unit.name()).apply();
     }
 
+    /**
+     * Assert that the key is valid (i.e., one of the following: TEMPERATURE_UNIT, WIND_SPEED_UNIT,
+     * PRESSURE_UNIT). It should not be null or empty.
+     *
+     * @param key the key to be validated
+     */
     private static void assertValidKey(@NonNull String key) {
         if (key == null || key.trim().isEmpty()) {
             throw new NullPointerException("Key cannot be null or empty");
@@ -99,6 +136,13 @@ public class UserPrefsManager {
         }
     }
 
+    /**
+     * Get the unit for the given key. The key must be one of the following: TEMPERATURE_UNIT,
+     * WIND_SPEED_UNIT, PRESSURE_UNIT.
+     *
+     * @param key the key for the unit
+     * @return the unit for the given key
+     */
     public Enum getUnit(@NonNull String key) {
         assertValidKey(key);
         return switch (key) {

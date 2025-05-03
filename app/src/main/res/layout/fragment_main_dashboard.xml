@@ -13,6 +13,10 @@
             name="userPrefs"
             type="com.optlab.nimbus.data.preferences.UserPrefsManager" />
 
+        <variable
+            name="fragment"
+            type="com.optlab.nimbus.ui.view.HomeFragment" />
+
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -250,6 +254,7 @@
                     android:id="@+id/tv_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="@{fragment::onMoreTextClick}"
                     android:text="More>"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="@color/persianIndigo"

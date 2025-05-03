@@ -15,6 +15,8 @@ public final class TomorrowIoConstant {
     public static final String PLUS_1_DAYS_FROM_TODAY = "nowPlus1d"; // plus 1 days for forecast
     public static final String PLUS_5_DAYS_FROM_TODAY = "nowPlus5d"; // plus 5 days for forecast
     public static final String METRIC = "metric"; // temperature unit
+    public static final long EXPIRY_TIME =
+            1000 * 60 * 60 * (long) 24; // 1 day in milliseconds (24 hours)
 
     /** Private constructor to prevent instantiation of this utility class. */
     private TomorrowIoConstant() {

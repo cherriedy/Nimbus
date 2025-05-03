@@ -41,4 +41,5 @@
     <string name="thunderstorm">Thunderstorm</string>
     <string name="unknown">Unknown</string>
     <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>

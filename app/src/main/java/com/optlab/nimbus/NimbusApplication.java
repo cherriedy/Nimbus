@@ -2,6 +2,14 @@ package com.optlab.nimbus;
 
 import android.app.Application;
 
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import com.optlab.nimbus.worker.WeatherSyncWorker;
+
+import java.util.concurrent.TimeUnit;
+
 import dagger.hilt.android.HiltAndroidApp;
 import timber.log.Timber;
 
@@ -16,7 +24,16 @@ public class NimbusApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initTimber();
+        initTimber(); // Initialize Timber for logging.
+        syncWeatherData(); // Start syncing weather data.
+    }
+
+    private void syncWeatherData() {
+        WorkRequest weatherSyncRequest =
+                new PeriodicWorkRequest.Builder(WeatherSyncWorker.class, 6, TimeUnit.HOURS).build();
+
+        // Enqueue the work request to start syncing weather data.
+        WorkManager.getInstance(this).enqueue(weatherSyncRequest);
     }
 
     private void initTimber() {

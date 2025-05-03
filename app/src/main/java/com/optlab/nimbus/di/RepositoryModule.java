@@ -2,6 +2,9 @@ package com.optlab.nimbus.di;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
+import com.optlab.nimbus.data.local.dao.WeatherDao;
 import com.optlab.nimbus.data.preferences.SecurePrefsManager;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
 import com.optlab.nimbus.data.repository.WeatherRepository;
@@ -34,14 +37,16 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public static WeatherRepository provideRepository(
-            Endpoint endpoint,
-            TomorrowIoClient tomorrowIoClient,
-            SecurePrefsManager securePrefsManager,
-            @ApplicationContext Context context) {
+            @ApplicationContext Context context,
+            @NonNull Endpoint endpoint,
+            @NonNull TomorrowIoClient tomorrowIoClient,
+            @NonNull SecurePrefsManager securePrefsManager,
+            @NonNull WeatherDao weatherDao) {
         return switch (endpoint) {
             case OPEN_WEATHER -> null;
             case TOMORROW_IO ->
-                    new TomorrowIoRepository(context, tomorrowIoClient, securePrefsManager);
+                    new TomorrowIoRepository(
+                            context, tomorrowIoClient, securePrefsManager, weatherDao);
         };
     }
 }

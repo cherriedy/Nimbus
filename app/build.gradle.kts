@@ -72,6 +72,9 @@ dependencies {
 
     // Logging interceptor for logging network requests and responses
     implementation(libs.logging.interceptor)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.work.runtime)
 
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
@@ -82,6 +85,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    annotationProcessor(libs.androidx.room.compiler)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 

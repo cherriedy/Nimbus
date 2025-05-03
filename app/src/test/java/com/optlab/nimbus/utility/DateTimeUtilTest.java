@@ -8,13 +8,14 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 
 public class DateTimeUtilTest {
 
     @Test
     public void getDayOfWeek_valid_date() {
         String date = ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
-        String result = DateTimeUtil.getDayOfWeek(date);
+        String result = DateTimeUtil.getDayOfWeek(date, TextStyle.FULL);
         assertEquals("FRIDAY", result);
     }
 
