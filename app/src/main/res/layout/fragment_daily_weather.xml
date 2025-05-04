@@ -32,7 +32,7 @@
             android:layout_marginStart="@dimen/spacing_large"
             android:layout_marginTop="@dimen/spacing_large"
             android:layout_marginEnd="@dimen/spacing_large"
-            android:background="@drawable/bg_gradient_20dp">
+            android:background="@drawable/bg_light_gradient_20dp">
 
             <ImageView
                 android:id="@+id/iv_icon"
