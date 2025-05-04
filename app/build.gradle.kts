@@ -94,10 +94,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Lombok for getting rid of boilerplate code of getters, setters, constructors, etc.
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
-
     // Hilt for dependency injection
     implementation(libs.com.google.dagger.hilt.android.gradle.plugin)
     implementation(libs.hilt.android)
