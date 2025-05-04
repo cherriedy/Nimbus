@@ -1,6 +1,5 @@
 package com.optlab.nimbus.utility;
 
-
 import androidx.annotation.NonNull;
 
 import lombok.Getter;
@@ -13,6 +12,11 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * Utility class for date and time operations. This class provides methods to manipulate and format
+ * date and time strings. It includes methods to get the current date and time, format dates, and
+ * retrieve specific components of a date.
+ */
 public final class DateTimeUtil {
     @Getter public static final ZoneId timeZone = TimeZone.getDefault().toZoneId();
 
@@ -46,6 +50,11 @@ public final class DateTimeUtil {
         return zonedDateTime.format(DateTimeFormatter.ofPattern("EEE MMMM dd | hh:mm a"));
     }
 
+    /**
+     * Get the current time zone ID.
+     *
+     * @return The current time zone ID (e.g., "America/New_York").
+     */
     public static String getTimeZoneId() {
         return timeZone.getId();
     }
@@ -55,21 +64,45 @@ public final class DateTimeUtil {
      *
      * @return The start of the day in UTC format (yyyy-MM-dd'T'HH:mm:ssZ).
      */
+    @NonNull
     public static String getStartOfDay() {
         return LocalDate.now(timeZone) // Returns the date without timezone for specified timezone
                 .atStartOfDay(timeZone) // Returns the start of the day in the specified timezone
                 .toInstant() // Return the start of the day of the specified timezone to UTC
                 .toString(); // Convert to string in ISO format (ISO_INSTANT)
 
-        // Or
-        // LocalDate.now(ZoneId.of("UTC"))
+        // Or you can use the following line to get the start of the day in UTC:
+        // return LocalDate.now(ZoneId.of("UTC"))
         //         .atStartOfDay()
         //         .atZone(ZoneId.of("UTC"))
         //         .format(DateTimeFormatter.ISO_INSTANT);
     }
 
-    public static String getNextAnHourTime() {
-        return ZonedDateTime.now(timeZone).plusHours(1).toInstant().toString();
+    /**
+     * Get the current date and time in UTC format.
+     *
+     * @return The current date and time in UTC format (yyyy-MM-dd'T'HH:mm:ssZ).
+     */
+    @NonNull
+    public static String getAnHourLater() {
+        return ZonedDateTime.now(timeZone) // Returns the date without timezone
+                .plusHours(1) // Adds an hour to the current date and time
+                .toInstant() // Converts the date and time to UTC
+                .toString(); // Converts to string in ISO format (ISO_INSTANT)
+    }
+
+    /**
+     * Get the date and time one hour later tomorrow in UTC format.
+     *
+     * @return The date and time one hour later tomorrow in UTC format (yyyy-MM-dd'T'HH:mm:ssZ).
+     */
+    @NonNull
+    public static String getAnHourLaterTomorrow() {
+        return ZonedDateTime.now(timeZone)
+                .plusHours(1) // Adds an hour to the current date and time
+                .plusDays(1) // Adds a day to the current date and time
+                .toInstant() // Converts the date and time to UTC
+                .toString(); // Converts to string in ISO format (ISO_INSTANT)
     }
 
     /**
@@ -77,6 +110,7 @@ public final class DateTimeUtil {
      *
      * @return The end of the day in UTC format (yyyy-MM-dd'T'HH:mm:ssZ).
      */
+    @NonNull
     public static String getEndOfDay() {
         return LocalDate.now(timeZone) // Returns the date without timezone for specified timezone
                 .atTime(23, 59, 59) // Returns the end of the day in the specified timezone
