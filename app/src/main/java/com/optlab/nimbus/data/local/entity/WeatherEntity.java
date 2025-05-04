@@ -4,8 +4,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.optlab.nimbus.constant.ResponseConstant;
+
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -55,5 +55,14 @@ public class WeatherEntity {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isExpired() {
+        return switch (type) {
+            case DAILY, HOURLY ->
+                    System.currentTimeMillis() - timestamp > ResponseConstant.DAILY_EXPIRY_TIME;
+            case CURRENT ->
+                    System.currentTimeMillis() - timestamp > ResponseConstant.CURRENT_EXPIRY_TIME;
+        };
     }
 }

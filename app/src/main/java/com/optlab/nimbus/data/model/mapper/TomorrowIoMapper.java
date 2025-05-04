@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.model.common.UnifiedWeatherResponse;
+import com.optlab.nimbus.data.model.common.WeatherResponse;
 import com.optlab.nimbus.data.model.tomorrowio.TomorrowIoResponse;
 
 import java.util.ArrayList;
@@ -20,34 +20,33 @@ public final class TomorrowIoMapper {
     }
 
     /**
-     * Maps TomorrowIoResponse to a list of UnifiedWeatherResponse.
+     * Maps TomorrowIoResponse to a list of WeatherResponse.
      *
      * @param response TomorrowIoResponse
-     * @return List of UnifiedWeatherResponse
+     * @return List of WeatherResponse
      */
-    public static List<UnifiedWeatherResponse> map(Context context, TomorrowIoResponse response) {
+    public static List<WeatherResponse> map(
+            @NonNull Context context, @NonNull TomorrowIoResponse response) {
         // List is used to store the weather summaries (daily weather data)
-        List<UnifiedWeatherResponse> weatherSummaries = new ArrayList<>();
+        List<WeatherResponse> weatherSummaries = new ArrayList<>();
 
-        // Based on the structure of TomorrowIoResponse, we can access the data and map it to
-        // UnifiedWeatherResponse
         response.data() // Get the data from the response
                 .timelines() // Get the timelines from the data
                 .get(0) // Get the first timeline (daily)
                 .intervals() // Get the intervals from the timeline
                 .forEach(
-                        daily -> {
-                            // Create a new UnifiedWeatherResponse object for each interval
-                            UnifiedWeatherResponse weather = new UnifiedWeatherResponse();
-                            weather.setDate(daily.startTime()); // Set the string date
-                            weather.setTemperature(daily.values().temperature());
-                            weather.setTemperatureMin(daily.values().temperatureMin());
-                            weather.setTemperatureMax(daily.values().temperatureMax());
-                            weather.setPressure(daily.values().pressureSurfaceLevel());
-                            weather.setWindSpeed(daily.values().windSpeed());
-                            weather.setHumidity(daily.values().humidity());
+                        interval -> {
+                            // Create a new WeatherResponse object for each interval
+                            WeatherResponse weather = new WeatherResponse();
+                            weather.setDate(interval.startTime()); // Set the string date
+                            weather.setTemperature(interval.values().temperature());
+                            weather.setTemperatureMin(interval.values().temperatureMin());
+                            weather.setTemperatureMax(interval.values().temperatureMax());
+                            weather.setPressure(interval.values().pressureSurfaceLevel());
+                            weather.setWindSpeed(interval.values().windSpeed());
+                            weather.setHumidity(interval.values().humidity());
 
-                            int weatherCode = daily.values().weatherCode();
+                            int weatherCode = interval.values().weatherCode();
                             weather.setWeatherCode(weatherCode);
                             weather.setWeatherIcon(mapWeatherCodeToIcon(weatherCode));
                             weather.setWeatherDescription(

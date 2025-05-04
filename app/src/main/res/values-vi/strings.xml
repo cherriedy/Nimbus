@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nimbus</string>
+    <string name="hello_blank_fragment">Xin chào fragment trống</string>
+
+    <string name="mic_desc" translatable="false">mic để tìm kiếm</string>
+    <string name="day">ngày</string>
+    <string name="pressure">Áp suất</string>
+    <string name="wind">Tốc độ gió</string>
+    <string name="humidity">Độ ẩm</string>
+    <string name="enter_city_name">NHẬP TÊN THÀNH PHỐ</string>
+    <string name="updated_at">CẬP NHẬT LÚC</string>
+    <string name="monday">Thứ Hai</string>
+    <string name="tuesday">Thứ Ba</string>
+    <string name="wednesday">Thứ Tư</string>
+    <string name="thursday">Thứ Năm</string>
+    <string name="friday">Thứ Sáu</string>
+    <string name="saturday">Thứ Bảy</string>
+    <string name="sunday">Chủ Nhật</string>
+    <string name="clear_sunny">Quang đãng, Có nắng</string>
+    <string name="mostly_clear">Hầu hết quang đãng</string>
+    <string name="partly_cloudy">Nhiều mây rải rác</string>
+    <string name="mostly_cloudy">Hầu hết có mây</string>
+    <string name="cloudy">Có mây</string>
+    <string name="fog">Sương mù</string>
+    <string name="light_fog">Sương mù nhẹ</string>
+    <string name="drizzle">Mưa phùn</string>
+    <string name="rain">Mưa</string>
+    <string name="light_rain">Mưa nhỏ</string>
+    <string name="heavy_rain">Mưa lớn</string>
+    <string name="snow">Tuyết</string>
+    <string name="flurries">Tuyết rơi nhẹ</string>
+    <string name="light_snow">Tuyết nhẹ</string>
+    <string name="heavy_snow">Tuyết dày</string>
+    <string name="freezing_drizzle">Mưa phùn đóng băng</string>
+    <string name="freezing_rain">Mưa băng</string>
+    <string name="light_freezing_rain">Mưa băng nhẹ</string>
+    <string name="heavy_freezing_rain">Mưa băng dày</string>
+    <string name="ice_pellets">Mưa đá nhỏ</string>
+    <string name="heavy_ice_pellets">Mưa đá nhỏ dày</string>
+    <string name="light_ice_pellets">Mưa đá nhỏ nhẹ</string>
+    <string name="thunderstorm">Bão có sấm sét</string>
+    <string name="unknown">Không rõ</string>
+    <string name="today">Hôm nay</string>
+    <string name="tomorrow">Ngày mai</string>
+</resources>

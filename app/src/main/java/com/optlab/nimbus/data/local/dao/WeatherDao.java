@@ -14,7 +14,7 @@ public interface WeatherDao {
     WeatherEntity getLatestWeather(@NonNull WeatherEntity.Type type);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertWeather(@NonNull WeatherEntity weatherEntity);
+    long insertWeather(@NonNull WeatherEntity weatherEntity);
 
     @Query("DELETE FROM weather_database WHERE timestamp < :expiryTime")
     void deleteExpiry(long expiryTime);

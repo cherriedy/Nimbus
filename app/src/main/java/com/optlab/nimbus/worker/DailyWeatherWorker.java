@@ -15,12 +15,12 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class WeatherSyncWorker extends Worker {
+public class DailyWeatherWorker extends Worker {
     private final WeatherRepository repository;
     private final UserPrefsManager userPrefs;
 
     @Inject
-    public WeatherSyncWorker(
+    public DailyWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
             @NonNull WeatherRepository repository,
@@ -36,7 +36,7 @@ public class WeatherSyncWorker extends Worker {
     public Result doWork() {
         try {
             repository
-                    .getDailyWeatherByLocation(userPrefs.getLocation(0))
+                    .fetchAndCacheDailyWeather(userPrefs.getLocation(0))
                     .subscribeOn(Schedulers.io())
                     .blockingFirst();
             Timber.d("Sync completed successfully");

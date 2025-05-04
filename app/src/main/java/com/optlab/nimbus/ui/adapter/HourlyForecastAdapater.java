@@ -8,27 +8,25 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.optlab.nimbus.data.model.common.UnifiedWeatherResponse;
+import com.optlab.nimbus.data.model.common.WeatherResponse;
 import com.optlab.nimbus.data.preferences.UserPrefsManager;
 import com.optlab.nimbus.databinding.LayoutItemHourlyWeatherBinding;
 
-import javax.inject.Inject;
-
 public class HourlyForecastAdapater
-        extends ListAdapter<UnifiedWeatherResponse, HourlyForecastAdapater.ViewHolder> {
-    private static final DiffUtil.ItemCallback<UnifiedWeatherResponse> CALL_BACK =
+        extends ListAdapter<WeatherResponse, HourlyForecastAdapater.ViewHolder> {
+    private static final DiffUtil.ItemCallback<WeatherResponse> CALL_BACK =
             new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(
-                        @NonNull UnifiedWeatherResponse oldItem,
-                        @NonNull UnifiedWeatherResponse newItem) {
+                        @NonNull WeatherResponse oldItem,
+                        @NonNull WeatherResponse newItem) {
                     return oldItem.getDate().equals(newItem.getDate());
                 }
 
                 @Override
                 public boolean areContentsTheSame(
-                        @NonNull UnifiedWeatherResponse oldItem,
-                        @NonNull UnifiedWeatherResponse newItem) {
+                        @NonNull WeatherResponse oldItem,
+                        @NonNull WeatherResponse newItem) {
                     return oldItem.equals(newItem);
                 }
             };
@@ -63,7 +61,7 @@ public class HourlyForecastAdapater
             this.binding = binding;
         }
 
-        public void bind(@NonNull UnifiedWeatherResponse response) {
+        public void bind(@NonNull WeatherResponse response) {
             binding.setResponse(response);
             binding.executePendingBindings();
         }

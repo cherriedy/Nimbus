@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UnifiedWeatherResponse {
+public class WeatherResponse {
     private String date;
     private double temperature;
     private double temperatureMax;

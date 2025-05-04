@@ -6,7 +6,7 @@
 
         <variable
             name="response"
-            type="com.optlab.nimbus.data.model.common.UnifiedWeatherResponse" />
+            type="com.optlab.nimbus.data.model.common.WeatherResponse" />
 
         <variable
             name="userPrefs"

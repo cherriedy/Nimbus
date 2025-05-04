@@ -8,7 +8,7 @@
 
         <variable
             name="response"
-            type="com.optlab.nimbus.data.model.common.UnifiedWeatherResponse" />
+            type="com.optlab.nimbus.data.model.common.WeatherResponse" />
 
         <variable
             name="userPrefs"
@@ -22,10 +22,10 @@
 
         <TextView
             android:id="@+id/tv_day"
-            android:layout_width="32dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_middle"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             app:day="@{response.date}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +37,7 @@
             android:layout_width="@dimen/spacing_xxlarge"
             android:layout_height="@dimen/spacing_xxlarge"
             android:layout_marginStart="@dimen/spacing_middle"
+            android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@id/tv_day"
             app:layout_constraintStart_toEndOf="@id/tv_day"
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
             android:text="@{response.weatherDescription}"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             app:layout_constraintBottom_toBottomOf="@id/iv_icon"
             app:layout_constraintStart_toEndOf="@id/iv_icon"
             app:layout_constraintTop_toTopOf="@id/iv_icon" />
@@ -59,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/spacing_middle"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             app:layout_constraintBottom_toBottomOf="@id/tv_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_description"
@@ -71,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/spacing_middle"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             app:layout_constraintBottom_toBottomOf="@id/tv_max_temperature"
             app:layout_constraintEnd_toStartOf="@id/tv_max_temperature"
             app:layout_constraintTop_toTopOf="@id/tv_max_temperature"

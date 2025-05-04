@@ -1,10 +1,10 @@
 package com.optlab.nimbus.utility;
 
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import java.time.DayOfWeek;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -12,8 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import lombok.Getter;
 
 public final class DateTimeUtil {
     @Getter public static final ZoneId timeZone = TimeZone.getDefault().toZoneId();
@@ -33,7 +31,7 @@ public final class DateTimeUtil {
      */
     public static String getDayOfWeek(@NonNull String date, TextStyle style) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE_TIME);
-        return localDate.getDayOfWeek().getDisplayName(style, Locale.ENGLISH);
+        return localDate.getDayOfWeek().getDisplayName(style, Locale.getDefault());
     }
 
     /**
@@ -68,6 +66,10 @@ public final class DateTimeUtil {
         //         .atStartOfDay()
         //         .atZone(ZoneId.of("UTC"))
         //         .format(DateTimeFormatter.ISO_INSTANT);
+    }
+
+    public static String getNextAnHourTime() {
+        return ZonedDateTime.now(timeZone).plusHours(1).toInstant().toString();
     }
 
     /**

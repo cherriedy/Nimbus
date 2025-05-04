@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.optlab.nimbus.data.model.common.UnifiedWeatherResponse;
 import com.optlab.nimbus.data.model.common.Coordinates;
+import com.optlab.nimbus.data.model.common.WeatherResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import java.util.List;
@@ -23,8 +23,8 @@ import timber.log.Timber;
 public class HomeViewModel extends ViewModel {
     private final WeatherRepository repository;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final MutableLiveData<List<UnifiedWeatherResponse>> current = new MutableLiveData<>();
-    private final MutableLiveData<List<UnifiedWeatherResponse>> hourly = new MutableLiveData<>();
+    private final MutableLiveData<List<WeatherResponse>> current = new MutableLiveData<>();
+    private final MutableLiveData<List<WeatherResponse>> hourly = new MutableLiveData<>();
 
     @Inject
     public HomeViewModel(@NonNull WeatherRepository repository) {
@@ -49,18 +49,16 @@ public class HomeViewModel extends ViewModel {
     }
 
     private void onCurrentWeatherFetchFail(Throwable throwable) {
-        Timber.e("onError: %s", throwable.getMessage());
+        Timber.e("Current: %s", throwable.getMessage());
     }
 
     private void onCurrentWeatherFetchSuccessful(
-            List<UnifiedWeatherResponse> unifiedWeatherResponses) {
-        if (unifiedWeatherResponses != null && !unifiedWeatherResponses.isEmpty()) {
-            current.postValue(unifiedWeatherResponses);
-            Timber.d("onSuccess: %s", unifiedWeatherResponses.size());
-            unifiedWeatherResponses.forEach(
-                    weather -> Timber.d("onSuccess: %s", weather.toString()));
+            List<WeatherResponse> weatherRespons) {
+        if (weatherRespons != null && !weatherRespons.isEmpty()) {
+            current.postValue(weatherRespons);
+            Timber.d("Current: %s", weatherRespons.size());
         } else {
-            Timber.e("onSuccess: No data received");
+            Timber.e("Current: No data received");
         }
     }
 
@@ -76,24 +74,24 @@ public class HomeViewModel extends ViewModel {
     }
 
     private void onHourlyWeatherFetchSuccessful(
-            List<UnifiedWeatherResponse> unifiedWeatherResponses) {
-        if (unifiedWeatherResponses != null && !unifiedWeatherResponses.isEmpty()) {
-            hourly.postValue(unifiedWeatherResponses);
-            Timber.d("onSuccess: %s", unifiedWeatherResponses.size());
+            List<WeatherResponse> weatherRespons) {
+        if (weatherRespons != null && !weatherRespons.isEmpty()) {
+            hourly.postValue(weatherRespons);
+            Timber.d("Hourly: %s", weatherRespons.size());
         } else {
-            Timber.e("onSuccess: No data received");
+            Timber.e("Hourly: No data received");
         }
     }
 
     private void onHourlyWeathersFetchFail(Throwable throwable) {
-        Timber.e("onError: %s", throwable.getMessage());
+        Timber.e("Hourly: %s", throwable.getMessage());
     }
 
-    public LiveData<List<UnifiedWeatherResponse>> getHourly() {
+    public LiveData<List<WeatherResponse>> getHourly() {
         return hourly;
     }
 
-    public LiveData<List<UnifiedWeatherResponse>> getCurrent() {
+    public LiveData<List<WeatherResponse>> getCurrent() {
         return current;
     }
 }

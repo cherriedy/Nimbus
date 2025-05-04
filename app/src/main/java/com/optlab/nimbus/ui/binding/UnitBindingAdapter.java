@@ -1,5 +1,6 @@
 package com.optlab.nimbus.ui.binding;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
+import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.common.PressureUnit;
 import com.optlab.nimbus.data.model.common.TemperatureUnit;
 import com.optlab.nimbus.data.model.common.WindSpeedUnit;
@@ -127,5 +129,18 @@ public class UnitBindingAdapter {
     @BindingAdapter("hour")
     public static void setHour(@NonNull TextView view, @NonNull String dateTime) {
         view.setText(DateTimeUtil.getHours(dateTime));
+    }
+
+    /**
+     * Sets the updated time based on the provided date time string.
+     *
+     * @param view the TextView to set the updated time on
+     * @param dateTime the date time string
+     */
+    @SuppressLint("SetTextI18n")
+    @BindingAdapter("updated_at")
+    public static void setUpdatedAt(@NonNull TextView view, @NonNull String dateTime) {
+        String updatedAt = view.getContext().getString(R.string.updated_at);
+        view.setText(updatedAt + ": " + DateTimeUtil.getDayTime(dateTime));
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.UnifiedWeatherResponse;
+import com.optlab.nimbus.data.model.common.WeatherResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import timber.log.Timber;
 public class DailyWeatherViewModel extends ViewModel {
     private final WeatherRepository repository;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final MutableLiveData<List<UnifiedWeatherResponse>> daily = new MutableLiveData<>();
+    private final MutableLiveData<List<WeatherResponse>> daily = new MutableLiveData<>();
 
     @Inject
     public DailyWeatherViewModel(@NonNull WeatherRepository repository) {
@@ -36,7 +36,7 @@ public class DailyWeatherViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public LiveData<List<UnifiedWeatherResponse>> getDaily() {
+    public LiveData<List<WeatherResponse>> getDaily() {
         return daily;
     }
 
@@ -54,10 +54,10 @@ public class DailyWeatherViewModel extends ViewModel {
         daily.postValue(null);
     }
 
-    private void onDailyFetchedSuccessful(List<UnifiedWeatherResponse> unifiedWeatherResponses) {
-        if (unifiedWeatherResponses != null && !unifiedWeatherResponses.isEmpty()) {
-            daily.postValue(unifiedWeatherResponses);
-            Timber.d("onSuccess: %s", unifiedWeatherResponses.size());
+    private void onDailyFetchedSuccessful(List<WeatherResponse> weatherRespons) {
+        if (weatherRespons != null && !weatherRespons.isEmpty()) {
+            daily.postValue(weatherRespons);
+            Timber.d("onSuccess: %s", weatherRespons.size());
         } else {
             Timber.d("onSuccess: response is null or empty");
         }

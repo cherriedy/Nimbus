@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nimbus</string>
+    <string name="hello_blank_fragment">空のフラグメント</string>
+
+    <string name="mic_desc" translatable="false">検索用マイク</string>
+    <string name="day">日</string>
+    <string name="pressure">気圧</string>
+    <string name="wind">風</string>
+    <string name="humidity">湿度</string>
+    <string name="enter_city_name">都市名を入力</string>
+    <string name="updated_at">更新日時</string>
+    <string name="monday">月曜日</string>
+    <string name="tuesday">火曜日</string>
+    <string name="wednesday">水曜日</string>
+    <string name="thursday">木曜日</string>
+    <string name="friday">金曜日</string>
+    <string name="saturday">土曜日</string>
+    <string name="sunday">日曜日</string>
+    <string name="clear_sunny">晴れ</string>
+    <string name="mostly_clear">ほぼ晴れ</string>
+    <string name="partly_cloudy">ときどき曇り</string>
+    <string name="mostly_cloudy">ほぼ曇り</string>
+    <string name="cloudy">曇り</string>
+    <string name="fog">霧</string>
+    <string name="light_fog">薄霧</string>
+    <string name="drizzle">霧雨</string>
+    <string name="rain">雨</string>
+    <string name="light_rain">小雨</string>
+    <string name="heavy_rain">大雨</string>
+    <string name="snow">雪</string>
+    <string name="flurries">雪あられ</string>
+    <string name="light_snow">小雪</string>
+    <string name="heavy_snow">大雪</string>
+    <string name="freezing_drizzle">凍雨</string>
+    <string name="freezing_rain">着氷性の雨</string>
+    <string name="light_freezing_rain">弱い着氷性の雨</string>
+    <string name="heavy_freezing_rain">強い着氷性の雨</string>
+    <string name="ice_pellets">氷あられ</string>
+    <string name="heavy_ice_pellets">強い氷あられ</string>
+    <string name="light_ice_pellets">弱い氷あられ</string>
+    <string name="thunderstorm">雷雨</string>
+    <string name="unknown">不明</string>
+    <string name="today">今日</string>
+    <string name="tomorrow">明日</string>
+</resources>
