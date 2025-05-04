@@ -121,6 +121,7 @@ public class TomorrowIoRepository implements WeatherRepository {
                     if (entity.isExpired()) {
                         Timber.tag(TagConstant.DATABASE)
                                 .e("%s: Cached weather data expired", type.name());
+                        weatherDao.deleteExpiry(System.currentTimeMillis()); // Delete expired data
                         return Collections.emptyList(); // Return an empty list if data is expired
                     }
 
@@ -146,7 +147,7 @@ public class TomorrowIoRepository implements WeatherRepository {
                         cachedWeather -> {
                             if (!cachedWeather.isEmpty()) {
                                 Timber.tag(TagConstant.DATABASE)
-                                        .d("Current: Returning cached current weather data, size");
+                                        .d("Current: Returning cached current weather data");
                                 return Observable.just(cachedWeather);
                             }
                             Timber.tag(TagConstant.NETWORK)
@@ -196,12 +197,8 @@ public class TomorrowIoRepository implements WeatherRepository {
         List<WeatherResponse> weatherData = TomorrowIoMapper.map(context, response);
 
         switch (type) { // Delete expired weather data based on the type
-            case DAILY, HOURLY ->
-                    weatherDao.deleteExpiry(
-                            System.currentTimeMillis() - ResponseConstant.DAILY_EXPIRY_TIME);
-            case CURRENT ->
-                    weatherDao.deleteExpiry(
-                            System.currentTimeMillis() - ResponseConstant.CURRENT_EXPIRY_TIME);
+            case CURRENT -> weatherDao.deleteExpiry(ResponseConstant.CURRENT_EXPIRY_TIME);
+            case DAILY, HOURLY -> weatherDao.deleteExpiry(ResponseConstant.DAILY_EXPIRY_TIME);
             default -> Timber.tag(TagConstant.DATABASE).e("Unknown weather type: %s", type.name());
         }
 
@@ -268,8 +265,8 @@ public class TomorrowIoRepository implements WeatherRepository {
                         TomorrowIoConstant.HOURLY_WEATHER_FIELDS,
                         TomorrowIoConstant.TIMESTEPS_ONE_HOUR,
                         TomorrowIoConstant.METRIC,
-                        DateTimeUtil.getNextAnHourTime(),
-                        DateTimeUtil.getEndOfDay(),
+                        DateTimeUtil.getAnHourLater(),
+                        DateTimeUtil.getAnHourLaterTomorrow(),
                         DateTimeUtil.getTimeZoneId(),
                         tomorrowIoKey)
                 .map(response -> cacheWeatherDataLocally(response, type))
