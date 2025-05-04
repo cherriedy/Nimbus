@@ -14,11 +14,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import timber.log.Timber;
 
-public class DailyWeatherWorker extends Worker {
+public class HourlyWeatherWorker extends Worker {
     private final WeatherRepository repository;
     private final UserPrefsManager userPrefs;
 
-    public DailyWeatherWorker(
+    public HourlyWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
             @NonNull WeatherRepository repository,
@@ -37,13 +37,13 @@ public class DailyWeatherWorker extends Worker {
     public Result doWork() {
         try {
             repository
-                    .fetchAndCacheDailyWeather(userPrefs.getLocation(0))
+                    .fetchAndCacheHourlyWeather(userPrefs.getLocation(0))
                     .subscribeOn(Schedulers.io())
                     .blockingFirst();
-            Timber.d("Sync completed successfully");
+            Timber.d("Hourly weather data fetched and cached successfully.");
             return Result.success();
         } catch (Exception e) {
-            Timber.e("Sync failed: %s", e.getMessage());
+            Timber.e("Error fetching hourly weather data: %s", e.getMessage());
             return Result.failure();
         }
     }
