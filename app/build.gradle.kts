@@ -38,76 +38,84 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding = true
         buildConfig = true
     }
 }
 
 dependencies {
-
-    // Lombok for getting rid of boilerplate code of getters, setters, constructors, etc.
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
-
+    // --- Core AndroidX ---
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    // Retrofit for network operations
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-    // RxJava for reactive programming
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-    // RxJava adapter for Retrofit
-    implementation(libs.rxjava3.retrofit.adapter)
-
-    // Logging interceptor for logging network requests and responses
-    implementation(libs.logging.interceptor)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava3)
-    implementation(libs.androidx.work.runtime)
-
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-
-    // Timber for logging
-    implementation(libs.timber)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    annotationProcessor(libs.androidx.room.compiler)
+    // --- Compose UI ---
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.work.testing)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
-    // Hilt for dependency injection
+    // --- Navigation ---
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    // --- Lombok (boilerplate reduction) ---
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    // --- Room Database ---
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.rxjava3)
+    annotationProcessor(libs.androidx.room.compiler)
+
+    // --- WorkManager ---
+    implementation(libs.androidx.work.runtime)
+    testImplementation(libs.androidx.work.testing)
+    testImplementation(libs.androidx.core)
+
+    // --- Dependency Injection (Hilt) ---
     implementation(libs.com.google.dagger.hilt.android.gradle.plugin)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-    // Glide for loading images with caching, transformation, etc.
+    // --- Networking (Retrofit, Gson, Logging) ---
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    // --- RxJava ---
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
+    implementation(libs.rxjava3.retrofit.adapter)
+
+    // --- Image Loading ---
     implementation(libs.glide)
 
-    // Security for encrypting sensitive data
+    // --- Security ---
     implementation(libs.androidx.security.crypto)
 
-    // Mockito for mocking in unit tests
-    testImplementation(libs.mockito.core)
-
-    // Google Play Services for location services
+    // --- Location Services ---
     implementation(libs.play.services.location)
+
+    // --- Logging ---
+    implementation(libs.timber)
+
+    // --- Testing ---
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.mockito.android)
 }
