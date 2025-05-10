@@ -2,11 +2,13 @@ package com.optlab.nimbus.utility;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -16,108 +18,233 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DateTimeUtilTest {
-    private static final String ISO_UTC_DATE_STRING = "2025-05-04T11:11:00Z";
-    private static final String ISO_PAST_DATE_STRING =
-            "2025-04-04T11:11:00+07:00[Asia/Ho_Chi_Minh]";
-    private static final String ISO_FUTURE_DATE_STRING =
-            "2025-12-04T11:11:00+07:00[Asia/Ho_Chi_Minh]";
-    private static final String INVALID_DATE_STRING =
-            "2025-05-04T11:11:00+07:00[Asia/Invalid_Zone]";
-
     /**
      * Test the getDayOfWeek method with a valid ISO date string to ensure it returns the correct
      * day of the week.
      */
-    @Test
-    public void getDayOfWeek_with_SHORT_style() {
-        String result = DateTimeUtil.getDayOfWeek(ISO_UTC_DATE_STRING, TextStyle.SHORT);
-        assertEquals("Sun", result); // Expected short form of Sunday
+    @RunWith(Parameterized.class)
+    public static class GetDayOfWeekParameterizedTest {
+        /**
+         * Test data for getDayOfWeek method.
+         *
+         * <p>getDayOfWeek({0}, {1}) = {2}) with {0} is the date string, {1} is the TextStyle, {2}
+         * is the expected day of week. We can use this to test the getDayOfWeek method with
+         * different date strings and TextStyles.
+         */
+        @Parameterized.Parameters(name = "{index}: getDayOfWeek({0}, {1}) = {2}")
+        public static Collection<Object[]> data() {
+            return List.of(
+                    new Object[][] {
+                        {"2025-05-04T11:11:00Z", TextStyle.SHORT, "Sun"},
+                        {"2025-05-04T09:11:00Z", TextStyle.SHORT, "Sun"},
+                        {"2025-05-03T11:11:00Z", TextStyle.SHORT, "Sat"},
+                        {"2025-05-04T09:11:00Z", TextStyle.NARROW, "S"},
+                        {"2025-05-03T11:11:00Z", TextStyle.NARROW, "S"},
+                        {"2025-05-04T11:11:00Z", TextStyle.NARROW, "S"},
+                        {"2025-04-04T11:11:00+07:00[Asia/Ho_Chi_Minh]", TextStyle.SHORT, "Fri"},
+                        {"2025-12-04T11:11:00+07:00[Asia/Ho_Chi_Minh]", TextStyle.SHORT, "Thu"}
+                    });
+        }
+
+        /** The date string to be tested. This is the first parameter of the test. */
+        @Parameterized.Parameter(0)
+        public String date;
+
+        /** The TextStyle to be tested. This is the second parameter of the test. */
+        @Parameterized.Parameter(1)
+        public TextStyle style;
+
+        /** The expected day of the week. This is the third parameter of the test. */
+        @Parameterized.Parameter(2)
+        public String expected;
+
+        @Test
+        public void testGetDayOfWeek() {
+            // Call the getDayOfWeek method with the date and style parameters.
+            assertEquals(expected, DateTimeUtil.getDayOfWeek(date, style));
+        }
     }
 
     /**
-     * Test the getDayOfWeek method with a valid ISO date string to ensure it returns the correct
-     * day of the week.
+     * This test is to check if the getDayOfWeek method works correctly when the date string is in
+     * invalid format. It should throw a DateTimeParseException or NullPointerException.
      */
     @Test
-    public void getDayOfWeek_with_NARROW_style() {
-        String result = DateTimeUtil.getDayOfWeek(ISO_UTC_DATE_STRING, TextStyle.NARROW);
-        assertEquals("S", result);
+    public void getDayOfWeek_invalidInput_throwException() {
+        assertThrows(
+                DateTimeParseException.class,
+                () ->
+                        DateTimeUtil.getDayOfWeek(
+                                "2025-05-04T11:11:00+07:00[Asia/INVALID_ZONE]", TextStyle.SHORT));
+        assertThrows(
+                NullPointerException.class, () -> DateTimeUtil.getDayOfWeek(null, TextStyle.SHORT));
+        assertThrows(
+                DateTimeParseException.class, () -> DateTimeUtil.getDayOfWeek("", TextStyle.SHORT));
     }
 
-    @Test(expected = DateTimeParseException.class)
-    public void getDayOfWeek_invalid_date_format() {
-        DateTimeUtil.getDayOfWeek(INVALID_DATE_STRING, TextStyle.SHORT);
+    /**
+     * Test the getDayTime method with a valid ISO date string to ensure it returns the correct
+     * formatted date and time.
+     */
+    @RunWith(Parameterized.class)
+    public static class GetDatTimeParameterizedTest {
+        /**
+         * Test data for getDayTime method.
+         *
+         * <p>getDayTime({0}) = {1} with {0} is the date string, {1} is the expected formatted date
+         * and time. We can use this to test the getDayTime method with different date strings.
+         */
+        @Parameterized.Parameters(name = "{index}: getDayTime({0}) = {1}")
+        public static Collection<Object[]> data() {
+            return List.of(
+                    new Object[][] {
+                        {"2025-05-04T11:11:00Z", "Sun May 04 | 11:11 AM"},
+                        {"2025-05-04T11:11:00+07:00", "Sun May 04 | 11:11 AM"},
+                        {"2025-05-04T11:11:00+05:00", "Sun May 04 | 11:11 AM"},
+                        {"2025-05-04T11:11:00+07:00[Asia/Ho_Chi_Minh]", "Sun May 04 | 11:11 AM"}
+                    });
+        }
+
+        @Parameterized.Parameter(0)
+        public String date;
+
+        @Parameterized.Parameter(1)
+        public String expected;
+
+        @Test
+        public void testGetDayTime() {
+            // Call the getDayTime method with the date parameter.
+            // The expected date and time is in the format "EEE MMM dd | hh:mm a".
+            assertEquals(expected, DateTimeUtil.getDayTime(date));
+        }
     }
 
-    @Test(expected = NullPointerException.class)
-    public void getDayOfWeek_null_date() {
-        DateTimeUtil.getDayOfWeek(null, TextStyle.SHORT);
-    }
-
-    @Test(expected = DateTimeParseException.class)
-    public void getDayOfWeek_empty_date() {
-        DateTimeUtil.getDayOfWeek("", TextStyle.SHORT);
-    }
-
+    /**
+     * This test is to check if the getDayTime method works correctly when the date string is in
+     * invalid format. It should throw a DateTimeParseException or NullPointerException.
+     */
     @Test
-    public void getDayOfWeek_past_date() {
-        String result = DateTimeUtil.getDayOfWeek(ISO_PAST_DATE_STRING, TextStyle.SHORT);
-        assertEquals("Fri", result);
+    public void getDayTime_invalidInput_throwException() {
+        assertThrows(
+                DateTimeParseException.class,
+                () -> DateTimeUtil.getDayTime("2025-05-04T11:11:00+07:00[Asia/INVALID_ZONE]"));
+        assertThrows(NullPointerException.class, () -> DateTimeUtil.getDayTime(null));
+        assertThrows(DateTimeParseException.class, () -> DateTimeUtil.getDayTime(""));
     }
 
-    @Test
-    public void getDayOfWeek_future_date() {
-        String result = DateTimeUtil.getDayOfWeek(ISO_FUTURE_DATE_STRING, TextStyle.SHORT);
-        assertEquals("Thu", result);
+    /**
+     * Test the getTimeZoneId method with different time zones to ensure it returns the correct time
+     * zone ID.
+     */
+    @RunWith(Parameterized.class)
+    public static class GetTimeZoneIdParameterizedTest {
+        /**
+         * Test data for getTimeZoneId method.
+         *
+         * <p>getTimeZoneId() = {0} with {0} is the time zone ID. We can use this to test the
+         * getTimeZoneId method with different time zones.
+         */
+        @Parameterized.Parameters(name = "{index}: getTimeZoneId() = {0}")
+        public static Collection<Object[]> data() {
+            return List.of(
+                    new Object[][] {
+                        {"Asia/Ho_Chi_Minh"},
+                        {"Asia/Tokyo"},
+                        {"America/New_York"},
+                        {"Europe/London"},
+                        {"Australia/Sydney"},
+                        {"America/Los_Angeles"},
+                        {"America/Chicago"},
+                        {"Brazil/Acre"}
+                    });
+        }
+
+        /** The time zone ID to be tested. This is the first parameter of the test. */
+        @Parameterized.Parameter(0)
+        public String timezone;
+
+        @Test
+        public void testGetTimezone() {
+            // Get TimeZone object for the current timezone to mock TimeZone.getDefault().
+            TimeZone timeZone = TimeZone.getTimeZone(ZoneId.of(timezone));
+            // We need to mock the TimeZone.getDefault() method to return the current time zone.
+            try (MockedStatic<TimeZone> tzMock = mockStatic(TimeZone.class)) {
+                // Mock the TimeZone.getDefault() method to return the current time zone.
+                tzMock.when(TimeZone::getDefault).thenReturn(timeZone);
+                // Check if the getTimeZoneId() method returns the correct time zone ID.
+                assertEquals(timezone, DateTimeUtil.getTimeZoneId());
+            }
+        }
     }
 
-    @Test
-    public void getDayTime_valid_date() {
-        // The format of output is "EEE MMMM dd | hh:mm a"
-        String result = DateTimeUtil.getDayTime(ISO_UTC_DATE_STRING);
-        assertEquals("Sun May 04 | 11:11 AM", result);
-    }
+    /**
+     * Test the getAnHourLater method with different time zones to ensure it returns the correct
+     * date and time in UTC format.
+     */
+    @RunWith(Parameterized.class)
+    public static class GetAnHourLaterParameterizedTest {
+        /**
+         * Test data for getAnHourLater method.
+         *
+         * <p>getAnHourLater() = {0} with {0} is the expected date and time in UTC format. We can
+         * use this to test the getAnHourLater method with different date and time.
+         */
+        @Parameterized.Parameters(name = "{index}: getAnHourLater() = {0}")
+        public static Collection<Object[]> data() {
+            return List.of(
+                    new Object[][] {
+                        {"2025-05-10T15:14:00Z"},
+                        {"2025-05-11T00:59:00Z"},
+                        {"2025-05-10T01:00:00Z"},
+                        {"2025-05-10T13:30:00Z"},
+                        {"2025-05-11T00:11:00Z"},
+                        {"2025-05-10T13:11:00Z"}
+                    });
+        }
 
-    @Test(expected = DateTimeParseException.class)
-    public void getDayTime_invalid_date_format() {
-        DateTimeUtil.getDayTime(INVALID_DATE_STRING);
-    }
+        @Parameterized.Parameter(0)
+        public String expected;
 
-    @Test(expected = NullPointerException.class)
-    public void getDayTime_null_date() {
-        DateTimeUtil.getDayTime(null);
-    }
+        @Test
+        public void testGetAnHourLate() {
+            // Parse the expected date and time and subtract one hour to get the assumed current
+            // date and time.
+            ZonedDateTime nowZdt = ZonedDateTime.parse(expected).minusHours(1);
 
-    @Test(expected = DateTimeParseException.class)
-    public void getDayTime_empty_date() {
-        DateTimeUtil.getDayTime("");
-    }
+            // Plus one hour to get the expected date and time, which is used to check the result of
+            // DateTimeUtil.getAnHourLater() method.
+            ZonedDateTime nowPlusOneZdt = nowZdt.plusHours(1);
 
-    @Test
-    public void getTimeZoneId() {
-        String result = DateTimeUtil.getTimeZoneId();
-        // Replace with the expected time zone ID for your test environment
-        assertEquals("Asia/Ho_Chi_Minh", result);
-    }
+            // Get TimeZone object for the current zoneId to mock TimeZone.getDefault(). The
+            // timezone should be UTC since we are testing the getAnHourLater method which
+            // returns the date and time in UTC format.
+            TimeZone timezone = TimeZone.getTimeZone(ZoneId.of("UTC"));
 
-    @Test
-    public void getAnHourLater() {
-        try (MockedStatic<DateTimeUtil> util = mockStatic(DateTimeUtil.class)) {
-            // Mock the static method getAnHourLater to return a specific date and time.
-            util.when(DateTimeUtil::getAnHourLater).thenReturn("2025-05-04T12:11:00Z");
+            try (MockedStatic<TimeZone> tzMock = mockStatic(TimeZone.class);
+                    MockedStatic<ZonedDateTime> zdtMock = mockStatic(ZonedDateTime.class)) {
+                // We need to mock the TimeZone.getDefault() method to return the current time zone.
+                tzMock.when(TimeZone::getDefault).thenReturn(timezone);
 
-            String result = DateTimeUtil.getAnHourLater();
+                // We need to mock the ZonedDateTime.now() method to return the current date and
+                // time in the current time zone. This is used to check the result of
+                // DateTimeUtil.getAnHourLater() method.
+                zdtMock.when(() -> ZonedDateTime.now(any(ZoneId.class))).thenReturn(nowZdt);
 
-            // Verify the result and assert that it matches the expected date and time.
-            assertEquals("2025-05-04T12:11:00Z", result);
+                // Since we mocked the ZonedDateTime.now() method to return the current date and
+                // time in the current time zone, we also need to mock the plusHours(1) method to
+                // return the expected date and time in the current time zone. This is used to check
+                // the result of DateTimeUtil.getAnHourLater() method.
+                Mockito.when(nowZdt.plusHours(1)).thenReturn(nowPlusOneZdt);
 
-            // Verify the result does not match an incorrect date and time.
-            assertNotEquals("2025-05-05T11:11:00Z", result);
+                assertEquals(expected, DateTimeUtil.getAnHourLater());
+            }
         }
     }
 
@@ -132,55 +259,54 @@ public class DateTimeUtilTest {
         }
     }
 
-    @Test
-    public void getHours_valid_date() {
-        try (MockedStatic<DateTimeUtil> util = mockStatic(DateTimeUtil.class)) {
-            util.when(() -> DateTimeUtil.getHours(ISO_UTC_DATE_STRING)).thenReturn("11 AM");
-            String result = DateTimeUtil.getHours(ISO_UTC_DATE_STRING);
-            assertEquals("11 AM", result);
+    /**
+     * Test the getHours method with a valid ISO date string to ensure it returns the correct
+     * formatted hour.
+     */
+    @RunWith(Parameterized.class)
+    public static class GetHoursParameterizedTest {
+        /**
+         * Test data for getHours method.
+         *
+         * <p>getHours({0}) = {1} with {0} is the date string, {1} is the expected formatted hour.
+         * We can use this to test the getHours method with different date strings.
+         */
+        @Parameterized.Parameters(name = "{index}: getHours({0}) = {1}")
+        public static Collection<Object[]> data() {
+            return List.of(
+                    new Object[][] {
+                        {"2025-05-04T11:11:00Z", "11 AM"},
+                        {"2025-05-04T23:59:00+07:00", "11 PM"},
+                        {"2025-05-04T00:00:00+00:00", "12 AM"}
+                    });
+        }
+
+        /** The date string to be tested. This is the first parameter of the test. */
+        @Parameterized.Parameter(0)
+        public String date;
+
+        /**
+         * The expected formatted hour. This is the second parameter of the test. The expected
+         * formatted hour is in the format "hh a".
+         */
+        @Parameterized.Parameter(1)
+        public String expected;
+
+        @Test
+        public void testGetHours() {
+            assertEquals(expected, DateTimeUtil.getHours(date));
         }
     }
 
-    @Test(expected = DateTimeParseException.class)
-    public void getHours_invalid_date_format() {
-        DateTimeUtil.getHours(INVALID_DATE_STRING);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void getHours_null_date() {
-        DateTimeUtil.getHours(null);
-    }
-
-    @Test(expected = DateTimeParseException.class)
-    public void getHours_empty_date() {
-        DateTimeUtil.getHours("");
-    }
-
+    /**
+     * This test is to check if the getHours method works correctly when the date string is in
+     * invalid format. It should throw a DateTimeParseException or NullPointerException.
+     */
     @Test
-    public void getDayOfWeek_timezone_independence_check() {
-        String plus7ZoneDayOfWeek =
-                DateTimeUtil.getDayOfWeek("2025-05-04T11:11:00+07:00", TextStyle.SHORT);
-        assertEquals("Sun", plus7ZoneDayOfWeek);
-
-        String minus7ZoneDayOfWeek =
-                DateTimeUtil.getDayOfWeek("2025-05-04T09:11:00-07:00", TextStyle.SHORT);
-        assertEquals("Sun", minus7ZoneDayOfWeek);
-
-        String plus9ZoneDayOfWeek =
-                DateTimeUtil.getDayOfWeek("2025-05-04T16:11:00+09:00", TextStyle.SHORT);
-        assertEquals("Sun", plus9ZoneDayOfWeek);
-    }
-
-    @Test
-    public void getDayTime_timezone_independence_check() {
-        String utcDayTime = DateTimeUtil.getDayTime("2025-05-04T11:11:00Z");
-        assertEquals("Sun May 04 | 11:11 AM", utcDayTime);
-
-        String plus7ZoneDayTime = DateTimeUtil.getDayTime("2025-05-04T11:11:00+07:00");
-        assertEquals("Sun May 04 | 11:11 AM", plus7ZoneDayTime);
-
-        String plus5ZoneDayTime = DateTimeUtil.getDayTime("2025-05-04T11:11:00+05:00");
-        assertEquals("Sun May 04 | 11:11 AM", plus5ZoneDayTime);
+    public void getHours_invalidInput_throwException() {
+        assertThrows(DateTimeParseException.class, () -> DateTimeUtil.getHours("invalid"));
+        assertThrows(DateTimeParseException.class, () -> DateTimeUtil.getHours(""));
+        assertThrows(NullPointerException.class, () -> DateTimeUtil.getHours(null));
     }
 
     @Test
@@ -413,7 +539,6 @@ public class DateTimeUtilTest {
             ZonedDateTime.of(2018, 1, 11, 22, 17, 0, 0, ZoneId.of("Australia/Sydney")),
             ZonedDateTime.of(2005, 2, 22, 23, 21, 0, 0, ZoneId.of("America/Los_Angeles")),
             ZonedDateTime.of(2016, 3, 30, 21, 11, 2, 0, ZoneId.of("America/Chicago")),
-            // Additional edge cases
             ZonedDateTime.of(2025, 3, 9, 1, 30, 0, 0, ZoneId.of("America/New_York")), // DST spring
             ZonedDateTime.of(2025, 11, 2, 1, 30, 0, 0, ZoneId.of("America/New_York")), // DST fall
             ZonedDateTime.of(2024, 2, 29, 23, 45, 0, 0, ZoneId.of("UTC")), // Leap year
