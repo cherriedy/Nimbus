@@ -19,13 +19,4 @@ public final class TemperatureConvertor {
                             case FAHRENHEIT -> (temperature - 32) * 5 / 9;
                         });
     }
-
-    /** Convert temperature to Celsius based on the Fahrenheit or Kelvin value. */
-    public static double toCelsius(double temperature, TemperatureUnit unit) {
-        return switch (unit) {
-            case CELSIUS -> temperature;
-            case KELVIN -> temperature + 273.15;
-            case FAHRENHEIT -> (temperature * 9 / 5) + 32;
-        };
-    }
 }
