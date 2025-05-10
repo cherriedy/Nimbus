@@ -17,12 +17,10 @@ import com.optlab.nimbus.data.model.common.WindSpeedUnit;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.ResultSet;
-
-public class UserPrefsManagerTest {
+public class UserPreferencesManagerTest {
     private SharedPreferences mockSharedPreferences;
     private SharedPreferences.Editor mockEditor;
-    private UserPrefsManager unitUserPrefsManager;
+    private UserPreferencesManager unitUserPreferencesManager;
 
     @Before
     public void setUp() {
@@ -46,25 +44,25 @@ public class UserPrefsManagerTest {
         // mockEditor again. This is useful for method chaining.
         when(mockEditor.putString(anyString(), anyString())).thenReturn(mockEditor);
 
-        unitUserPrefsManager = new UserPrefsManager(mockContext);
+        unitUserPreferencesManager = new UserPreferencesManager(mockContext);
     }
 
     @Test
     public void setUnit_valid_key_unit() {
-        unitUserPrefsManager.setUnit(UserPrefsManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS);
+        unitUserPreferencesManager.setUnit(UserPreferencesManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS);
 
         // Verify that the putString method was called on the mockEditor with the correct key and
         // value. The key should be UserPrefsManager.TEMPERATURE_UNIT and the value should be
         // TemperatureUnit.CELSIUS.name().
         verify(mockEditor)
-                .putString(UserPrefsManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name());
+                .putString(UserPreferencesManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name());
 
         verify(mockEditor).apply(); // Verify that apply() was called on the mockEditor.
     }
 
     @Test(expected = NullPointerException.class)
     public void setUnit_null_key() {
-        unitUserPrefsManager.setUnit(null, TemperatureUnit.CELSIUS);
+        unitUserPreferencesManager.setUnit(null, TemperatureUnit.CELSIUS);
 
         verify(mockEditor).putString(null, TemperatureUnit.CELSIUS.name());
         verify(mockEditor).apply();
@@ -72,59 +70,59 @@ public class UserPrefsManagerTest {
 
     @Test(expected = NullPointerException.class)
     public void setUnit_null_unit() {
-        unitUserPrefsManager.setUnit(UserPrefsManager.PRESSURE_UNIT, null);
+        unitUserPreferencesManager.setUnit(UserPreferencesManager.PRESSURE_UNIT, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void setUnit_empty_key() {
-        unitUserPrefsManager.setUnit(null, WindSpeedUnit.KNOTS);
+        unitUserPreferencesManager.setUnit(null, WindSpeedUnit.KNOTS);
     }
 
     @Test(expected = NullPointerException.class)
     public void setUnit_whitespace_key() {
-        unitUserPrefsManager.setUnit(" ", PressureUnit.BAR);
+        unitUserPreferencesManager.setUnit(" ", PressureUnit.BAR);
     }
 
     @Test
     public void getUnit_valid_key_enum_default() {
         when(mockSharedPreferences.getString(
-                        UserPrefsManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()))
+                        UserPreferencesManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()))
                 .thenReturn(TemperatureUnit.FAHRENHEIT.name());
 
-        Enum result = unitUserPrefsManager.getUnit(UserPrefsManager.TEMPERATURE_UNIT);
+        Enum result = unitUserPreferencesManager.getUnit(UserPreferencesManager.TEMPERATURE_UNIT);
 
         assertEquals(TemperatureUnit.FAHRENHEIT, result);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void getUnit_nonexistent_key() {
-        unitUserPrefsManager.getUnit("non_exists");
+        unitUserPreferencesManager.getUnit("non_exists");
     }
 
     @Test(expected = NullPointerException.class)
     public void getUnit_null_key() {
-        unitUserPrefsManager.getUnit(null);
+        unitUserPreferencesManager.getUnit(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void getUnit_empty_key() {
-        unitUserPrefsManager.getUnit("");
+        unitUserPreferencesManager.getUnit("");
     }
 
     @Test(expected = NullPointerException.class)
     public void getUnit_whitespace_key() {
-        unitUserPrefsManager.getUnit(" ");
+        unitUserPreferencesManager.getUnit(" ");
     }
 
     /** Test if a value set by setUnit can be retrieved correctly by getUnit using same key. */
     @Test
     public void getUnit_setUnit_consistency() {
         when(mockSharedPreferences.getString(
-                        UserPrefsManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()))
+                        UserPreferencesManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()))
                 .thenReturn(TemperatureUnit.KELVIN.name());
 
-        unitUserPrefsManager.setUnit(UserPrefsManager.TEMPERATURE_UNIT, TemperatureUnit.KELVIN);
-        Enum result = unitUserPrefsManager.getUnit(UserPrefsManager.TEMPERATURE_UNIT);
+        unitUserPreferencesManager.setUnit(UserPreferencesManager.TEMPERATURE_UNIT, TemperatureUnit.KELVIN);
+        Enum result = unitUserPreferencesManager.getUnit(UserPreferencesManager.TEMPERATURE_UNIT);
         assertEquals(TemperatureUnit.KELVIN, result);
     }
 
