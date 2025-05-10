@@ -3,7 +3,7 @@ package com.optlab.nimbus.di;
 import android.content.Context;
 
 import com.optlab.nimbus.data.preferences.SecurePrefsManager;
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 
 import javax.inject.Singleton;
 
@@ -25,7 +25,7 @@ public class SharedPreferencesModule {
 
     @Provides
     @Singleton
-    public static UserPrefsManager provideUserPrefsManager(@ApplicationContext Context context) {
-        return new UserPrefsManager(context);
+    public static UserPreferencesManager provideUserPrefsManager(@ApplicationContext Context context) {
+        return new UserPreferencesManager(context);
     }
 }

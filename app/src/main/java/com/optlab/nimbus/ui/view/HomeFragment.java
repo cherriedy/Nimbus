@@ -21,7 +21,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.databinding.FragmentMainDashboardBinding;
 import com.optlab.nimbus.ui.adapter.HourlyForecastAdapater;
 import com.optlab.nimbus.ui.decoration.LinearSpacingStrategy;
@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
     private HourlyForecastAdapater adapter;
     private FusedLocationProviderClient fusedLocationClient;
 
-    @Inject protected UserPrefsManager userPrefs;
+    @Inject protected UserPreferencesManager userPrefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

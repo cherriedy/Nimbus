@@ -2,7 +2,7 @@ package com.optlab.nimbus.di;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 import com.optlab.nimbus.worker.FetchingWorkerFactory;
 
@@ -19,7 +19,7 @@ public class WorkerModule {
     @Provides
     @Singleton
     public static FetchingWorkerFactory provideFetchingWorkerFactory(
-            @NonNull WeatherRepository repository, @NonNull UserPrefsManager userPrefs) {
+            @NonNull WeatherRepository repository, @NonNull UserPreferencesManager userPrefs) {
         return new FetchingWorkerFactory(repository, userPrefs);
     }
 }

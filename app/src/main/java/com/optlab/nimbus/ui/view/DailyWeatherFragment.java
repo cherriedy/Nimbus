@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.databinding.FragmentDailyWeatherBinding;
 import com.optlab.nimbus.ui.adapter.DailyForecastAdapter;
 import com.optlab.nimbus.ui.decoration.LinearSpacingStrategy;
@@ -29,7 +29,7 @@ public class DailyWeatherFragment extends Fragment {
     private DailyWeatherViewModel viewModel;
     private DailyForecastAdapter adapter;
 
-    @Inject protected UserPrefsManager userPrefs;
+    @Inject protected UserPreferencesManager userPrefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

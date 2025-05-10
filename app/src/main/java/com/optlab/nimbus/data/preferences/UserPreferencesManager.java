@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @noinspection rawtypes
  */
-public class UserPrefsManager {
+public class UserPreferencesManager implements UserPreferences {
     public static final String TEMPERATURE_UNIT = "temperature_unit";
     public static final String WIND_SPEED_UNIT = "wind_speed_unit";
     public static final String PRESSURE_UNIT = "pressure_unit";
@@ -38,7 +38,7 @@ public class UserPrefsManager {
     private final SharedPreferences userPrefs;
     private final Gson gson;
 
-    public UserPrefsManager(@NonNull Context context) {
+    public UserPreferencesManager(@NonNull Context context) {
         this.userPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.gson = new Gson();
         initUnits();
@@ -50,6 +50,7 @@ public class UserPrefsManager {
      *
      * @param coordinates the location to be added
      */
+    @Override
     public void setLocation(@NonNull Coordinates coordinates) {
         List<String> locations = getLocations();
         String json = gson.toJson(coordinates);
@@ -67,6 +68,7 @@ public class UserPrefsManager {
      * @param position the position of the location in the list
      * @return the location at the given position
      */
+    @Override
     public Coordinates getLocation(int position) {
         List<String> locations = getLocations();
         if (locations.isEmpty()) {
@@ -81,6 +83,7 @@ public class UserPrefsManager {
      *
      * @return the list of locations
      */
+    @Override
     public List<String> getLocations() {
         String json = userPrefs.getString(LOCATIONS, null);
         if (json == null) {
@@ -113,6 +116,7 @@ public class UserPrefsManager {
      * @param key the key for the unit
      * @param unit the unit to be set
      */
+    @Override
     public void setUnit(@NonNull String key, @NonNull Enum unit) {
         assertValidKey(key);
         if (unit == null) {
@@ -143,6 +147,7 @@ public class UserPrefsManager {
      * @param key the key for the unit
      * @return the unit for the given key
      */
+    @Override
     public Enum getUnit(@NonNull String key) {
         assertValidKey(key);
         return switch (key) {
@@ -163,14 +168,32 @@ public class UserPrefsManager {
         };
     }
 
+    /**
+     * Get the temperature unit.
+     *
+     * @return the temperature unit
+     */
+    @Override
     public TemperatureUnit getTemperatureUnit() {
         return (TemperatureUnit) getUnit(TEMPERATURE_UNIT);
     }
 
+    /**
+     * Get the wind speed unit.
+     *
+     * @return the wind speed unit
+     */
+    @Override
     public WindSpeedUnit getWindSpeedUnit() {
         return (WindSpeedUnit) getUnit(WIND_SPEED_UNIT);
     }
 
+    /**
+     * Get the pressure unit.
+     *
+     * @return the pressure unit
+     */
+    @Override
     public PressureUnit getPressureUnit() {
         return (PressureUnit) getUnit(PRESSURE_UNIT);
     }

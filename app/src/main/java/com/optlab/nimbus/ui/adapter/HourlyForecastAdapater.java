@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.databinding.LayoutItemHourlyWeatherBinding;
 
 public class HourlyForecastAdapater
@@ -31,9 +31,9 @@ public class HourlyForecastAdapater
                 }
             };
 
-    protected final UserPrefsManager userPrefs;
+    protected final UserPreferencesManager userPrefs;
 
-    public HourlyForecastAdapater(UserPrefsManager userPrefs) {
+    public HourlyForecastAdapater(UserPreferencesManager userPrefs) {
         super(CALL_BACK);
         this.userPrefs = userPrefs;
     }

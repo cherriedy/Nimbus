@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.databinding.LayoutItemDailyWeatherBinding;
 
 public class DailyForecastAdapter
@@ -31,9 +31,9 @@ public class DailyForecastAdapter
                 }
             };
 
-    private final UserPrefsManager userPrefs;
+    private final UserPreferencesManager userPrefs;
 
-    public DailyForecastAdapter(@NonNull UserPrefsManager userPrefs) {
+    public DailyForecastAdapter(@NonNull UserPreferencesManager userPrefs) {
         super(CALL_BACK);
         this.userPrefs = userPrefs;
     }

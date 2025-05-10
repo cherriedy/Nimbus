@@ -117,6 +117,9 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter("weather_icon")
     public static void setWeatherIcon(@NonNull ImageView view, int icon) {
+        if (icon == 0) {
+            return;
+        }
         Glide.with(view.getContext()).load(icon).centerCrop().into(view);
     }
 

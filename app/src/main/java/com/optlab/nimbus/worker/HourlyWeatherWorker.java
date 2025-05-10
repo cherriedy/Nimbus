@@ -7,7 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferences;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -16,13 +17,13 @@ import timber.log.Timber;
 
 public class HourlyWeatherWorker extends Worker {
     private final WeatherRepository repository;
-    private final UserPrefsManager userPrefs;
+    private final UserPreferences userPrefs;
 
     public HourlyWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
             @NonNull WeatherRepository repository,
-            @NonNull UserPrefsManager userPrefs) {
+            @NonNull UserPreferences userPrefs) {
         super(context, workerParams);
         this.repository = repository;
         this.userPrefs = userPrefs;

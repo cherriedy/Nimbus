@@ -10,7 +10,7 @@
 
         <variable
             name="userPrefs"
-            type="com.optlab.nimbus.data.preferences.UserPrefsManager" />
+            type="com.optlab.nimbus.data.preferences.UserPreferencesManager" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -11,7 +11,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.optlab.nimbus.constant.ResponseConstant;
-import com.optlab.nimbus.data.preferences.UserPrefsManager;
+import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.worker.CurrentWeatherWorker;
 import com.optlab.nimbus.worker.DailyWeatherWorker;
 import com.optlab.nimbus.worker.FetchingWorkerFactory;
@@ -32,7 +32,7 @@ import timber.log.Timber;
  */
 @HiltAndroidApp // Annotation to trigger Hilt's code generation and setup.
 public class NimbusApplication extends Application implements Configuration.Provider {
-    @Inject protected UserPrefsManager userPrefs;
+    @Inject protected UserPreferencesManager userPrefs;
     @Inject protected FetchingWorkerFactory fetchingWorkerFactory;
 
     private static final String CURRENT_WEATHER_SYNC = "CurrentWeatherSync";
