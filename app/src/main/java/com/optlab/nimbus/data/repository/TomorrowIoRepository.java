@@ -108,7 +108,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      * @param type the type of weather data (DAILY, HOURLY, CURRENT)
      * @return an Observable that emits a list of UnifiedWeatherResponse
      */
-    private Observable<List<WeatherResponse>> getCachedWeather(@NonNull WeatherEntity.Type type) {
+    public Observable<List<WeatherResponse>> getCachedWeather(@NonNull WeatherEntity.Type type) {
         return Observable.fromCallable(
                 () -> {
                     WeatherEntity entity = weatherDao.getLatestWeather(type);

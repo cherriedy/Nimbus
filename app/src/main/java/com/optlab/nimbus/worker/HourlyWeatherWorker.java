@@ -7,9 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.optlab.nimbus.data.model.common.WeatherResponse;
 import com.optlab.nimbus.data.preferences.UserPreferences;
 import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.data.repository.WeatherRepository;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -29,23 +32,29 @@ public class HourlyWeatherWorker extends Worker {
         this.userPrefs = userPrefs;
     }
 
-    /**
-     * @noinspection ResultOfMethodCallIgnored
-     */
-    @SuppressLint("CheckResult")
     @NonNull
     @Override
+    @SuppressLint({"CheckResult"})
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public Result doWork() {
         try {
             repository
                     .fetchAndCacheHourlyWeather(userPrefs.getLocation(0))
                     .subscribeOn(Schedulers.io())
-                    .blockingFirst();
-            Timber.d("Hourly weather data fetched and cached successfully.");
+                    .subscribe(this::onSuccess, this::onError);
+            Timber.d("Periodic work request for hourly weather data completed");
             return Result.success();
         } catch (Exception e) {
-            Timber.e("Error fetching hourly weather data: %s", e.getMessage());
+            Timber.e("Hourly weather sync failed: %s", e.getMessage());
             return Result.failure();
         }
+    }
+
+    private void onError(Throwable throwable) {
+        Timber.e("Error fetching hourly weather data: %s", throwable.getMessage());
+    }
+
+    private void onSuccess(List<WeatherResponse> weatherResponses) {
+        Timber.d("Hourly weather data fetched successfully");
     }
 }

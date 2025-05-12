@@ -1,7 +1,10 @@
 [versions]
 agp = "8.9.2"
 core = "1.6.1"
+hamcrest = "2.2"
+hamcrestVersion = "2.2"
 hiltAndroid = "2.56.1"
+hiltAndroidTesting = "2.51"
 kotlin = "2.1.21-RC"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -37,12 +40,17 @@ roomCompiler = "2.7.1"
 roomRxjava3 = "2.7.1"
 workRuntime = "2.10.1"
 workTesting = "2.10.1"
+awaitility = "4.3.0"
 
 [libraries]
 androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+hamcrest-hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrestVersion" }
+hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroidTesting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -83,6 +91,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "roomRxjava3" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "workRuntime" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "workTesting" }
+awaitility = { group = "org.awaitility", name = "awaitility", version.ref = "awaitility" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

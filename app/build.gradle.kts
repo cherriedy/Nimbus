@@ -17,8 +17,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_KEY", "\"${project.findProperty("API_KEY") ?: ""}\"")
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.optlab.nimbus.di.CustomTestRunner"
     }
 
     buildTypes {
@@ -42,6 +42,12 @@ android {
         dataBinding = true
         buildConfig = true
     }
+}
+
+configurations.all {
+    exclude(group = "org.hamcrest", module = "hamcrest-core")
+    exclude(group = "org.hamcrest", module = "hamcrest-library")
+    exclude(group = "org.hamcrest", module = "hamcrest")
 }
 
 dependencies {
@@ -88,7 +94,7 @@ dependencies {
     // --- Dependency Injection (Hilt) ---
     implementation(libs.com.google.dagger.hilt.android.gradle.plugin)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    annotationProcessor(libs.hilt.android.compiler)
 
     // --- Networking (Retrofit, Gson, Logging) ---
     implementation(libs.retrofit)
@@ -115,7 +121,12 @@ dependencies {
     // --- Testing ---
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
+    testImplementation(libs.hamcrest)
+    androidTestImplementation(libs.hamcrest.hamcrest)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.awaitility)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestAnnotationProcessor(libs.hilt.android.compiler)
 }
