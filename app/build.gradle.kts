@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.rxandroid)
     implementation(libs.rxjava)
     implementation(libs.rxjava3.retrofit.adapter)
+    implementation (libs.androidx.lifecycle.reactivestreams)
 
     // --- Image Loading ---
     implementation(libs.glide)
@@ -129,4 +130,5 @@ dependencies {
     androidTestImplementation(libs.awaitility)
     androidTestImplementation(libs.hilt.android.testing)
     androidTestAnnotationProcessor(libs.hilt.android.compiler)
+
 }

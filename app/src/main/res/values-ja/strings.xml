@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Nimbus</string>
-    <string name="hello_blank_fragment">空のフラグメント</string>
 
-    <string name="mic_desc" translatable="false">検索用マイク</string>
     <string name="day">日</string>
     <string name="pressure">気圧</string>
     <string name="wind">風</string>
@@ -41,6 +39,19 @@
     <string name="light_ice_pellets">弱い氷あられ</string>
     <string name="thunderstorm">雷雨</string>
     <string name="unknown">不明</string>
-    <string name="today">今日</string>
+    <string name="hourly_forecast">時間ごとの予報</string>
     <string name="tomorrow">明日</string>
+    <string name="more">もっと見る</string>
+    <string name="expect_hot_conditions_with_temperatures_ranging_from">"気温は "</string>
+    <string name="high_humidity_around">"湿度は "</string>
+    <string name="will_make_it_feel_even_warmer">%で、体感温度はさらに高くなるでしょう。 </string>
+    <string name="the_uv_index_will_be_very_high">紫外線指数は非常に高いでしょう (</string>
+    <string name="so_remember_to_use_sun_protection">)ので、日焼け対策を忘れないでください。 </string>
+    <string name="there_is_a">"</string>
+    <string name="chance_of_rain_so_keep_an_umbrella_handy">% の降水確率がありますので、傘をご用意ください。 </string>
+    <string name="the_chance_of_rain_is_low_at">"降水確率は低く "</string>
+    <string name="winds_will_be_around">"風速は "</string>
+    <string name="offering_slight_relief_from_the_heat">" で、暑さを少し和らげるでしょう。 "</string>
+    <string name="daily_summary">日ごとの要約</string>
+    <string name="to">" ～ "</string>
 </resources>

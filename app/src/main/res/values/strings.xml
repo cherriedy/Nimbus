@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Nimbus</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
-    <string name="mic_desc" translatable="false">mic for search</string>
     <string name="day">day</string>
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>
@@ -40,6 +39,19 @@
     <string name="light_ice_pellets">Light Ice Pellets</string>
     <string name="thunderstorm">Thunderstorm</string>
     <string name="unknown">Unknown</string>
-    <string name="today">Today</string>
+    <string name="hourly_forecast">Hourly forecast</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="more">More</string>
+    <string name="expect_hot_conditions_with_temperatures_ranging_from">"Expect hot conditions with temperatures ranging from "</string>
+    <string name="high_humidity_around">"High humidity around "</string>
+    <string name="will_make_it_feel_even_warmer">% will make it feel even warmer. </string>
+    <string name="the_uv_index_will_be_very_high">The UV index will be very high (</string>
+    <string name="so_remember_to_use_sun_protection">), so remember to use sun protection. </string>
+    <string name="there_is_a">"There is a "</string>
+    <string name="chance_of_rain_so_keep_an_umbrella_handy">"% chance of rain, so keep an umbrella handy. "</string>
+    <string name="the_chance_of_rain_is_low_at">"The chance of rain is low at "</string>
+    <string name="winds_will_be_around">"Winds will be around "</string>
+    <string name="offering_slight_relief_from_the_heat">" , offering slight relief from the heat. "</string>
+    <string name="daily_summary">Daily Summary</string>
+    <string name="to">" to "</string>
 </resources>

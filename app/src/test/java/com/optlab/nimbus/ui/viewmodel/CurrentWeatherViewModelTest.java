@@ -2,7 +2,7 @@ package com.optlab.nimbus.ui.viewmodel;
 
 import org.junit.Test;
 
-public class HomeViewModelTest {
+public class CurrentWeatherViewModelTest {
 
     @Test
     public void successful_weather_data_retrieval() {

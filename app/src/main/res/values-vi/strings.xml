@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Nimbus</string>
-    <string name="hello_blank_fragment">Xin chào fragment trống</string>
 
-    <string name="mic_desc" translatable="false">mic để tìm kiếm</string>
     <string name="day">ngày</string>
     <string name="pressure">Áp suất</string>
     <string name="wind">Tốc độ gió</string>
@@ -41,6 +39,19 @@
     <string name="light_ice_pellets">Mưa đá nhỏ nhẹ</string>
     <string name="thunderstorm">Bão có sấm sét</string>
     <string name="unknown">Không rõ</string>
-    <string name="today">Hôm nay</string>
+    <string name="hourly_forecast">Dự báo hàng giờ</string>
     <string name="tomorrow">Ngày mai</string>
+    <string name="more">Xem thêm</string>
+    <string name="expect_hot_conditions_with_temperatures_ranging_from">"Dự báo thời tiết nóng với nhiệt độ dao động từ "</string>
+    <string name="high_humidity_around">"Độ ẩm cao khoảng "</string>
+    <string name="will_make_it_feel_even_warmer">% sẽ làm cho cảm giác nóng hơn nữa. </string>
+    <string name="the_uv_index_will_be_very_high">Chỉ số UV sẽ rất cao (</string>
+    <string name="so_remember_to_use_sun_protection">), vì vậy hãy nhớ sử dụng kem chống nắng. </string>
+    <string name="there_is_a">"Có "</string>
+    <string name="chance_of_rain_so_keep_an_umbrella_handy">% khả năng mưa, vì vậy hãy mang theo ô. </string>
+    <string name="the_chance_of_rain_is_low_at">"Khả năng mưa thấp, khoảng "</string>
+    <string name="winds_will_be_around">"Gió sẽ khoảng "</string>
+    <string name="offering_slight_relief_from_the_heat">" , giúp giảm bớt cái nóng một chút. "</string>
+    <string name="daily_summary">Tóm tắt</string>
+    <string name="to">" to "</string>
 </resources>

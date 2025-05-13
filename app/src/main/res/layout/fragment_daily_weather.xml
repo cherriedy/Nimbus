@@ -81,11 +81,11 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="@{viewModel.daily.first.weatherDescription}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@id/tv_temperature"
-                    app:layout_constraintTop_toBottomOf="@id/tv_temperature" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_temperature"
+                    app:text_resource="@{viewModel.daily.first.weatherDescription}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -109,7 +109,7 @@
                         android:layout_width="@dimen/spacing_xxlarge"
                         android:layout_height="@dimen/spacing_xxlarge"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/pressure_icon" />
+                        android:src="@drawable/ic_pressure" />
 
                     <TextView
                         android:id="@+id/tv_rain_percentage"
@@ -141,7 +141,7 @@
                         android:layout_height="@dimen/spacing_xxlarge"
                         android:importantForAccessibility="no"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/wind" />
+                        android:src="@drawable/ic_wind" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,7 +171,7 @@
                         android:layout_width="@dimen/spacing_xxlarge"
                         android:layout_height="@dimen/spacing_xxlarge"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/humidity" />
+                        android:src="@drawable/ic_humidity" />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -3,6 +3,7 @@ package com.optlab.nimbus.data.model.mapper;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.common.WeatherResponse;
@@ -25,8 +26,7 @@ public final class TomorrowIoMapper {
      * @param response TomorrowIoResponse
      * @return List of WeatherResponse
      */
-    public static List<WeatherResponse> map(
-            @NonNull Context context, @NonNull TomorrowIoResponse response) {
+    public static List<WeatherResponse> map(@NonNull TomorrowIoResponse response) {
         // List is used to store the weather summaries (daily weather data)
         List<WeatherResponse> weatherSummaries = new ArrayList<>();
 
@@ -49,8 +49,7 @@ public final class TomorrowIoMapper {
                             int weatherCode = interval.values().weatherCode();
                             weather.setWeatherCode(weatherCode);
                             weather.setWeatherIcon(mapWeatherCodeToIcon(weatherCode));
-                            weather.setWeatherDescription(
-                                    mapWeatherCodeToDescription(context, weatherCode));
+                            weather.setWeatherDescription(mapWeatherCodeToDescription(weatherCode));
 
                             weatherSummaries.add(weather); // Add the weather summary to the list
                         });
@@ -65,55 +64,66 @@ public final class TomorrowIoMapper {
      */
     private static int mapWeatherCodeToIcon(int code) {
         return switch (code) {
-            case 1000 -> R.drawable.ic_clear_day;
-            case 1100, 1101, 1001 -> R.drawable.cloudy;
-            case 1102 -> R.drawable.ic_broken_clouds;
-            case 2000, 2100 -> R.drawable.ic_launcher_foreground; // Replace with actual fog icon
-            case 4000 -> R.drawable.ic_drizzle;
-            case 4001, 4200, 4201 -> R.drawable.ic_rain;
-            case 5000 -> R.drawable.ic_snow;
-            case 5100 -> R.drawable.ic_snow; // Light snow
-            case 5101 -> R.drawable.ic_rain; // Heavy snow
-            case 6000, 6001, 6200, 6201 -> R.drawable.ic_rain; // Freezing rain
-            case 8000 -> R.drawable.ic_thunderstorm;
-            default -> R.drawable.ic_launcher_foreground; // Replace with a generic unknown icon
+            case 1000 -> R.drawable.ic_large_2x_10000_clear;
+            case 1001 -> R.drawable.ic_large_2x_10010_cloudy;
+            case 1100 -> R.drawable.ic_large_2x_11000_mostly_clear;
+            case 1101 -> R.drawable.ic_large_2x_11010_partly_cloudy;
+            case 1102 -> R.drawable.ic_large_2x_11020_mostly_cloudy;
+            case 2000 -> R.drawable.ic_large_2x_20000_fog;
+            case 2100 -> R.drawable.ic_large_2x_21000_light_fog;
+            case 4000 -> R.drawable.ic_large_2x_40000_drizzle;
+            case 4001 -> R.drawable.ic_large_2x_40010_rain;
+            case 4200 -> R.drawable.ic_large_2x_42000_light_rain;
+            case 4201 -> R.drawable.ic_large_2x_42010_heavy_rain;
+            case 5000 -> R.drawable.ic_large_2x_50000_snow;
+            case 5001 -> R.drawable.ic_large_2x_50010_flurries;
+            case 5100 -> R.drawable.ic_large_2x_51000_light_snow;
+            case 5101 -> R.drawable.ic_large_2x_51010_heavy_snow;
+            case 6000 -> R.drawable.ic_large_2x_60000_freezing_rain_drizzle;
+            case 6001 -> R.drawable.ic_large_2x_60010_freezing_rain;
+            case 6200 -> R.drawable.ic_large_2x_62000_light_freezing_rain;
+            case 6201 -> R.drawable.ic_large_2x_62010_heavy_freezing_rain;
+            case 7000 -> R.drawable.ic_large_2x_70000_ice_pellets;
+            case 7101 -> R.drawable.ic_large_2x_71010_heavy_ice_pellets;
+            case 7102 -> R.drawable.ic_large_2x_71020_light_ice_pellets;
+            case 8000 -> R.drawable.ic_large_2x_80000_thunderstorm;
+            default -> throw new IllegalStateException("Unexpected value: " + code);
         };
     }
 
     /**
-     * Maps the weather code to a description string.
+     * Maps the weather code to a string resource ID.
      *
-     * @param context the context to access resources
      * @param code the weather code to map
-     * @return the description string for the weather code
+     * @return the string resource ID for the weather description
      */
-    @NonNull
-    private static String mapWeatherCodeToDescription(Context context, int code) {
+    @StringRes
+    private static int mapWeatherCodeToDescription(int code) {
         return switch (code) {
-            case 1000 -> context.getString(R.string.clear_sunny);
-            case 1100 -> context.getString(R.string.mostly_clear);
-            case 1101 -> context.getString(R.string.partly_cloudy);
-            case 1102 -> context.getString(R.string.mostly_cloudy);
-            case 1001 -> context.getString(R.string.cloudy);
-            case 2000 -> context.getString(R.string.fog);
-            case 2100 -> context.getString(R.string.light_fog);
-            case 4000 -> context.getString(R.string.drizzle);
-            case 4001 -> context.getString(R.string.rain);
-            case 4200 -> context.getString(R.string.light_rain);
-            case 4201 -> context.getString(R.string.heavy_rain);
-            case 5000 -> context.getString(R.string.snow);
-            case 5001 -> context.getString(R.string.flurries);
-            case 5100 -> context.getString(R.string.light_snow);
-            case 5101 -> context.getString(R.string.heavy_snow);
-            case 6000 -> context.getString(R.string.freezing_drizzle);
-            case 6001 -> context.getString(R.string.freezing_rain);
-            case 6200 -> context.getString(R.string.light_freezing_rain);
-            case 6201 -> context.getString(R.string.heavy_freezing_rain);
-            case 7000 -> context.getString(R.string.ice_pellets);
-            case 7101 -> context.getString(R.string.heavy_ice_pellets);
-            case 7102 -> context.getString(R.string.light_ice_pellets);
-            case 8000 -> context.getString(R.string.thunderstorm);
-            default -> context.getString(R.string.unknown);
+            case 1000 -> R.string.clear_sunny;
+            case 1100 -> R.string.mostly_clear;
+            case 1101 -> R.string.partly_cloudy;
+            case 1102 -> R.string.mostly_cloudy;
+            case 1001 -> R.string.cloudy;
+            case 2000 -> R.string.fog;
+            case 2100 -> R.string.light_fog;
+            case 4000 -> R.string.drizzle;
+            case 4001 -> R.string.rain;
+            case 4200 -> R.string.light_rain;
+            case 4201 -> R.string.heavy_rain;
+            case 5000 -> R.string.snow;
+            case 5001 -> R.string.flurries;
+            case 5100 -> R.string.light_snow;
+            case 5101 -> R.string.heavy_snow;
+            case 6000 -> R.string.freezing_drizzle;
+            case 6001 -> R.string.freezing_rain;
+            case 6200 -> R.string.light_freezing_rain;
+            case 6201 -> R.string.heavy_freezing_rain;
+            case 7000 -> R.string.ice_pellets;
+            case 7101 -> R.string.heavy_ice_pellets;
+            case 7102 -> R.string.light_ice_pellets;
+            case 8000 -> R.string.thunderstorm;
+            default -> R.string.unknown;
         };
     }
 }

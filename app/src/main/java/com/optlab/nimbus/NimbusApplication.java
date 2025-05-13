@@ -90,8 +90,9 @@ public class NimbusApplication extends Application implements Configuration.Prov
      *
      * <p>This method creates a periodic work request for the HourlyWeatherWorker class, which is
      * responsible for fetching hourly weather data. The request is set to run at a specified
-     * interval defined by the CURRENT_EXPIRY_TIME constant. When the device is connected to the
-     * internet, the worker will be triggered to fetch the latest hourly weather data.
+     * interval defined by the CURRENT_EXPIRY_TIME constant. The flex interval is set to one-third
+     * of the current expiry time. When the device is connected to the internet, the worker will be
+     * triggered to fetch the latest hourly weather data.
      *
      * @return A PeriodicWorkRequest object for hourly weather synchronization.
      */
@@ -100,6 +101,8 @@ public class NimbusApplication extends Application implements Configuration.Prov
         return new PeriodicWorkRequest.Builder(
                         HourlyWeatherWorker.class,
                         ResponseConstant.CURRENT_EXPIRY_TIME,
+                        TimeUnit.MILLISECONDS,
+                        ResponseConstant.CURRENT_EXPIRY_TIME / 3,
                         TimeUnit.MILLISECONDS)
                 .setConstraints(NETWORK_CONNECTION_CONSTRAINT)
                 .build();
@@ -110,8 +113,9 @@ public class NimbusApplication extends Application implements Configuration.Prov
      *
      * <p>This method creates a periodic work request for the CurrentWeatherWorker class, which is
      * responsible for fetching current weather data. The request is set to run at a specified
-     * interval defined by the CURRENT_EXPIRY_TIME constant. When the device is connected to the
-     * internet, the worker will be triggered to fetch the latest current weather data.
+     * interval defined by the CURRENT_EXPIRY_TIME constant. The flex interval is set to one-third
+     * of the current expiry time. When the device is connected to the internet, the worker will be
+     * triggered to fetch the latest current weather data.
      *
      * @return A PeriodicWorkRequest object for current weather synchronization.
      */
@@ -120,6 +124,8 @@ public class NimbusApplication extends Application implements Configuration.Prov
         return new PeriodicWorkRequest.Builder(
                         CurrentWeatherWorker.class,
                         ResponseConstant.CURRENT_EXPIRY_TIME,
+                        TimeUnit.MILLISECONDS,
+                        ResponseConstant.CURRENT_EXPIRY_TIME / 3,
                         TimeUnit.MILLISECONDS)
                 .setConstraints(NETWORK_CONNECTION_CONSTRAINT)
                 .build();

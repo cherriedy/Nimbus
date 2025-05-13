@@ -146,4 +146,17 @@ public class UnitBindingAdapter {
         String updatedAt = view.getContext().getString(R.string.updated_at);
         view.setText(updatedAt + ": " + DateTimeUtil.getDayTime(dateTime));
     }
+
+    /**
+     * Sets the text resource for the TextView.
+     *
+     * @param view the TextView to set the text on
+     * @param resId the resource ID of the string to set
+     */
+    @BindingAdapter("text_resource")
+    public static void setTextResource(@NonNull TextView view, int resId) {
+        if (resId != 0) {
+            view.setText(view.getContext().getString(resId));
+        }
+    }
 }

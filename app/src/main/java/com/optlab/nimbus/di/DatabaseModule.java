@@ -7,6 +7,7 @@ import androidx.room.Room;
 
 import com.optlab.nimbus.data.local.dao.WeatherDao;
 import com.optlab.nimbus.data.local.database.WeatherDatabase;
+import com.optlab.nimbus.data.local.entity.Converters;
 
 import javax.inject.Singleton;
 

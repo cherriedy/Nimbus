@@ -41,12 +41,12 @@ public class DailyWeatherViewModel extends ViewModel {
     }
 
     public void fetchDailyWeatherByLocation(@NonNull Coordinates coordinates) {
-        disposable.add(
-                repository
-                        .getDailyWeatherByLocation(coordinates)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::onDailyFetchedSuccessful, this::onDailyFetchedFail));
+        // disposable.add(
+        //         repository
+        //                 .getDailyWeather(coordinates)
+        //                 .subscribeOn(Schedulers.io())
+        //                 .observeOn(AndroidSchedulers.mainThread())
+        //                 .subscribe(this::onDailyFetchedSuccessful, this::onDailyFetchedFail));
     }
 
     private void onDailyFetchedFail(Throwable throwable) {

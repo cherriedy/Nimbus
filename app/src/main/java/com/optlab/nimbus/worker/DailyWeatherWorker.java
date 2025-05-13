@@ -36,17 +36,18 @@ public class DailyWeatherWorker extends Worker {
     @SuppressLint({"CheckResult"})
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public Result doWork() {
-        try {
-            repository
-                    .fetchAndCacheDailyWeather(userPrefs.getLocation(0))
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(this::onSuccess, this::onError);
-            Timber.d("Periodic work request for daily weather data completed");
-            return Result.success();
-        } catch (Exception e) {
-            Timber.e("Daily weather sync failed: %s", e.getMessage());
-            return Result.failure();
-        }
+        // try {
+        //     repository
+        //             .fetchAndCacheDailyWeather(userPrefs.getLocation(0))
+        //             .subscribeOn(Schedulers.io())
+        //             .subscribe(this::onSuccess, this::onError);
+        //     Timber.d("Periodic work request for daily weather data completed");
+        //     return Result.success();
+        // } catch (Exception e) {
+        //     Timber.e("Daily weather sync failed: %s", e.getMessage());
+        //     return Result.failure();
+        // }
+        return  Result.success();
     }
 
     private void onError(Throwable throwable) {

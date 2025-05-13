@@ -1,6 +1,6 @@
 package com.optlab.nimbus.data.common;
 
-public enum Endpoint {
+public enum WeatherProvider {
     TOMORROW_IO,
     OPEN_WEATHER
 }

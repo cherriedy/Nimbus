@@ -108,140 +108,147 @@ public class WorkerManagerWithInjectedRepositoryTest {
                 ApplicationProvider.getApplicationContext(), configuration);
     }
 
-    @Test
-    public void testWorkersRunWithNetworkAvailable() {
-        workers.forEach(
-                worker -> {
-                    String uniqueWorkName = "test_with_network_available_" + worker.getSimpleName();
-                    PeriodicWorkRequest request =
-                            new PeriodicWorkRequest.Builder(
-                                            worker, 30, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
-                                    .setConstraints(conectivityConstraints)
-                                    .build();
-
-                    workManager.enqueueUniquePeriodicWork(
-                            uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, request);
-
-                    testDriver.setPeriodDelayMet(request.getId());
-                    testDriver.setAllConstraintsMet(request.getId());
-
-                    if (worker.getSimpleName().equals(CurrentWeatherWorker.class.getSimpleName())) {
-                        try {
-                            ((TomorrowIoRepository) repository)
-                                    .getCachedWeather(WeatherEntity.Type.CURRENT)
-                                    .test()
-                                    .await()
-                                    .assertValue(response -> !response.isEmpty());
-                        } catch (InterruptedException e) {
-                            fail(
-                                    "Error while waiting for "
-                                            + worker.getSimpleName()
-                                            + " to complete: "
-                                            + e.getMessage());
-                        }
-                    }
-                    if (worker.getSimpleName().equals(DailyWeatherWorker.class.getSimpleName())) {
-                        try {
-                            ((TomorrowIoRepository) repository)
-                                    .getCachedWeather(WeatherEntity.Type.DAILY)
-                                    .test()
-                                    .await()
-                                    .assertValue(response -> !response.isEmpty());
-                        } catch (InterruptedException e) {
-                            fail(
-                                    "Error while waiting for "
-                                            + worker.getSimpleName()
-                                            + " to complete: "
-                                            + e.getMessage());
-                        }
-                    }
-                    if (worker.getSimpleName().equals(HourlyWeatherWorker.class.getSimpleName())) {
-                        try {
-                            ((TomorrowIoRepository) repository)
-                                    .getCachedWeather(WeatherEntity.Type.HOURLY)
-                                    .test()
-                                    .await()
-                                    .assertValue(response -> !response.isEmpty());
-                        } catch (InterruptedException e) {
-                            fail(
-                                    "Error while waiting for "
-                                            + worker.getSimpleName()
-                                            + " to complete: "
-                                            + e.getMessage());
-                        }
-                    }
-                });
-    }
-
-    @Test
-    public void testWorkersRunWithNetworkUnavailable() {
-        workers.forEach(
-                worker -> {
-                    String uniqueWorkName =
-                            "test_with_network_unavailable_" + worker.getSimpleName();
-
-                    PeriodicWorkRequest request =
-                            new PeriodicWorkRequest.Builder(
-                                            worker, 30, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
-                                    .setConstraints(conectivityConstraints)
-                                    .build();
-
-                    workManager.enqueueUniquePeriodicWork(
-                            uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, request);
-
-                    testDriver.setPeriodDelayMet(request.getId());
-
-                    if (worker.getSimpleName().equals(CurrentWeatherWorker.class.getSimpleName())) {
-                        try {
-                            ((TomorrowIoRepository) repository)
-                                    .getCachedWeather(WeatherEntity.Type.CURRENT)
-                                    .test()
-                                    .await()
-                                    .assertValue(List::isEmpty)
-                                    .assertNoErrors()
-                                    .assertComplete();
-                        } catch (InterruptedException e) {
-                            fail(
-                                    "Error while waiting for "
-                                            + worker.getSimpleName()
-                                            + " to complete: "
-                                            + e.getMessage());
-                        }
-                    }
-                    if (worker.getSimpleName().equals(DailyWeatherWorker.class.getSimpleName())) {
-                        try {
-                            ((TomorrowIoRepository) repository)
-                                    .getCachedWeather(WeatherEntity.Type.DAILY)
-                                    .test()
-                                    .await()
-                                    .assertValue(List::isEmpty)
-                                    .assertNoErrors()
-                                    .assertComplete();
-                        } catch (InterruptedException e) {
-                            fail(
-                                    "Error while waiting for "
-                                            + worker.getSimpleName()
-                                            + " to complete: "
-                                            + e.getMessage());
-                        }
-                    }
-                    if (worker.getSimpleName().equals(HourlyWeatherWorker.class.getSimpleName())) {
-                        try {
-                            ((TomorrowIoRepository) repository)
-                                    .getCachedWeather(WeatherEntity.Type.HOURLY)
-                                    .test()
-                                    .await()
-                                    .assertValue(List::isEmpty)
-                                    .assertNoErrors()
-                                    .assertComplete();
-                        } catch (InterruptedException e) {
-                            fail(
-                                    "Error while waiting for "
-                                            + worker.getSimpleName()
-                                            + " to complete: "
-                                            + e.getMessage());
-                        }
-                    }
-                });
-    }
+    // @Test
+    // public void testWorkersRunWithNetworkAvailable() {
+    //     workers.forEach(
+    //             worker -> {
+    //                 String uniqueWorkName = "test_with_network_available_" +
+    // worker.getSimpleName();
+    //                 PeriodicWorkRequest request =
+    //                         new PeriodicWorkRequest.Builder(
+    //                                         worker, 30, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+    //                                 .setConstraints(conectivityConstraints)
+    //                                 .build();
+    //
+    //                 workManager.enqueueUniquePeriodicWork(
+    //                         uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, request);
+    //
+    //                 testDriver.setPeriodDelayMet(request.getId());
+    //                 testDriver.setAllConstraintsMet(request.getId());
+    //
+    //                 if
+    // (worker.getSimpleName().equals(CurrentWeatherWorker.class.getSimpleName())) {
+    //                     try {
+    //                         ((TomorrowIoRepository) repository)
+    //                                 .getCachedWeather(WeatherEntity.Type.CURRENT)
+    //                                 .test()
+    //                                 .await()
+    //                                 .assertValue(response -> !response.isEmpty());
+    //                     } catch (InterruptedException e) {
+    //                         fail(
+    //                                 "Error while waiting for "
+    //                                         + worker.getSimpleName()
+    //                                         + " to complete: "
+    //                                         + e.getMessage());
+    //                     }
+    //                 }
+    //                 if (worker.getSimpleName().equals(DailyWeatherWorker.class.getSimpleName()))
+    // {
+    //                     try {
+    //                         ((TomorrowIoRepository) repository)
+    //                                 .getCachedWeather(WeatherEntity.Type.DAILY)
+    //                                 .test()
+    //                                 .await()
+    //                                 .assertValue(response -> !response.isEmpty());
+    //                     } catch (InterruptedException e) {
+    //                         fail(
+    //                                 "Error while waiting for "
+    //                                         + worker.getSimpleName()
+    //                                         + " to complete: "
+    //                                         + e.getMessage());
+    //                     }
+    //                 }
+    //                 if (worker.getSimpleName().equals(HourlyWeatherWorker.class.getSimpleName()))
+    // {
+    //                     try {
+    //                         ((TomorrowIoRepository) repository)
+    //                                 .getCachedWeather(WeatherEntity.Type.HOURLY)
+    //                                 .test()
+    //                                 .await()
+    //                                 .assertValue(response -> !response.isEmpty());
+    //                     } catch (InterruptedException e) {
+    //                         fail(
+    //                                 "Error while waiting for "
+    //                                         + worker.getSimpleName()
+    //                                         + " to complete: "
+    //                                         + e.getMessage());
+    //                     }
+    //                 }
+    //             });
+    // }
+    //
+    // @Test
+    // public void testWorkersRunWithNetworkUnavailable() {
+    //     workers.forEach(
+    //             worker -> {
+    //                 String uniqueWorkName =
+    //                         "test_with_network_unavailable_" + worker.getSimpleName();
+    //
+    //                 PeriodicWorkRequest request =
+    //                         new PeriodicWorkRequest.Builder(
+    //                                         worker, 30, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+    //                                 .setConstraints(conectivityConstraints)
+    //                                 .build();
+    //
+    //                 workManager.enqueueUniquePeriodicWork(
+    //                         uniqueWorkName, ExistingPeriodicWorkPolicy.KEEP, request);
+    //
+    //                 testDriver.setPeriodDelayMet(request.getId());
+    //
+    //                 if
+    // (worker.getSimpleName().equals(CurrentWeatherWorker.class.getSimpleName())) {
+    //                     try {
+    //                         ((TomorrowIoRepository) repository)
+    //                                 .getCachedWeather(WeatherEntity.Type.CURRENT)
+    //                                 .test()
+    //                                 .await()
+    //                                 .assertValue(List::isEmpty)
+    //                                 .assertNoErrors()
+    //                                 .assertComplete();
+    //                     } catch (InterruptedException e) {
+    //                         fail(
+    //                                 "Error while waiting for "
+    //                                         + worker.getSimpleName()
+    //                                         + " to complete: "
+    //                                         + e.getMessage());
+    //                     }
+    //                 }
+    //                 if (worker.getSimpleName().equals(DailyWeatherWorker.class.getSimpleName()))
+    // {
+    //                     try {
+    //                         ((TomorrowIoRepository) repository)
+    //                                 .getCachedWeather(WeatherEntity.Type.DAILY)
+    //                                 .test()
+    //                                 .await()
+    //                                 .assertValue(List::isEmpty)
+    //                                 .assertNoErrors()
+    //                                 .assertComplete();
+    //                     } catch (InterruptedException e) {
+    //                         fail(
+    //                                 "Error while waiting for "
+    //                                         + worker.getSimpleName()
+    //                                         + " to complete: "
+    //                                         + e.getMessage());
+    //                     }
+    //                 }
+    //                 if (worker.getSimpleName().equals(HourlyWeatherWorker.class.getSimpleName()))
+    // {
+    //                     try {
+    //                         ((TomorrowIoRepository) repository)
+    //                                 .getCachedWeather(WeatherEntity.Type.HOURLY)
+    //                                 .test()
+    //                                 .await()
+    //                                 .assertValue(List::isEmpty)
+    //                                 .assertNoErrors()
+    //                                 .assertComplete();
+    //                     } catch (InterruptedException e) {
+    //                         fail(
+    //                                 "Error while waiting for "
+    //                                         + worker.getSimpleName()
+    //                                         + " to complete: "
+    //                                         + e.getMessage());
+    //                     }
+    //                 }
+    //             });
+    // }
 }

@@ -4,11 +4,11 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.optlab.nimbus.data.common.WeatherProvider;
 import com.optlab.nimbus.data.local.dao.WeatherDao;
 import com.optlab.nimbus.data.preferences.SecurePrefsManager;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
 import com.optlab.nimbus.data.repository.WeatherRepository;
-import com.optlab.nimbus.data.common.Endpoint;
 import com.optlab.nimbus.data.repository.TomorrowIoRepository;
 
 import javax.inject.Singleton;
@@ -28,25 +28,23 @@ import dagger.hilt.components.SingletonComponent;
 public class RepositoryModule {
     @Provides
     @Singleton
-    public static Endpoint provideEndpoint() {
+    public static WeatherProvider provideEndpoint() {
         // Later: get the endpoint from the build config or any other source
-        return Endpoint.TOMORROW_IO;
+        return WeatherProvider.TOMORROW_IO;
     }
 
     /** Inject WeatherRepository implementation based on the selected endpoint. */
     @Provides
     @Singleton
     public static WeatherRepository provideRepository(
-            @ApplicationContext Context context,
-            @NonNull Endpoint endpoint,
+            @NonNull WeatherProvider weatherProvider,
             @NonNull TomorrowIoClient tomorrowIoClient,
             @NonNull SecurePrefsManager securePrefsManager,
             @NonNull WeatherDao weatherDao) {
-        return switch (endpoint) {
+        return switch (weatherProvider) {
             case OPEN_WEATHER -> null;
             case TOMORROW_IO ->
-                    new TomorrowIoRepository(
-                            context, tomorrowIoClient, securePrefsManager, weatherDao);
+                    new TomorrowIoRepository(tomorrowIoClient, securePrefsManager, weatherDao);
         };
     }
 }

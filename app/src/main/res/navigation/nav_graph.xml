@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.optlab.nimbus.ui.view.HomeFragment"
-        tools:layout="@layout/fragment_main_dashboard" />
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/dailyWeatherFragment"

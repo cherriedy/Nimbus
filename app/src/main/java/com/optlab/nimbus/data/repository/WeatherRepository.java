@@ -2,30 +2,16 @@ package com.optlab.nimbus.data.repository;
 
 import androidx.annotation.NonNull;
 
+import com.optlab.nimbus.data.local.entity.WeatherEntity;
 import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
 
-import java.util.List;
-
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Flowable;
 
 /** BaseRepository interface for fetching weather data. */
 public interface WeatherRepository {
-    Observable<List<WeatherResponse>> getDailyWeatherByLocation(
-            @NonNull Coordinates coordinates);
+    Flowable<WeatherEntity> getDailyWeather(@NonNull Coordinates coordinates);
 
-    Observable<List<WeatherResponse>> getCurrentWeatherByLocation(
-            @NonNull Coordinates coordinates);
+    Flowable<WeatherEntity> getCurrentWeather(@NonNull Coordinates coordinates);
 
-    Observable<List<WeatherResponse>> getHourlyWeatherByLocation(
-            @NonNull Coordinates coordinates);
-
-    Observable<List<WeatherResponse>> fetchAndCacheDailyWeather(
-            @NonNull Coordinates coordinates);
-
-    Observable<List<WeatherResponse>> fetchAndCacheCurrentWeather(
-            @NonNull Coordinates coordinates);
-
-    Observable<List<WeatherResponse>> fetchAndCacheHourlyWeather(
-            @NonNull Coordinates coordinates);
+    Flowable<WeatherEntity> getHourlyWeather(@NonNull Coordinates coordinates);
 }

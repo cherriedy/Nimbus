@@ -2,7 +2,7 @@ package com.optlab.nimbus.data.network.tomorrowio;
 
 import com.optlab.nimbus.data.model.tomorrowio.TomorrowIoResponse;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -21,7 +21,7 @@ public interface TomorrowIoService {
      * @return an observable of TomorrowIoResponse
      */
     @GET("v4/timelines")
-    Observable<TomorrowIoResponse> getWeatherByLocationCode(
+    Single<TomorrowIoResponse> getWeatherByLocationCode(
             @Query("location") String location,
             @Query("fields") String fields,
             @Query("timesteps") String timesteps,
@@ -43,7 +43,7 @@ public interface TomorrowIoService {
      * @return an observable of TomorrowIoResponse
      */
     @GET("v4/timelines")
-    Observable<TomorrowIoResponse> getWeatherByLocationCode(
+    Single<TomorrowIoResponse> getWeatherByLocationCode(
             @Query("location") String location,
             @Query("fields") String fields,
             @Query("timesteps") String timesteps,
