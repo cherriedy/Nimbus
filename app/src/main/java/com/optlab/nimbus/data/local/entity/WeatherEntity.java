@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @TypeConverters({Converters.class})
 public class WeatherEntity {
     public enum Type {
-        DAILY,
+        WEAKLY,
         HOURLY,
         CURRENT
     }
@@ -56,7 +56,7 @@ public class WeatherEntity {
 
     public boolean isExpired() {
         return switch (type) {
-            case DAILY, HOURLY ->
+            case WEAKLY, HOURLY ->
                     System.currentTimeMillis() - timestamp > ResponseConstant.DAILY_EXPIRY_TIME;
             case CURRENT ->
                     System.currentTimeMillis() - timestamp > ResponseConstant.CURRENT_EXPIRY_TIME;

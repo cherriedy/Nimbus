@@ -7,6 +7,12 @@ import android.security.keystore.KeyProperties;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.optlab.nimbus.data.common.WeatherProvider;
+
+import timber.log.Timber;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -26,8 +32,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
-import timber.log.Timber;
-
 /**
  * SecurePrefsManager is a class that manages secure shared preferences using the Android Keystore
  *
@@ -36,9 +40,7 @@ import timber.log.Timber;
  * exist, we need to generate a new key. Then, we can use the key to encrypt the data and store it
  * in the shared preferences.
  */
-public class SecurePrefsManager {
-    public static final String TOMORROW_IO_API_KEY = "tomorrow_io";
-
+public class WeatherApiPreferencesImpl implements WeatherApiPreferences {
     /**
      * The name of the shared preferences file. This is the name used to create or access the shared
      */
@@ -61,7 +63,7 @@ public class SecurePrefsManager {
 
     private final SharedPreferences securePrefs;
 
-    public SecurePrefsManager(Context context) {
+    public WeatherApiPreferencesImpl(Context context) {
         this.securePrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         generateKeyIfNeeded();
         initApiKey();
@@ -71,7 +73,7 @@ public class SecurePrefsManager {
      * @noinspection SpellCheckingInspection
      */
     private void initApiKey() {
-        setApiKey(TOMORROW_IO_API_KEY, "jxlIW6sxnnCUFCAIiCYPgnuckubOdW5s");
+        setApiKey(WeatherProvider.TOMORROW_IO.name(), "jxlIW6sxnnCUFCAIiCYPgnuckubOdW5s");
     }
 
     private void generateKeyIfNeeded() {
@@ -129,27 +131,42 @@ public class SecurePrefsManager {
     }
 
     /**
-     * Get the API key for the specified endpoint from the secure shared preferences. The data is
+     * Get the API key for the specified provider from the secure shared preferences. The data is
      * decrypted using the secret key and IV stored in the shared preferences.
      */
-    public void setApiKey(String endpoint, String key) {
-        saveEncrypted(endpoint, key);
+    @Override
+    public void setApiKey(String provider, String key) {
+        saveEncrypted(provider, key);
     }
 
     /**
      * Get the API key for the specified endpoint from the secure shared preferences. The data is
      * decrypted using the secret key and IV stored in the shared preferences.
      */
-    public String getApiKey(String endpoint) {
-        return getDecrypted(endpoint);
+    @Override
+    public String getApiKey(String provider) {
+        return getDecrypted(provider);
     }
 
     /**
-     * Remove the API key for the specified endpoint from the secure shared preferences. The
+     * Remove the API key for the specified provider from the secure shared preferences. The
      * encrypted data and IV are removed from the shared preferences.
      */
-    public void removeApiKey(String endpoint) {
-        securePrefs.edit().remove(endpoint + "_iv").remove(endpoint).apply();
+    @Override
+    public void removeApiKey(String provider) {
+        securePrefs.edit().remove(provider + "_iv").remove(provider).apply();
+    }
+
+    @Override
+    public void registerOnChangeListener(
+            @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        securePrefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void unregisterOnChangeListener(
+            @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        securePrefs.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     /**

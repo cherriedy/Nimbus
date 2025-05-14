@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.optlab.nimbus.data.common.WeatherProvider;
 import com.optlab.nimbus.data.model.common.Coordinates;
 import com.optlab.nimbus.data.model.common.PressureUnit;
 import com.optlab.nimbus.data.model.common.TemperatureUnit;
@@ -25,21 +26,22 @@ import java.util.List;
  *
  * @noinspection rawtypes
  */
-public class UserPreferencesManager implements UserPreferences {
+public class SettingPreferencesImpl implements SettingPreferences {
     public static final String TEMPERATURE_UNIT = "temperature_unit";
     public static final String WIND_SPEED_UNIT = "wind_speed_unit";
     public static final String PRESSURE_UNIT = "pressure_unit";
+    public static final String WEATHER_PROVIDER = "weather_provider";
+    public static final String LOCATIONS = "locations";
 
-    private static final String PREF_NAME = "user_prefs";
+    private static final String PREF_NAME = "setting_prefs";
     private static final String[] UNITS =
             new String[] {TEMPERATURE_UNIT, WIND_SPEED_UNIT, PRESSURE_UNIT};
-    private static final String LOCATIONS = "locations";
 
-    private final SharedPreferences userPrefs;
+    private final SharedPreferences settingsPrefs;
     private final Gson gson;
 
-    public UserPreferencesManager(@NonNull Context context) {
-        this.userPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    public SettingPreferencesImpl(@NonNull Context context) {
+        this.settingsPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.gson = new Gson();
         initUnits();
     }
@@ -56,7 +58,7 @@ public class UserPreferencesManager implements UserPreferences {
         String json = gson.toJson(coordinates);
         if (!locations.contains(json)) {
             locations.add(json);
-            userPrefs.edit().putString(LOCATIONS, gson.toJson(locations)).apply();
+            settingsPrefs.edit().putString(LOCATIONS, gson.toJson(locations)).apply();
         } else {
             Timber.w("Location already exists");
         }
@@ -85,7 +87,7 @@ public class UserPreferencesManager implements UserPreferences {
      */
     @Override
     public List<String> getLocations() {
-        String json = userPrefs.getString(LOCATIONS, null);
+        String json = settingsPrefs.getString(LOCATIONS, null);
         if (json == null) {
             return new ArrayList<>();
         }
@@ -93,18 +95,26 @@ public class UserPreferencesManager implements UserPreferences {
         return gson.fromJson(json, type);
     }
 
+    @Override
+    public void setWeatherProvider(@NonNull WeatherProvider provider) {
+        if (provider == null) {
+            provider = WeatherProvider.TOMORROW_IO;
+        }
+        settingsPrefs.edit().putString(WEATHER_PROVIDER, provider.name()).apply();
+    }
+
     /**
      * Initialize the units in the shared preferences. If the units do not exist, they will be
      * initialized to the default values.
      */
     private void initUnits() {
-        if (!userPrefs.contains(TEMPERATURE_UNIT)) {
+        if (!settingsPrefs.contains(TEMPERATURE_UNIT)) {
             setUnit(TEMPERATURE_UNIT, TemperatureUnit.CELSIUS);
         }
-        if (!userPrefs.contains(WIND_SPEED_UNIT)) {
+        if (!settingsPrefs.contains(WIND_SPEED_UNIT)) {
             setUnit(WIND_SPEED_UNIT, WindSpeedUnit.METERS_PER_SECOND);
         }
-        if (!userPrefs.contains(PRESSURE_UNIT)) {
+        if (!settingsPrefs.contains(PRESSURE_UNIT)) {
             setUnit(PRESSURE_UNIT, PressureUnit.HECTOPASCAL);
         }
     }
@@ -122,7 +132,7 @@ public class UserPreferencesManager implements UserPreferences {
         if (unit == null) {
             throw new NullPointerException("Unit cannot be null");
         }
-        userPrefs.edit().putString(key, unit.name()).apply();
+        settingsPrefs.edit().putString(key, unit.name()).apply();
     }
 
     /**
@@ -154,16 +164,18 @@ public class UserPreferencesManager implements UserPreferences {
             case TEMPERATURE_UNIT ->
                     Enum.valueOf(
                             TemperatureUnit.class,
-                            userPrefs.getString(TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()));
+                            settingsPrefs.getString(
+                                    TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()));
             case WIND_SPEED_UNIT ->
                     Enum.valueOf(
                             WindSpeedUnit.class,
-                            userPrefs.getString(
+                            settingsPrefs.getString(
                                     WIND_SPEED_UNIT, WindSpeedUnit.METERS_PER_SECOND.name()));
             case PRESSURE_UNIT ->
                     Enum.valueOf(
                             PressureUnit.class,
-                            userPrefs.getString(PRESSURE_UNIT, PressureUnit.HECTOPASCAL.name()));
+                            settingsPrefs.getString(
+                                    PRESSURE_UNIT, PressureUnit.HECTOPASCAL.name()));
             default -> throw new IllegalStateException("Unexpected value: " + key);
         };
     }
@@ -196,5 +208,24 @@ public class UserPreferencesManager implements UserPreferences {
     @Override
     public PressureUnit getPressureUnit() {
         return (PressureUnit) getUnit(PRESSURE_UNIT);
+    }
+
+    @Override
+    public WeatherProvider getWeatherProvider() {
+        String providerName =
+                settingsPrefs.getString(WEATHER_PROVIDER, WeatherProvider.TOMORROW_IO.name());
+        return WeatherProvider.valueOf(providerName);
+    }
+
+    @Override
+    public void registerOnChangeListener(
+            @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        settingsPrefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void unregisterOnChangeListener(
+            @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        settingsPrefs.unregisterOnSharedPreferenceChangeListener(listener);
     }
 }

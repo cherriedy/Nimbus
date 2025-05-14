@@ -1,5 +1,7 @@
 package com.optlab.nimbus.data.model.common;
 
+import androidx.annotation.NonNull;
+
 /**
  * UnifiedWeatherResponse is a record class that represents the weather data for a specific date.
  *
@@ -28,5 +30,11 @@ public record Coordinates(String lat, String lon) {
 
     public String getLocationParameter() {
         return lat + "," + lon;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getLocationParameter();
     }
 }

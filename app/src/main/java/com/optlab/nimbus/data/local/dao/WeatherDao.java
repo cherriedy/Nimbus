@@ -7,13 +7,9 @@ import androidx.room.Query;
 
 import com.optlab.nimbus.data.common.WeatherProvider;
 import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.Coordinates;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Maybe;
 
 @Dao
 public interface WeatherDao {
@@ -25,7 +21,7 @@ public interface WeatherDao {
                     + "AND coordinates = :coordinates "
                     + "ORDER BY timestamp DESC "
                     + "LIMIT 1")
-    Flowable<WeatherEntity> getLatestWeather(
+    Maybe<WeatherEntity> getLatestWeather(
             WeatherEntity.Type type, WeatherProvider provider, String coordinates);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
