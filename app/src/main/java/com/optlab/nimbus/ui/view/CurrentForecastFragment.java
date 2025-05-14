@@ -25,14 +25,14 @@ import com.google.android.gms.location.LocationServices;
 import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.common.Coordinates;
 import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPreferencesManager;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.databinding.FragmentHomeBinding;
 import com.optlab.nimbus.ui.adapter.HourlyForecastAdapater;
 import com.optlab.nimbus.ui.decoration.LinearSpacingStrategy;
 import com.optlab.nimbus.ui.decoration.SpacingItemDecoration;
 import com.optlab.nimbus.ui.decoration.SpacingStrategy;
-import com.optlab.nimbus.ui.viewmodel.CurrentWeatherViewModel;
-import com.optlab.nimbus.utility.WeatherSummaryBuilder;
+import com.optlab.nimbus.ui.viewmodel.CurrentForecastViewModel;
+import com.optlab.nimbus.utility.WeatherSummary;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -45,13 +45,13 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 @AndroidEntryPoint
-public class HomeFragment extends Fragment {
+public class CurrentForecastFragment extends Fragment {
     private FragmentHomeBinding binding;
-    private CurrentWeatherViewModel viewModel;
+    private CurrentForecastViewModel viewModel;
     private HourlyForecastAdapater adapter;
     private FusedLocationProviderClient fusedLocationClient;
 
-    @Inject protected UserPreferencesManager userPrefs;
+    @Inject protected SettingPreferences settingPreferences;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +68,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
-        binding.setUserPrefs(userPrefs);
         binding.setFragment(this);
         return binding.getRoot();
     }
@@ -114,7 +113,7 @@ public class HomeFragment extends Fragment {
                                         new Coordinates(
                                                 String.valueOf(location.getLatitude()),
                                                 String.valueOf(location.getLongitude()));
-                                userPrefs.setLocation(coordinates);
+                                settingPreferences.setLocation(coordinates);
                                 viewModel.fetchCurrent(coordinates);
                                 viewModel.fetchHourly(coordinates);
                             }
@@ -123,11 +122,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void initAdapter() {
-        adapter = new HourlyForecastAdapater(userPrefs);
+        adapter = new HourlyForecastAdapater(settingPreferences);
     }
 
     private void initViewModel() {
-        viewModel = new ViewModelProvider(this).get(CurrentWeatherViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CurrentForecastViewModel.class);
     }
 
     @Override
@@ -144,7 +143,7 @@ public class HomeFragment extends Fragment {
     private void fetchAndDisplayLocation() {
         try {
             Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
-            Coordinates coordinates = userPrefs.getLocation(0);
+            Coordinates coordinates = settingPreferences.getLocation(0);
 
             List<Address> addresses =
                     geocoder.getFromLocation(
@@ -172,16 +171,13 @@ public class HomeFragment extends Fragment {
                         getViewLifecycleOwner(),
                         current -> {
                             WeatherResponse response = current.get(0);
-                            String summary =
-                                    new WeatherSummaryBuilder(requireContext())
-                                            .buildDailySummerSummary(
-                                                    response.getTemperatureMax(),
-                                                    response.getTemperatureMin(),
-                                                    response.getHumidity(),
-                                                    response.getHumidity(),
-                                                    response.getWindSpeed(),
-                                                    response.getWindSpeed());
-                            binding.included.tvSummary.setText(summary);
+                            binding.included.tvSummary.setText(
+                                    new WeatherSummary.Builder(requireContext(), settingPreferences)
+                                            .humidity(response.getHumidity())
+                                            .windSpeed(response.getWindSpeed())
+                                            .build()
+                                            .generate()
+                            );
                         });
     }
 
@@ -195,6 +191,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void onMoreTextClick(@NonNull View view) {
-        Navigation.findNavController(view).navigate(R.id.dailyWeatherFragment);
+        Navigation.findNavController(view).navigate(R.id.weaklyForecastFragment);
     }
 }

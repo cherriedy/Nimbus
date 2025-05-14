@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPreferencesManager;
-import com.optlab.nimbus.databinding.LayoutItemHourlyWeatherBinding;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
+import com.optlab.nimbus.databinding.LayoutItemHourlyForecastBinding;
 
 public class HourlyForecastAdapater
         extends ListAdapter<WeatherResponse, HourlyForecastAdapater.ViewHolder> {
@@ -18,22 +18,20 @@ public class HourlyForecastAdapater
             new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(
-                        @NonNull WeatherResponse oldItem,
-                        @NonNull WeatherResponse newItem) {
+                        @NonNull WeatherResponse oldItem, @NonNull WeatherResponse newItem) {
                     return oldItem.getDate().equals(newItem.getDate());
                 }
 
                 @Override
                 public boolean areContentsTheSame(
-                        @NonNull WeatherResponse oldItem,
-                        @NonNull WeatherResponse newItem) {
+                        @NonNull WeatherResponse oldItem, @NonNull WeatherResponse newItem) {
                     return oldItem.equals(newItem);
                 }
             };
 
-    protected final UserPreferencesManager userPrefs;
+    protected final SettingPreferences userPrefs;
 
-    public HourlyForecastAdapater(UserPreferencesManager userPrefs) {
+    public HourlyForecastAdapater(SettingPreferences userPrefs) {
         super(CALL_BACK);
         this.userPrefs = userPrefs;
     }
@@ -41,8 +39,8 @@ public class HourlyForecastAdapater
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutItemHourlyWeatherBinding binding =
-                LayoutItemHourlyWeatherBinding.inflate(
+        LayoutItemHourlyForecastBinding binding =
+                LayoutItemHourlyForecastBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false);
         binding.setUserPrefs(userPrefs);
         return new ViewHolder(binding);
@@ -54,9 +52,9 @@ public class HourlyForecastAdapater
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final LayoutItemHourlyWeatherBinding binding;
+        private final LayoutItemHourlyForecastBinding binding;
 
-        public ViewHolder(@NonNull LayoutItemHourlyWeatherBinding binding) {
+        public ViewHolder(@NonNull LayoutItemHourlyForecastBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
