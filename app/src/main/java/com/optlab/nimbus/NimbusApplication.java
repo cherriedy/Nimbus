@@ -10,8 +10,7 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.optlab.nimbus.constant.ResponseConstant;
-import com.optlab.nimbus.data.preferences.UserPreferencesManager;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.worker.CurrentWeatherWorker;
 import com.optlab.nimbus.worker.DailyWeatherWorker;
 import com.optlab.nimbus.worker.FetchingWorkerFactory;
@@ -32,7 +31,7 @@ import timber.log.Timber;
  */
 @HiltAndroidApp // Annotation to trigger Hilt's code generation and setup.
 public class NimbusApplication extends Application implements Configuration.Provider {
-    @Inject protected UserPreferencesManager userPrefs;
+    @Inject protected SettingPreferences settingPreferences;
     @Inject protected FetchingWorkerFactory fetchingWorkerFactory;
 
     private static final String CURRENT_WEATHER_SYNC = "CurrentWeatherSync";
@@ -51,7 +50,7 @@ public class NimbusApplication extends Application implements Configuration.Prov
     public void onCreate() {
         super.onCreate();
         initTimber(); // Initialize Timber for logging.
-        syncWeatherData(); // Start syncing weather data.
+        // syncWeatherData(); // Start syncing weather data.
     }
 
     /**
@@ -85,68 +84,23 @@ public class NimbusApplication extends Application implements Configuration.Prov
                 );
     }
 
-    /**
-     * Creates a periodic work request for hourly weather synchronization.
-     *
-     * <p>This method creates a periodic work request for the HourlyWeatherWorker class, which is
-     * responsible for fetching hourly weather data. The request is set to run at a specified
-     * interval defined by the CURRENT_EXPIRY_TIME constant. The flex interval is set to one-third
-     * of the current expiry time. When the device is connected to the internet, the worker will be
-     * triggered to fetch the latest hourly weather data.
-     *
-     * @return A PeriodicWorkRequest object for hourly weather synchronization.
-     */
     @NonNull
     private static PeriodicWorkRequest getHourlyWeatherSyncRequest() {
-        return new PeriodicWorkRequest.Builder(
-                        HourlyWeatherWorker.class,
-                        ResponseConstant.CURRENT_EXPIRY_TIME,
-                        TimeUnit.MILLISECONDS,
-                        ResponseConstant.CURRENT_EXPIRY_TIME / 3,
-                        TimeUnit.MILLISECONDS)
+        return new PeriodicWorkRequest.Builder(HourlyWeatherWorker.class, 1, TimeUnit.HOURS)
                 .setConstraints(NETWORK_CONNECTION_CONSTRAINT)
                 .build();
     }
 
-    /**
-     * Creates a periodic work request for current weather synchronization.
-     *
-     * <p>This method creates a periodic work request for the CurrentWeatherWorker class, which is
-     * responsible for fetching current weather data. The request is set to run at a specified
-     * interval defined by the CURRENT_EXPIRY_TIME constant. The flex interval is set to one-third
-     * of the current expiry time. When the device is connected to the internet, the worker will be
-     * triggered to fetch the latest current weather data.
-     *
-     * @return A PeriodicWorkRequest object for current weather synchronization.
-     */
     @NonNull
     private static PeriodicWorkRequest getCurrentWeatherSyncRequest() {
-        return new PeriodicWorkRequest.Builder(
-                        CurrentWeatherWorker.class,
-                        ResponseConstant.CURRENT_EXPIRY_TIME,
-                        TimeUnit.MILLISECONDS,
-                        ResponseConstant.CURRENT_EXPIRY_TIME / 3,
-                        TimeUnit.MILLISECONDS)
+        return new PeriodicWorkRequest.Builder(CurrentWeatherWorker.class, 1, TimeUnit.HOURS)
                 .setConstraints(NETWORK_CONNECTION_CONSTRAINT)
                 .build();
     }
 
-    /**
-     * Creates a periodic work request for daily weather synchronization.
-     *
-     * <p>This method creates a periodic work request for the DailyWeatherWorker class, which is
-     * responsible for fetching daily weather data. The request is set to run at a specified
-     * interval defined by the DAILY_EXPIRY_TIME constant. When the device is connected to the
-     * internet, the worker will be triggered to fetch the latest daily weather data.
-     *
-     * @return A PeriodicWorkRequest object for daily weather synchronization.
-     */
     @NonNull
     private static PeriodicWorkRequest getDailyWeatherSyncRequest() {
-        return new PeriodicWorkRequest.Builder(
-                        DailyWeatherWorker.class,
-                        ResponseConstant.DAILY_EXPIRY_TIME,
-                        TimeUnit.MILLISECONDS)
+        return new PeriodicWorkRequest.Builder(DailyWeatherWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(NETWORK_CONNECTION_CONSTRAINT)
                 .build();
     }

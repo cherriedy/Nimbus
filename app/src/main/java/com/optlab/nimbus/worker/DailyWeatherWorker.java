@@ -8,24 +8,22 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPreferences;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import java.util.List;
-
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import timber.log.Timber;
 
 public class DailyWeatherWorker extends Worker {
     private final WeatherRepository repository;
-    private final UserPreferences userPrefs;
+    private final SettingPreferences userPrefs;
 
     public DailyWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
             @NonNull WeatherRepository repository,
-            @NonNull UserPreferences userPrefs) {
+            @NonNull SettingPreferences userPrefs) {
         super(context, workerParams);
         this.repository = repository;
         this.userPrefs = userPrefs;

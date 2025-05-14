@@ -7,25 +7,22 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPreferences;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
-import java.util.List;
-
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
 public class CurrentWeatherWorker extends Worker {
     private final WeatherRepository repository;
-    private final UserPreferences userPrefs;
+    private final SettingPreferences userPrefs;
 
     public CurrentWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
             @NonNull WeatherRepository repository,
-            @NonNull UserPreferences userPrefs) {
+            @NonNull SettingPreferences userPrefs) {
         super(context, workerParams);
         this.repository = repository;
         this.userPrefs = userPrefs;
@@ -33,28 +30,20 @@ public class CurrentWeatherWorker extends Worker {
 
     @NonNull
     @Override
-    @SuppressLint({"CheckResult"})
+    @SuppressLint("CheckResult")
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public Result doWork() {
         // try {
         //     repository
-        //             .fetchAndCacheCurrentWeather(userPrefs.getLocation(0))
-        //             .subscribeOn(Schedulers.io())
-        //             .subscribe(this::onSuccess, this::onError);
-        //     Timber.d("Periodic work request for current weather data completed");
+        //             .getCurrentWeather(userPrefs.getLocation(0))
+        //             .firstOrError()
+        //             .timeout(30, TimeUnit.SECONDS)
+        //             .blockingGet();
         //     return Result.success();
         // } catch (Exception e) {
-        //     Timber.e("Current weather sync failed: %s", e.getMessage());
+        //     Timber.e(e, "Error fetching current weather");
         //     return Result.failure();
         // }
-        return  Result.success();
-    }
-
-    private void onError(Throwable throwable) {
-        Timber.e("Error fetching current weather data: %s", throwable.getMessage());
-    }
-
-    private void onSuccess(List<WeatherResponse> weatherResponses) {
-        Timber.d("Current weather data fetched successfully");
+        return Result.failure();
     }
 }
