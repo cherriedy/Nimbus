@@ -31,7 +31,6 @@ rxandroid = "3.0.2"
 rxjava = "3.1.10"
 rxjava3RetrofitAdapter = "3.0.0"
 comGoogleDaggerHiltAndroidGradlePlugin = "2.56.2"
-securityCrypto = "1.0.0"
 glide = "5.0.0-rc01"
 loggingInterceptor = "5.0.0-alpha.14"
 timber = "4.7.1"
@@ -42,12 +41,10 @@ roomRxjava3 = "2.7.1"
 workRuntime = "2.10.1"
 workTesting = "2.10.1"
 awaitility = "4.3.0"
-lifecycleLivedata = "2.9.0"
 
 [libraries]
 androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-lifecycle-reactivestreams = { module = "androidx.lifecycle:lifecycle-reactivestreams", version.ref = "lifecycleReactivestreams" }
 hamcrest-hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrestVersion" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }

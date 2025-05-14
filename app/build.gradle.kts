@@ -17,7 +17,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.optlab.nimbus.di.CustomTestRunner"
     }
 
@@ -28,6 +27,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("boolean", "ROOM_DB_DEBUG", "false")
+        }
+
+        debug {
+            buildConfigField("boolean", "ROOM_DB_DEBUG", "true")
         }
     }
     compileOptions {
@@ -105,7 +109,6 @@ dependencies {
     implementation(libs.rxandroid)
     implementation(libs.rxjava)
     implementation(libs.rxjava3.retrofit.adapter)
-    implementation (libs.androidx.lifecycle.reactivestreams)
 
     // --- Image Loading ---
     implementation(libs.glide)
