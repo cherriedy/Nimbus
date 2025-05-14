@@ -50,7 +50,7 @@
     <string name="there_is_a">"</string>
     <string name="chance_of_rain_so_keep_an_umbrella_handy">% の降水確率がありますので、傘をご用意ください。 </string>
     <string name="the_chance_of_rain_is_low_at">"降水確率は低く "</string>
-    <string name="winds_will_be_around">"風速は "</string>
+    <string name="winds_will_be_around">" 風速は "</string>
     <string name="offering_slight_relief_from_the_heat">" で、暑さを少し和らげるでしょう。 "</string>
     <string name="daily_summary">日ごとの要約</string>
     <string name="to">" ～ "</string>

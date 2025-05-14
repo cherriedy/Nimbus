@@ -50,7 +50,7 @@
     <string name="there_is_a">"There is a "</string>
     <string name="chance_of_rain_so_keep_an_umbrella_handy">"% chance of rain, so keep an umbrella handy. "</string>
     <string name="the_chance_of_rain_is_low_at">"The chance of rain is low at "</string>
-    <string name="winds_will_be_around">"Winds will be around "</string>
+    <string name="winds_will_be_around">" Winds will be around "</string>
     <string name="offering_slight_relief_from_the_heat">" , offering slight relief from the heat. "</string>
     <string name="daily_summary">Daily Summary</string>
     <string name="to">" to "</string>
