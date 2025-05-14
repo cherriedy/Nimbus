@@ -7,15 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.optlab.nimbus.ui.viewmodel.CurrentWeatherViewModel" />
-
-        <variable
-            name="userPrefs"
-            type="com.optlab.nimbus.data.preferences.UserPreferencesManager" />
+            type="com.optlab.nimbus.ui.viewmodel.CurrentForecastViewModel" />
 
         <variable
             name="fragment"
-            type="com.optlab.nimbus.ui.view.HomeFragment" />
+            type="com.optlab.nimbus.ui.view.CurrentForecastFragment" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -26,9 +22,8 @@
 
         <include
             android:id="@+id/included"
-            layout="@layout/fragment_current_weather"
+            layout="@layout/fragment_current_forecast"
             app:fragment="@{fragment}"
-            app:userPrefs="@{userPrefs}"
             app:viewModel="@{viewModel}" />
 
         <com.google.android.material.navigation.NavigationView

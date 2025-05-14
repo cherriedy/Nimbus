@@ -7,15 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.optlab.nimbus.ui.viewmodel.CurrentWeatherViewModel" />
-
-        <variable
-            name="userPrefs"
-            type="com.optlab.nimbus.data.preferences.UserPreferencesManager" />
+            type="com.optlab.nimbus.ui.viewmodel.CurrentForecastViewModel" />
 
         <variable
             name="fragment"
-            type="com.optlab.nimbus.ui.view.HomeFragment" />
+            type="com.optlab.nimbus.ui.view.CurrentForecastFragment" />
 
     </data>
 
@@ -85,7 +81,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:temperature="@{viewModel.current.first.temperature}"
-                app:unit="@{userPrefs.getTemperatureUnit()}" />
+                app:unit="@{viewModel.temperatureUnit}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -153,7 +149,7 @@
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             app:pressure="@{viewModel.current.first.pressure}"
-                            app:unit="@{userPrefs.getPressureUnit()}" />
+                            app:unit="@{viewModel.pressureUnit}" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -184,7 +180,7 @@
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="@color/white"
                             android:textStyle="bold"
-                            app:unit="@{userPrefs.getWindSpeedUnit()}"
+                            app:unit="@{viewModel.windSpeedUnit}"
                             app:wind_speed="@{viewModel.current.first.windSpeed}" />
 
                         <TextView
@@ -281,7 +277,7 @@
                 android:nestedScrollingEnabled="true"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/layout_item_hourly_weather" />
+                tools:listitem="@layout/layout_item_hourly_forecast" />
 
         </LinearLayout>
 
