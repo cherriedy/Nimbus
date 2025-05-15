@@ -3,54 +3,52 @@ package com.optlab.nimbus.data.repository;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.optlab.nimbus.data.common.WeatherProvider;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
+import com.optlab.nimbus.data.preferences.ForecastApiPreferences;
 import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.data.preferences.SettingPreferencesImpl;
-import com.optlab.nimbus.data.preferences.WeatherApiPreferences;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 import timber.log.Timber;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 public class PreferencesRepositoryImpl implements PreferencesRepository {
     private final SettingPreferences settingPreferences;
-    private final WeatherApiPreferences weatherApiPreferences;
+    private final ForecastApiPreferences forecastApiPreferences;
     private final BehaviorSubject<TemperatureUnit> tempUnitSubject = BehaviorSubject.create();
     private final BehaviorSubject<WindSpeedUnit> windSpeedUnitSubject = BehaviorSubject.create();
     private final BehaviorSubject<PressureUnit> pressureUnitSubject = BehaviorSubject.create();
     private final BehaviorSubject<Coordinates> lastLocationSubject = BehaviorSubject.create();
-    private final BehaviorSubject<List<Coordinates>> locationsSubject = BehaviorSubject.create();
-    private final BehaviorSubject<WeatherProvider> providerSubject = BehaviorSubject.create();
+    private final BehaviorSubject<ForecastProvider> providerSubject = BehaviorSubject.create();
     private final BehaviorSubject<String> apiKeySubject = BehaviorSubject.create();
     private final Gson gson = new Gson();
 
     @Inject
     public PreferencesRepositoryImpl(
             @NonNull SettingPreferences settingPreferences,
-            @NonNull WeatherApiPreferences weatherApiPreferences) {
+            @NonNull ForecastApiPreferences forecastApiPreferences) {
         this.settingPreferences = settingPreferences;
-        this.weatherApiPreferences = weatherApiPreferences;
+        this.forecastApiPreferences = forecastApiPreferences;
 
         tempUnitSubject.onNext(settingPreferences.getTemperatureUnit());
-        Timber.d("Loaded temperature unit: %s", tempUnitSubject.getValue());
         windSpeedUnitSubject.onNext(settingPreferences.getWindSpeedUnit());
-        Timber.d("Loaded wind speed unit: %s", windSpeedUnitSubject.getValue());
         pressureUnitSubject.onNext(settingPreferences.getPressureUnit());
-        Timber.d("Loaded pressure unit: %s", pressureUnitSubject.getValue());
-        // lastLocationSubject.onNext(settingPreferences.getLocation(0));
         providerSubject.onNext(settingPreferences.getWeatherProvider());
+        apiKeySubject.onNext(forecastApiPreferences.getApiKey(ForecastProvider.TOMORROW_IO.name()));
+
+        Timber.d("Loaded temperature unit: %s", tempUnitSubject.getValue());
+        Timber.d("Loaded wind speed unit: %s", windSpeedUnitSubject.getValue());
+        Timber.d("Loaded pressure unit: %s", pressureUnitSubject.getValue());
         Timber.d("Loaded weather provider: %s", providerSubject.getValue());
-        apiKeySubject.onNext(weatherApiPreferences.getApiKey(WeatherProvider.TOMORROW_IO.name()));
         Timber.d("Loaded API key: %s", apiKeySubject.getValue());
 
         observePreferences();
@@ -62,17 +60,17 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     private void observeWeatherApiPreference() {
-        weatherApiPreferences.registerOnChangeListener(
+        forecastApiPreferences.registerOnChangeListener(
                 (sharedPreferences, key) -> {
-                    if (Objects.equals(key, WeatherProvider.TOMORROW_IO.name())) {
+                    if (Objects.equals(key, ForecastProvider.TOMORROW_IO.name())) {
                         apiKeySubject.onNext(
-                                weatherApiPreferences.getApiKey(
-                                        WeatherProvider.TOMORROW_IO.name()));
+                                forecastApiPreferences.getApiKey(
+                                        ForecastProvider.TOMORROW_IO.name()));
                     }
-                    if (Objects.equals(key, WeatherProvider.OPEN_WEATHER.name())) {
+                    if (Objects.equals(key, ForecastProvider.OPEN_WEATHER.name())) {
                         apiKeySubject.onNext(
-                                weatherApiPreferences.getApiKey(
-                                        WeatherProvider.OPEN_WEATHER.name()));
+                                forecastApiPreferences.getApiKey(
+                                        ForecastProvider.OPEN_WEATHER.name()));
                     }
                 });
     }
@@ -107,22 +105,12 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public Observable<Coordinates> getLastLocation() {
-        return lastLocationSubject.hide();
-    }
-
-    @Override
-    public Observable<List<Coordinates>> getLocations() {
-        return locationsSubject.hide();
-    }
-
-    @Override
-    public Observable<String> getApiKey(WeatherProvider provider) {
+    public Observable<String> getApiKey(ForecastProvider provider) {
         return apiKeySubject.hide();
     }
 
     @Override
-    public Observable<WeatherProvider> getWeatherProvider() {
+    public Observable<ForecastProvider> getWeatherProvider() {
         return providerSubject.hide();
     }
 
@@ -142,35 +130,12 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public void setLastLocation(Coordinates coordinates) {
-        String json = gson.toJson(coordinates);
-        if (!settingPreferences.getLocations().contains(json)) {
-            settingPreferences.setLocation(coordinates);
-        }
+    public void setApiKey(String apiKey, ForecastProvider provider) {
+        forecastApiPreferences.setApiKey(provider.name(), apiKey);
     }
 
     @Override
-    public void setApiKey(String apiKey, WeatherProvider provider) {
-        weatherApiPreferences.setApiKey(provider.name(), apiKey);
-    }
-
-    @Override
-    public void setWeatherProvider(WeatherProvider provider) {
-        settingPreferences.setWeatherProvider(provider);
-    }
-
-    @Override
-    public void removeLocation(Coordinates coordinates) {
-        List<String> locations = settingPreferences.getLocations();
-        String json = gson.toJson(coordinates);
-        if (locations.contains(json)) {
-            locations.remove(json);
-            settingPreferences.setLocation(coordinates);
-        }
-    }
-
-    @Override
-    public void removeApiKey(WeatherProvider provider) {
-        weatherApiPreferences.removeApiKey(provider.name());
+    public void removeApiKey(ForecastProvider provider) {
+        forecastApiPreferences.removeApiKey(provider.name());
     }
 }

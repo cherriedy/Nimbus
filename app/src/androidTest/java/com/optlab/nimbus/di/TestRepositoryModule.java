@@ -1,14 +1,12 @@
 package com.optlab.nimbus.di;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.common.WeatherProvider;
-import com.optlab.nimbus.data.local.dao.WeatherDao;
+import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.local.dao.ForecastDao;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
-import com.optlab.nimbus.data.preferences.SecurePrefsManager;
-import com.optlab.nimbus.data.repository.TomorrowIoRepository;
+import com.optlab.nimbus.data.preferences.ForecastApiPreferencesImpl;
+import com.optlab.nimbus.data.repository.TomorrowIoRepositoryImpl;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import javax.inject.Singleton;
@@ -16,7 +14,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
 @Module
@@ -24,23 +21,23 @@ import dagger.hilt.components.SingletonComponent;
 public class TestRepositoryModule {
     @Provides
     @Singleton
-    public static WeatherProvider provideEndpoint() {
+    public static ForecastProvider provideEndpoint() {
         // Later: get the endpoint from the build config or any other source
-        return WeatherProvider.TOMORROW_IO;
+        return ForecastProvider.TOMORROW_IO;
     }
 
     /** Inject WeatherRepository implementation based on the selected endpoint. */
     @Provides
     @Singleton
     public static WeatherRepository provideRepository(
-            @NonNull WeatherProvider weatherProvider,
+            @NonNull ForecastProvider forecastProvider,
             @NonNull TomorrowIoClient tomorrowIoClient,
-            @NonNull SecurePrefsManager securePrefsManager,
-            @NonNull WeatherDao weatherDao) {
-        return switch (weatherProvider) {
+            @NonNull ForecastApiPreferencesImpl weatherApiPreferencesImpl,
+            @NonNull ForecastDao forecastDao) {
+        return switch (forecastProvider) {
             case OPEN_WEATHER -> null;
             case TOMORROW_IO ->
-                    new TomorrowIoRepository(tomorrowIoClient, securePrefsManager, weatherDao);
+                    new TomorrowIoRepositoryImpl(tomorrowIoClient, weatherApiPreferencesImpl, forecastDao);
         };
     }
 }

@@ -5,20 +5,12 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.optlab.nimbus.data.common.WeatherProvider;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 
-import timber.log.Timber;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * UserPrefsManager is a class that manages the user preferences for the application. It uses
@@ -31,74 +23,22 @@ public class SettingPreferencesImpl implements SettingPreferences {
     public static final String WIND_SPEED_UNIT = "wind_speed_unit";
     public static final String PRESSURE_UNIT = "pressure_unit";
     public static final String WEATHER_PROVIDER = "weather_provider";
-    public static final String LOCATIONS = "locations";
 
     private static final String PREF_NAME = "setting_prefs";
     private static final String[] UNITS =
             new String[] {TEMPERATURE_UNIT, WIND_SPEED_UNIT, PRESSURE_UNIT};
 
     private final SharedPreferences settingsPrefs;
-    private final Gson gson;
 
     public SettingPreferencesImpl(@NonNull Context context) {
         this.settingsPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        this.gson = new Gson();
         initUnits();
     }
 
-    /**
-     * Set the location in the list of locations. If the location already exists, it will not be
-     * added again.
-     *
-     * @param coordinates the location to be added
-     */
     @Override
-    public void setLocation(@NonNull Coordinates coordinates) {
-        List<String> locations = getLocations();
-        String json = gson.toJson(coordinates);
-        if (!locations.contains(json)) {
-            locations.add(json);
-            settingsPrefs.edit().putString(LOCATIONS, gson.toJson(locations)).apply();
-        } else {
-            Timber.w("Location already exists");
-        }
-    }
-
-    /**
-     * Get the location at the given position in the list of locations.
-     *
-     * @param position the position of the location in the list
-     * @return the location at the given position
-     */
-    @Override
-    public Coordinates getLocation(int position) {
-        List<String> locations = getLocations();
-        if (locations.isEmpty()) {
-            return null;
-        }
-        Type type = new TypeToken<Coordinates>() {}.getType();
-        return gson.fromJson(locations.get(position), type);
-    }
-
-    /**
-     * Get the list of locations.
-     *
-     * @return the list of locations
-     */
-    @Override
-    public List<String> getLocations() {
-        String json = settingsPrefs.getString(LOCATIONS, null);
-        if (json == null) {
-            return new ArrayList<>();
-        }
-        Type type = new TypeToken<List<String>>() {}.getType();
-        return gson.fromJson(json, type);
-    }
-
-    @Override
-    public void setWeatherProvider(@NonNull WeatherProvider provider) {
+    public void setWeatherProvider(@NonNull ForecastProvider provider) {
         if (provider == null) {
-            provider = WeatherProvider.TOMORROW_IO;
+            provider = ForecastProvider.TOMORROW_IO;
         }
         settingsPrefs.edit().putString(WEATHER_PROVIDER, provider.name()).apply();
     }
@@ -211,10 +151,10 @@ public class SettingPreferencesImpl implements SettingPreferences {
     }
 
     @Override
-    public WeatherProvider getWeatherProvider() {
+    public ForecastProvider getWeatherProvider() {
         String providerName =
-                settingsPrefs.getString(WEATHER_PROVIDER, WeatherProvider.TOMORROW_IO.name());
-        return WeatherProvider.valueOf(providerName);
+                settingsPrefs.getString(WEATHER_PROVIDER, ForecastProvider.TOMORROW_IO.name());
+        return ForecastProvider.valueOf(providerName);
     }
 
     @Override

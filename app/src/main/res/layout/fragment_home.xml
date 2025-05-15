@@ -11,7 +11,7 @@
 
         <variable
             name="fragment"
-            type="com.optlab.nimbus.ui.view.CurrentForecastFragment" />
+            type="com.optlab.nimbus.ui.view.forecast.CurrentForecastFragment" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -30,7 +30,11 @@
             android:id="@+id/nv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start" />
+            android:layout_gravity="start"
+            android:background="?attr/colorPrimary"
+            android:scrollbars="none"
+            app:drawerLayoutCornerSize="0dp"
+            app:headerLayout="@layout/layout_nav_search_header" />
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>

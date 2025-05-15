@@ -4,24 +4,15 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.common.WeatherProvider;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
-
-import java.util.List;
+import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 
 public interface SettingPreferences {
-    void setLocation(@NonNull Coordinates coordinates);
-
-    Coordinates getLocation(int position);
-
-    List<String> getLocations();
-
     void setUnit(@NonNull String key, @NonNull Enum<?> unit);
 
-    void setWeatherProvider(@NonNull WeatherProvider provider);
+    void setWeatherProvider(@NonNull ForecastProvider provider);
 
     Enum<?> getUnit(@NonNull String key);
 
@@ -31,7 +22,7 @@ public interface SettingPreferences {
 
     PressureUnit getPressureUnit();
 
-    WeatherProvider getWeatherProvider();
+    ForecastProvider getWeatherProvider();
 
     void registerOnChangeListener(
             @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);

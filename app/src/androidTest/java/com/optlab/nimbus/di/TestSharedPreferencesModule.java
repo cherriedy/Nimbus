@@ -2,8 +2,8 @@ package com.optlab.nimbus.di;
 
 import android.content.Context;
 
-import com.optlab.nimbus.data.preferences.SecurePrefsManager;
-import com.optlab.nimbus.data.preferences.UserPreferencesManager;
+import com.optlab.nimbus.data.preferences.ForecastApiPreferencesImpl;
+import com.optlab.nimbus.data.preferences.SettingPreferencesImpl;
 
 import javax.inject.Singleton;
 
@@ -18,15 +18,15 @@ import dagger.hilt.components.SingletonComponent;
 public class TestSharedPreferencesModule {
     @Provides
     @Singleton
-    public static SecurePrefsManager provideSecurePrefsManager(
+    public static ForecastApiPreferencesImpl provideSecurePrefsManager(
             @ApplicationContext Context context) {
-        return new SecurePrefsManager(context);
+        return new ForecastApiPreferencesImpl(context);
     }
 
     @Provides
     @Singleton
-    public static UserPreferencesManager provideUserPrefsManager(
+    public static SettingPreferencesImpl provideUserPrefsManager(
             @ApplicationContext Context context) {
-        return new UserPreferencesManager(context);
+        return new SettingPreferencesImpl(context);
     }
 }

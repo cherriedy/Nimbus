@@ -5,15 +5,12 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.room.Room;
 
-import com.optlab.nimbus.data.local.dao.WeatherDao;
-import com.optlab.nimbus.data.local.database.WeatherDatabase;
-import com.optlab.nimbus.data.local.entity.Converters;
-import com.optlab.nimbus.data.preferences.SettingPreferences;
-import com.optlab.nimbus.data.preferences.WeatherApiPreferences;
-import com.optlab.nimbus.data.repository.PreferencesRepository;
-import com.optlab.nimbus.data.repository.PreferencesRepositoryImpl;
+import com.optlab.nimbus.data.local.dao.ForecastDao;
+import com.optlab.nimbus.data.local.dao.LocationDao;
+import com.optlab.nimbus.data.local.database.LocationDatabase;
+import com.optlab.nimbus.data.local.database.ForecastDatabase;
 
-import java.util.concurrent.Executor;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import javax.inject.Singleton;
@@ -30,34 +27,40 @@ import timber.log.Timber;
 public class DatabaseModule {
     @Provides
     @Singleton
-    public static WeatherDatabase provideDatabase(@ApplicationContext Context context) {
-        return Room.databaseBuilder(context, WeatherDatabase.class, "nimbus-db")
-                .setQueryCallback(
-                        (sqlQuery, bindArgs) -> {
-                            StringBuilder logMessage =
-                                    new StringBuilder("SQL Query: ").append(sqlQuery);
-                            if (bindArgs != null) {
-                                logMessage.append(", Bind Args: ");
-                                for (Object arg : bindArgs) {
-                                    logMessage.append(arg).append(", ");
-                                }
-                            }
-                            Timber.d(logMessage.toString());
-                        },
-                        Executors.newSingleThreadExecutor())
+    public static ForecastDatabase provideForecastDatabase(@ApplicationContext Context context) {
+        return Room.databaseBuilder(context, ForecastDatabase.class, "nimbus-db")
+                .setQueryCallback(DatabaseModule::logQuery, Executors.newSingleThreadExecutor())
                 .build();
     }
 
     @Provides
     @Singleton
-    public static WeatherDao provideWeatherDao(@NonNull WeatherDatabase weatherDatabase) {
-        return weatherDatabase.weatherDao();
+    public static ForecastDao provideForecastDao(@NonNull ForecastDatabase forecastDatabase) {
+        return forecastDatabase.weatherDao();
     }
 
     @Provides
     @Singleton
-    public static PreferencesRepository providePreferencesRepository(
-            SettingPreferences settingPreferences, WeatherApiPreferences weatherApiPreferences) {
-        return new PreferencesRepositoryImpl(settingPreferences, weatherApiPreferences);
+    public static LocationDatabase provideLocationDatabase(@ApplicationContext Context context) {
+        return Room.databaseBuilder(context, LocationDatabase.class, "location-db")
+                .setQueryCallback(DatabaseModule::logQuery, Executors.newSingleThreadExecutor())
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    public static LocationDao provideLocationDao(@NonNull LocationDatabase locationDatabase) {
+        return locationDatabase.locationDao();
+    }
+
+    private static void logQuery(String sqlQuery, List<?> bindArgs) {
+        StringBuilder logMessage = new StringBuilder("SQL Query: ").append(sqlQuery);
+        if (bindArgs != null) {
+            logMessage.append(", Bind Args: ");
+            for (Object arg : bindArgs) {
+                logMessage.append(arg).append(", ");
+            }
+        }
+        Timber.d(logMessage.toString());
     }
 }

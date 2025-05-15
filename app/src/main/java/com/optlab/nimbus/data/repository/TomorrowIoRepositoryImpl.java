@@ -5,16 +5,15 @@ import androidx.annotation.NonNull;
 import com.optlab.nimbus.constant.ResponseConstant;
 import com.optlab.nimbus.constant.TagConstant;
 import com.optlab.nimbus.constant.TomorrowIoConstant;
-import com.optlab.nimbus.data.common.NetworkBoundResource;
-import com.optlab.nimbus.data.common.WeatherProvider;
-import com.optlab.nimbus.data.local.dao.WeatherDao;
-import com.optlab.nimbus.data.local.entity.Converters;
-import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.mapper.TomorrowIoMapper;
-import com.optlab.nimbus.data.model.mapper.WeatherMapper;
+import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.network.NetworkBoundResource;
+import com.optlab.nimbus.data.local.dao.ForecastDao;
+import com.optlab.nimbus.data.local.entity.ForecastEntity;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.forecast.ForecastResponse;
+import com.optlab.nimbus.data.model.tomorrowio.TomorrowIoResponse;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
-import com.optlab.nimbus.data.preferences.WeatherApiPreferences;
+import com.optlab.nimbus.data.preferences.ForecastApiPreferences;
 import com.optlab.nimbus.utility.DateTimeUtil;
 
 import io.reactivex.rxjava3.core.Flowable;
@@ -29,35 +28,35 @@ import timber.log.Timber;
 public class TomorrowIoRepositoryImpl implements WeatherRepository {
     private final TomorrowIoClient tomorrowIoClient;
     private final String tomorrowIoKey;
-    private final WeatherDao weatherDao;
+    private final ForecastDao forecastDao;
 
     public TomorrowIoRepositoryImpl(
             @NonNull TomorrowIoClient tomorrowIoClient,
-            @NonNull WeatherApiPreferences weatherApiPreferences,
-            @NonNull WeatherDao weatherDao) {
+            @NonNull ForecastApiPreferences forecastApiPreferences,
+            @NonNull ForecastDao forecastDao) {
         this.tomorrowIoClient = tomorrowIoClient;
-        this.weatherDao = weatherDao;
-        this.tomorrowIoKey = weatherApiPreferences.getApiKey(WeatherProvider.TOMORROW_IO.name());
+        this.forecastDao = forecastDao;
+        this.tomorrowIoKey = forecastApiPreferences.getApiKey(ForecastProvider.TOMORROW_IO.name());
     }
 
     @Override
-    public Flowable<WeatherEntity> getWeaklyForecast(@NonNull Coordinates coordinates) {
-        return new NetworkBoundResource<WeatherEntity, WeatherEntity>() {
+    public Flowable<ForecastEntity> getWeaklyForecast(@NonNull Coordinates coordinates) {
+        return new NetworkBoundResource<ForecastEntity, ForecastEntity>() {
             @Override
-            protected Maybe<WeatherEntity> getFromLocal() {
-                return weatherDao.getLatestWeather(
-                        WeatherEntity.Type.WEAKLY,
-                        WeatherProvider.TOMORROW_IO,
-                        Converters.fromCoordinates(coordinates));
+            protected Maybe<ForecastEntity> getFromLocal() {
+                return forecastDao.getForecast(
+                        ForecastEntity.Type.WEAKLY,
+                        ForecastProvider.TOMORROW_IO,
+                        coordinates.getLocationParameter());
             }
 
             @Override
-            protected boolean shouldFetch(WeatherEntity data) {
+            protected boolean shouldFetch(ForecastEntity data) {
                 return data == null || data.isExpired();
             }
 
             @Override
-            protected Single<WeatherEntity> fetchFromRemote() {
+            protected Single<ForecastEntity> fetchFromRemote() {
                 return tomorrowIoClient
                         .getTomorrowIoService()
                         .getWeatherByLocationCode(
@@ -69,27 +68,27 @@ public class TomorrowIoRepositoryImpl implements WeatherRepository {
                                 TomorrowIoConstant.PLUS_5_DAYS_FROM_TODAY,
                                 DateTimeUtil.getTimeZoneId(),
                                 tomorrowIoKey)
-                        .map(TomorrowIoMapper::map)
+                        .map(TomorrowIoResponse::mapToWeatherResponse)
                         .map(
                                 responses ->
-                                        WeatherMapper.mapToWeatherEntity(
-                                                responses, coordinates, WeatherEntity.Type.WEAKLY))
+                                        ForecastResponse.mapToForecastEntity(
+                                                responses, coordinates, ForecastEntity.Type.WEAKLY))
                         .onErrorResumeNext(TomorrowIoRepositoryImpl.this::onErrorFetchWeather);
             }
 
             @Override
-            protected void cacheFetchResult(WeatherEntity item) {
-                weatherDao
-                        .insertWeather(item)
+            protected void cacheFetchResult(ForecastEntity item) {
+                forecastDao
+                        .insert(item)
                         .subscribeOn(Schedulers.io())
                         .doOnComplete(
                                 () -> {
                                     Timber.tag(TagConstant.DATABASE)
                                             .d("Inserted weather data successfully");
-                                    weatherDao.deleteExpiry(
-                                            WeatherEntity.Type.WEAKLY,
-                                            WeatherProvider.TOMORROW_IO,
-                                            Converters.fromCoordinates(coordinates),
+                                    forecastDao.deleteExpiry(
+                                            ForecastEntity.Type.WEAKLY,
+                                            ForecastProvider.TOMORROW_IO,
+                                            coordinates.getLocationParameter(),
                                             System.currentTimeMillis()
                                                     + ResponseConstant.DAILY_EXPIRY_TIME);
                                 })
@@ -104,25 +103,25 @@ public class TomorrowIoRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public Flowable<WeatherEntity> getCurrentForecast(@NonNull Coordinates coordinates) {
-        return new NetworkBoundResource<WeatherEntity, WeatherEntity>() {
+    public Flowable<ForecastEntity> getCurrentForecast(@NonNull Coordinates coordinates) {
+        return new NetworkBoundResource<ForecastEntity, ForecastEntity>() {
             @Override
-            protected Maybe<WeatherEntity> getFromLocal() {
+            protected Maybe<ForecastEntity> getFromLocal() {
                 Timber.d("Fetching current weather from local database");
-                return weatherDao.getLatestWeather(
-                        WeatherEntity.Type.CURRENT,
-                        WeatherProvider.TOMORROW_IO,
-                        Converters.fromCoordinates(coordinates));
+                return forecastDao.getForecast(
+                        ForecastEntity.Type.CURRENT,
+                        ForecastProvider.TOMORROW_IO,
+                        coordinates.getLocationParameter());
             }
 
             @Override
-            protected boolean shouldFetch(WeatherEntity data) {
+            protected boolean shouldFetch(ForecastEntity data) {
                 Timber.d("Checking if current weather should be fetched");
                 return data == null || data.isExpired();
             }
 
             @Override
-            protected Single<WeatherEntity> fetchFromRemote() {
+            protected Single<ForecastEntity> fetchFromRemote() {
                 return tomorrowIoClient
                         .getTomorrowIoService()
                         .getWeatherByLocationCode(
@@ -132,18 +131,18 @@ public class TomorrowIoRepositoryImpl implements WeatherRepository {
                                 TomorrowIoConstant.METRIC,
                                 DateTimeUtil.getTimeZoneId(),
                                 tomorrowIoKey)
-                        .map(TomorrowIoMapper::map)
+                        .map(TomorrowIoResponse::mapToWeatherResponse)
                         .map(
                                 responses ->
-                                        WeatherMapper.mapToWeatherEntity(
-                                                responses, coordinates, WeatherEntity.Type.CURRENT))
+                                        ForecastResponse.mapToForecastEntity(
+                                                responses, coordinates, ForecastEntity.Type.CURRENT))
                         .onErrorResumeNext(TomorrowIoRepositoryImpl.this::onErrorFetchWeather);
             }
 
             @Override
-            protected void cacheFetchResult(WeatherEntity item) {
-                weatherDao
-                        .insertWeather(item)
+            protected void cacheFetchResult(ForecastEntity item) {
+                forecastDao
+                        .insert(item)
                         .subscribeOn(Schedulers.io())
                         .doOnComplete(
                                 () -> {
@@ -185,23 +184,23 @@ public class TomorrowIoRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public Flowable<WeatherEntity> getHourlyForecast(@NonNull Coordinates coordinates) {
-        return new NetworkBoundResource<WeatherEntity, WeatherEntity>() {
+    public Flowable<ForecastEntity> getHourlyForecast(@NonNull Coordinates coordinates) {
+        return new NetworkBoundResource<ForecastEntity, ForecastEntity>() {
             @Override
-            protected Maybe<WeatherEntity> getFromLocal() {
-                return weatherDao.getLatestWeather(
-                        WeatherEntity.Type.HOURLY,
-                        WeatherProvider.TOMORROW_IO,
-                        Converters.fromCoordinates(coordinates));
+            protected Maybe<ForecastEntity> getFromLocal() {
+                return forecastDao.getForecast(
+                        ForecastEntity.Type.HOURLY,
+                        ForecastProvider.TOMORROW_IO,
+                        coordinates.getLocationParameter());
             }
 
             @Override
-            protected boolean shouldFetch(WeatherEntity data) {
+            protected boolean shouldFetch(ForecastEntity data) {
                 return data == null || data.isExpired();
             }
 
             @Override
-            protected Single<WeatherEntity> fetchFromRemote() {
+            protected Single<ForecastEntity> fetchFromRemote() {
                 return tomorrowIoClient
                         .getTomorrowIoService()
                         .getWeatherByLocationCode(
@@ -213,27 +212,27 @@ public class TomorrowIoRepositoryImpl implements WeatherRepository {
                                 DateTimeUtil.getAnHourLaterTomorrow(),
                                 DateTimeUtil.getTimeZoneId(),
                                 tomorrowIoKey)
-                        .map(TomorrowIoMapper::map)
+                        .map(TomorrowIoResponse::mapToWeatherResponse)
                         .map(
                                 responses ->
-                                        WeatherMapper.mapToWeatherEntity(
-                                                responses, coordinates, WeatherEntity.Type.HOURLY))
+                                        ForecastResponse.mapToForecastEntity(
+                                                responses, coordinates, ForecastEntity.Type.HOURLY))
                         .onErrorResumeNext(TomorrowIoRepositoryImpl.this::onErrorFetchWeather);
             }
 
             @Override
-            protected void cacheFetchResult(WeatherEntity item) {
-                weatherDao
-                        .insertWeather(item)
+            protected void cacheFetchResult(ForecastEntity item) {
+                forecastDao
+                        .insert(item)
                         .subscribeOn(Schedulers.io())
                         .doOnComplete(
                                 () -> {
                                     Timber.tag(TagConstant.DATABASE)
                                             .d("Inserted hourly weather data successfully");
-                                    weatherDao.deleteExpiry(
-                                            WeatherEntity.Type.HOURLY,
-                                            WeatherProvider.TOMORROW_IO,
-                                            Converters.fromCoordinates(coordinates),
+                                    forecastDao.deleteExpiry(
+                                            ForecastEntity.Type.HOURLY,
+                                            ForecastProvider.TOMORROW_IO,
+                                            coordinates.getLocationParameter(),
                                             System.currentTimeMillis()
                                                     + ResponseConstant.DAILY_EXPIRY_TIME);
                                 })
@@ -247,9 +246,9 @@ public class TomorrowIoRepositoryImpl implements WeatherRepository {
         }.asFlowable();
     }
 
-    private SingleSource<? extends WeatherEntity> onErrorFetchWeather(Throwable throwable) {
+    private SingleSource<? extends ForecastEntity> onErrorFetchWeather(Throwable throwable) {
         Timber.tag(TagConstant.NETWORK)
                 .e("Error fetching weather data: %s", throwable.getMessage());
-        return Single.just(new WeatherEntity());
+        return Single.just(new ForecastEntity());
     }
 }

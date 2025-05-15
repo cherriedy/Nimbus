@@ -6,7 +6,7 @@
     <string name="pressure">気圧</string>
     <string name="wind">風</string>
     <string name="humidity">湿度</string>
-    <string name="enter_city_name">都市名を入力</string>
+    <string name="enter_search_place">場所を検索...</string>
     <string name="updated_at">更新日時</string>
     <string name="monday">月曜日</string>
     <string name="tuesday">火曜日</string>
@@ -54,4 +54,11 @@
     <string name="offering_slight_relief_from_the_heat">" で、暑さを少し和らげるでしょう。 "</string>
     <string name="daily_summary">日ごとの要約</string>
     <string name="to">" ～ "</string>
+    <string name="settings">設定</string>
+    <string name="units">単位</string>
+    <string name="temperature_unit">温度の単位</string>
+    <string name="wind_unit">風の単位</string>
+    <string name="pressure_unit">気圧の単位</string>
+    <string name="providers">プロバイダー</string>
+    <string name="weather_data">気象データ</string>
 </resources>

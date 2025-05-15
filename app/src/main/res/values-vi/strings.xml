@@ -6,7 +6,7 @@
     <string name="pressure">Áp suất</string>
     <string name="wind">Tốc độ gió</string>
     <string name="humidity">Độ ẩm</string>
-    <string name="enter_city_name">NHẬP TÊN THÀNH PHỐ</string>
+    <string name="enter_search_place">Tìm kiếm địa điểm...</string>
     <string name="updated_at">CẬP NHẬT LÚC</string>
     <string name="monday">Thứ Hai</string>
     <string name="tuesday">Thứ Ba</string>
@@ -54,4 +54,11 @@
     <string name="offering_slight_relief_from_the_heat">" , giúp giảm bớt cái nóng một chút. "</string>
     <string name="daily_summary">Tóm tắt</string>
     <string name="to">" to "</string>
+    <string name="settings">Cài đặt</string>
+    <string name="units">Đơn vị</string>
+    <string name="temperature_unit">Đơn vị nhiệt độ</string>
+    <string name="wind_unit">Đơn vị gió</string>
+    <string name="pressure_unit">Đơn vị áp suất</string>
+    <string name="providers">Nhà cung cấp</string>
+    <string name="weather_data">Dữ liệu thời tiết</string>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tie_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_search"
+            android:drawableEnd="@drawable/ic_vertical_three_dot"
+            android:drawablePadding="@dimen/spacing_xmedium"
+            android:hint="@string/enter_search_place"
+            android:paddingBottom="@dimen/spacing_mlarge"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_locations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:orientation="vertical"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
+</layout>

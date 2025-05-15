@@ -6,13 +6,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
-import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
-import com.optlab.nimbus.data.model.mapper.WeatherMapper;
+import com.optlab.nimbus.data.local.entity.ForecastEntity;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.model.forecast.ForecastResponse;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 import com.optlab.nimbus.data.repository.PreferencesRepository;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
@@ -33,8 +32,8 @@ public class CurrentForecastViewModel extends ViewModel {
     private final PreferencesRepository preferencesRepository;
     private final Gson gson = new Gson();
     private final CompositeDisposable disposables = new CompositeDisposable();
-    private final MutableLiveData<List<WeatherResponse>> current = new MutableLiveData<>();
-    private final MutableLiveData<List<WeatherResponse>> hourly = new MutableLiveData<>();
+    private final MutableLiveData<List<ForecastResponse>> current = new MutableLiveData<>();
+    private final MutableLiveData<List<ForecastResponse>> hourly = new MutableLiveData<>();
     private final MutableLiveData<TemperatureUnit> temperatureUnit = new MutableLiveData<>();
     private final MutableLiveData<WindSpeedUnit> windSpeedUnit = new MutableLiveData<>();
     private final MutableLiveData<PressureUnit> pressureUnit = new MutableLiveData<>();
@@ -57,11 +56,11 @@ public class CurrentForecastViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public LiveData<List<WeatherResponse>> getCurrent() {
+    public LiveData<List<ForecastResponse>> getCurrent() {
         return current;
     }
 
-    public LiveData<List<WeatherResponse>> getHourly() {
+    public LiveData<List<ForecastResponse>> getHourly() {
         return hourly;
     }
 
@@ -77,20 +76,17 @@ public class CurrentForecastViewModel extends ViewModel {
         return pressureUnit;
     }
 
-    public void fetchCurrent(@NonNull Coordinates coordinates) {
+    public void fetchForecast(@NonNull Coordinates coordinates) {
         fetchWeather(weatherRepository.getCurrentForecast(coordinates), current, "Current");
-    }
-
-    public void fetchHourly(@NonNull Coordinates coordinates) {
         fetchWeather(weatherRepository.getHourlyForecast(coordinates), hourly, "Hourly");
     }
 
     private void fetchWeather(
-            Flowable<WeatherEntity> flowable,
-            MutableLiveData<List<WeatherResponse>> liveData,
+            Flowable<ForecastEntity> flowable,
+            MutableLiveData<List<ForecastResponse>> liveData,
             String tag) {
         disposables.add(
-                flowable.map(WeatherMapper::mapFromWeatherEntity)
+                flowable.map(ForecastResponse::mapFromForecastEntity)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(

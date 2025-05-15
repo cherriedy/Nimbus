@@ -8,14 +8,14 @@ import androidx.work.ListenableWorker;
 import androidx.work.WorkerFactory;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.preferences.UserPreferences;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 public class TestWorkerFactory extends WorkerFactory {
     private final WeatherRepository repository;
-    private final UserPreferences userPrefs;
+    private final SettingPreferences userPrefs;
 
-    public TestWorkerFactory(WeatherRepository repository, UserPreferences userPrefs) {
+    public TestWorkerFactory(WeatherRepository repository, SettingPreferences userPrefs) {
         this.repository = repository;
         this.userPrefs = userPrefs;
     }

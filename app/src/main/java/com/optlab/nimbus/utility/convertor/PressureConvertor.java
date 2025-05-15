@@ -1,6 +1,6 @@
 package com.optlab.nimbus.utility.convertor;
 
-import com.optlab.nimbus.data.model.common.PressureUnit;
+import com.optlab.nimbus.data.common.PressureUnit;
 
 /** Utility class for converting pressure values between different units. */
 public final class PressureConvertor {

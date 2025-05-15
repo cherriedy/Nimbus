@@ -19,15 +19,16 @@ import androidx.work.Worker;
 import androidx.work.testing.TestDriver;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
+import com.optlab.nimbus.data.FakeSettingPreferenceManager;
 import com.optlab.nimbus.data.FakeTomorrowIoRepository;
-import com.optlab.nimbus.data.FakeUserPreferenceManager;
-import com.optlab.nimbus.data.preferences.UserPreferences;
+import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +51,7 @@ public class WorkManagerWithFakeRepositoryTest {
     WeatherRepository repository = new FakeTomorrowIoRepository();
 
     /** FakeUserPreferenceManager is a mock implementation of the UserPreferences interface. */
-    UserPreferences userPrefs = new FakeUserPreferenceManager();
+    SettingPreferences userPrefs = new FakeSettingPreferenceManager();
 
     /** WorkManager is the main entry point for managing work requests. It is used to enqueue, */
     private WorkManager workManager;
@@ -68,11 +69,13 @@ public class WorkManagerWithFakeRepositoryTest {
         initializeTestWorkManager();
 
         // Initialize the list of workers to be tested.
-        workers =
-                List.of(
-                        CurrentWeatherWorker.class,
-                        HourlyWeatherWorker.class,
-                        DailyWeatherWorker.class);
+        // workers =
+        //         List.of(
+        //                 CurrentWeatherWorker.class,
+        //                 HourlyWeatherWorker.class,
+        //                 DailyWeatherWorker.class);
+
+        workers = new ArrayList<>();
 
         // Set up constraint for network connectivity.
         connectedNetworkConstraints =

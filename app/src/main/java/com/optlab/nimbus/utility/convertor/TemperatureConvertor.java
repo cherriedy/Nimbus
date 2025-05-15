@@ -1,6 +1,6 @@
 package com.optlab.nimbus.utility.convertor;
 
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
 
 public final class TemperatureConvertor {
     private TemperatureConvertor() {
@@ -15,8 +15,20 @@ public final class TemperatureConvertor {
                 Math.round(
                         switch (unit) {
                             case CELSIUS -> temperature;
-                            case KELVIN -> temperature - 273.15;
-                            case FAHRENHEIT -> (temperature - 32) * 5 / 9;
+                            case KELVIN -> {
+                                if (temperature < -273.15) {
+                                    throw new IllegalArgumentException(
+                                            "Temperature cannot be below absolute zero.");
+                                }
+                                yield temperature - 273.15;
+                            }
+                            case FAHRENHEIT -> {
+                                if (temperature < -459.67) {
+                                    throw new IllegalArgumentException(
+                                            "Temperature cannot be below absolute zero.");
+                                }
+                                yield (temperature - 32) * 5 / 9;
+                            }
                         });
     }
 }

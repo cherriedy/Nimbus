@@ -6,11 +6,12 @@
 
         <variable
             name="response"
-            type="com.optlab.nimbus.data.model.common.WeatherResponse" />
+            type="com.optlab.nimbus.data.model.forecast.ForecastResponse" />
+
 
         <variable
-            name="userPrefs"
-            type="com.optlab.nimbus.data.preferences.SettingPreferences" />
+            name="temperatureUnit"
+            type="com.optlab.nimbus.data.common.TemperatureUnit" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +56,7 @@
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textStyle="bold"
                 app:temperature="@{response.temperature}"
-                app:unit="@{userPrefs.getTemperatureUnit()}" />
+                app:unit="@{temperatureUnit}" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

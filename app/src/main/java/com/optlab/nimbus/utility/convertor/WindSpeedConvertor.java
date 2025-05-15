@@ -1,6 +1,6 @@
 package com.optlab.nimbus.utility.convertor;
 
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 
 public final class WindSpeedConvertor {
     private WindSpeedConvertor() {
@@ -10,6 +10,12 @@ public final class WindSpeedConvertor {
     }
 
     public static double fromMeterPerSecond(double speed, WindSpeedUnit unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
+        }
+        if (speed < 0) {
+            throw new IllegalArgumentException("Speed cannot be negative");
+        }
         return switch (unit) {
             case KILOMETERS_PER_HOUR -> speed * 3.6;
             case MILES_PER_HOUR -> speed * 2.23694;

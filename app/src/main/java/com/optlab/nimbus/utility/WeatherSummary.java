@@ -1,43 +1,51 @@
 package com.optlab.nimbus.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.preferences.SettingPreferences;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 
 public class WeatherSummary {
     private final Context context;
-    private final SettingPreferences settingPreferences;
     private final Double tempMax;
     private final Double tempMin;
     private final Double uvIndex;
     private final Double humidity;
     private final Double windSpeed;
     private final Double rainProbability;
+    private final TemperatureUnit temperatureUnit;
+    private final WindSpeedUnit windSpeedUnit;
+    private final PressureUnit pressureUnit;
 
     private WeatherSummary(Builder builder) {
         this.context = builder.context;
-        this.settingPreferences = builder.settingPreferences;
         this.tempMax = builder.tempMax;
         this.tempMin = builder.tempMin;
         this.uvIndex = builder.uvIndex;
         this.humidity = builder.humidity;
         this.windSpeed = builder.windSpeed;
         this.rainProbability = builder.rainProbability;
+        this.temperatureUnit = builder.temperatureUnit;
+        this.windSpeedUnit = builder.windSpeedUnit;
+        this.pressureUnit = builder.pressureUnit;
     }
 
     public static class Builder {
         private final Context context;
-        private final SettingPreferences settingPreferences;
         private Double tempMax;
         private Double tempMin;
         private Double uvIndex;
         private Double humidity;
         private Double windSpeed;
         private Double rainProbability;
+        private TemperatureUnit temperatureUnit;
+        private WindSpeedUnit windSpeedUnit;
+        private PressureUnit pressureUnit;
 
-        public Builder(Context context, SettingPreferences settingPreferences) {
+        public Builder(Context context) {
             this.context = context;
-            this.settingPreferences = settingPreferences;
         }
 
         public Builder tempMax(Double tempMax) {
@@ -70,11 +78,27 @@ public class WeatherSummary {
             return this;
         }
 
+        public Builder temperatureUnit(TemperatureUnit temperatureUnit) {
+            this.temperatureUnit = temperatureUnit;
+            return this;
+        }
+
+        public Builder windSpeedUnit(WindSpeedUnit windSpeedUnit) {
+            this.windSpeedUnit = windSpeedUnit;
+            return this;
+        }
+
+        public Builder pressureUnit(PressureUnit pressureUnit) {
+            this.pressureUnit = pressureUnit;
+            return this;
+        }
+
         public WeatherSummary build() {
             return new WeatherSummary(this);
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public String generate() {
         StringBuilder summary = new StringBuilder();
 
@@ -83,19 +107,17 @@ public class WeatherSummary {
                             context.getString(
                                     R.string.expect_hot_conditions_with_temperatures_ranging_from))
                     .append(tempMax.intValue())
-                    .append(settingPreferences.getTemperatureUnit().getName())
+                    .append(temperatureUnit.getName())
                     .append(context.getString(R.string.to));
         }
 
         if (tempMin != null) {
-            summary.append(tempMin.intValue())
-                    .append(settingPreferences.getTemperatureUnit().getName())
-                    .append(". ");
+            summary.append(tempMin.intValue()).append(temperatureUnit.getName()).append(". ");
         }
 
         if (humidity != null && humidity > 60) {
             summary.append(context.getString(R.string.high_humidity_around))
-                    .append(humidity.intValue())
+                    .append(humidity)
                     .append(context.getString(R.string.will_make_it_feel_even_warmer));
         }
 
@@ -121,8 +143,8 @@ public class WeatherSummary {
 
         if (windSpeed != null) {
             summary.append(context.getString(R.string.winds_will_be_around))
-                    .append(windSpeed.intValue())
-                    .append(settingPreferences.getWindSpeedUnit().getName())
+                    .append(String.format("%.1f", windSpeed))
+                    .append(windSpeedUnit.getName())
                     .append(context.getString(R.string.offering_slight_relief_from_the_heat));
         }
 

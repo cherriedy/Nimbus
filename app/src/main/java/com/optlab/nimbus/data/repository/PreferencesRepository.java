@@ -1,14 +1,11 @@
 package com.optlab.nimbus.data.repository;
 
-import com.optlab.nimbus.data.common.WeatherProvider;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 
 import io.reactivex.rxjava3.core.Observable;
-
-import java.util.List;
 
 public interface PreferencesRepository {
     Observable<TemperatureUnit> getTemperatureUnit();
@@ -17,13 +14,9 @@ public interface PreferencesRepository {
 
     Observable<PressureUnit> getPressureUnit();
 
-    Observable<Coordinates> getLastLocation();
+    Observable<String> getApiKey(ForecastProvider provider);
 
-    Observable<List<Coordinates>> getLocations();
-
-    Observable<String> getApiKey(WeatherProvider provider);
-
-    Observable<WeatherProvider> getWeatherProvider();
+    Observable<ForecastProvider> getWeatherProvider();
 
     void setTemperatureUnit(TemperatureUnit unit);
 
@@ -31,13 +24,7 @@ public interface PreferencesRepository {
 
     void setPressureUnit(PressureUnit unit);
 
-    void setLastLocation(Coordinates coordinates);
+    void setApiKey(String apiKey, ForecastProvider provider);
 
-    void setApiKey(String apiKey, WeatherProvider provider);
-
-    void setWeatherProvider(WeatherProvider provider);
-
-    void removeLocation(Coordinates coordinates);
-
-    void removeApiKey(WeatherProvider provider);
+    void removeApiKey(ForecastProvider provider);
 }

@@ -2,21 +2,14 @@ package com.optlab.nimbus.data;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
+import com.optlab.nimbus.data.local.entity.ForecastEntity;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.forecast.ForecastResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableSource;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.functions.Supplier;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 // public class FakeTomorrowIoRepository implements WeatherRepository {
 //     private boolean shouldFail = false;
@@ -90,28 +83,28 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FakeTomorrowIoRepository implements WeatherRepository {
     private boolean shouldFail = false;
-    private List<WeatherResponse> mockResponses = null;
+    private List<ForecastResponse> mockResponses = null;
 
     public void setShouldFail(boolean fail) {
         shouldFail = fail;
     }
 
-    public List<WeatherResponse> getMockResponses() {
+    public List<ForecastResponse> getMockResponses() {
         return mockResponses;
     }
 
     @Override
-    public Flowable<WeatherEntity> getDailyWeather(@NonNull Coordinates coordinates) {
+    public Flowable<ForecastEntity> getWeaklyForecast(@NonNull Coordinates coordinates) {
         return null;
     }
 
     @Override
-    public Flowable<WeatherEntity> getCurrentWeather(@NonNull Coordinates coordinates) {
+    public Flowable<ForecastEntity> getCurrentForecast(@NonNull Coordinates coordinates) {
         return null;
     }
 
     @Override
-    public Flowable<WeatherEntity> getHourlyWeather(@NonNull Coordinates coordinates) {
+    public Flowable<ForecastEntity> getHourlyForecast(@NonNull Coordinates coordinates) {
         return null;
     }
 }

@@ -5,12 +5,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
-import com.optlab.nimbus.data.model.mapper.WeatherMapper;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.model.forecast.ForecastResponse;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 import com.optlab.nimbus.data.repository.PreferencesRepository;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
@@ -29,7 +28,7 @@ public class WeaklyForecastViewModel extends ViewModel {
     private final WeatherRepository weatherRepository;
     private final PreferencesRepository preferencesRepository;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final MutableLiveData<List<WeatherResponse>> weakly = new MutableLiveData<>();
+    private final MutableLiveData<List<ForecastResponse>> weakly = new MutableLiveData<>();
     private final MutableLiveData<TemperatureUnit> temperatureUnit = new MutableLiveData<>();
     private final MutableLiveData<WindSpeedUnit> windSpeedUnit = new MutableLiveData<>();
     private final MutableLiveData<PressureUnit> pressureUnit = new MutableLiveData<>();
@@ -52,7 +51,7 @@ public class WeaklyForecastViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public LiveData<List<WeatherResponse>> getWeakly() {
+    public LiveData<List<ForecastResponse>> getWeakly() {
         return weakly;
     }
 
@@ -72,7 +71,7 @@ public class WeaklyForecastViewModel extends ViewModel {
         disposable.add(
                 weatherRepository
                         .getWeaklyForecast(coordinates)
-                        .map(WeatherMapper::mapFromWeatherEntity)
+                        .map(ForecastResponse::mapFromForecastEntity)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(weakly::setValue, e -> Timber.e("onError: %s", e.getMessage())));

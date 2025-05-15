@@ -2,7 +2,7 @@ package com.optlab.nimbus.utility.convertor;
 
 import static org.junit.Assert.assertEquals;
 
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;

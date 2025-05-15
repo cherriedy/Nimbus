@@ -10,9 +10,9 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.common.TemperatureUnit;
+import com.optlab.nimbus.data.common.WindSpeedUnit;
 import com.optlab.nimbus.utility.DateTimeUtil;
 import com.optlab.nimbus.utility.convertor.PressureConvertor;
 import com.optlab.nimbus.utility.convertor.TemperatureConvertor;

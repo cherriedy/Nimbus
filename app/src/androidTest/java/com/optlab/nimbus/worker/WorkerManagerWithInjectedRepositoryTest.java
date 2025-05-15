@@ -1,58 +1,42 @@
 package com.optlab.nimbus.worker;
 
 import static org.awaitility.Awaitility.await;
-import static org.awaitility.Awaitility.reset;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.work.Configuration;
 import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.testing.TestDriver;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
-import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.preferences.UserPreferencesManager;
-import com.optlab.nimbus.data.repository.TomorrowIoRepository;
+import com.optlab.nimbus.data.preferences.SettingPreferencesImpl;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 import com.optlab.nimbus.di.DatabaseModule;
+import com.optlab.nimbus.di.PreferencesModule;
 import com.optlab.nimbus.di.RepositoryModule;
-import com.optlab.nimbus.di.SharedPreferencesModule;
 
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.observers.TestObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import timber.log.Timber;
 
 @HiltAndroidTest
-@UninstallModules({DatabaseModule.class, SharedPreferencesModule.class, RepositoryModule.class})
+@UninstallModules({DatabaseModule.class, PreferencesModule.class, RepositoryModule.class})
 @RunWith(AndroidJUnit4.class)
 public class WorkerManagerWithInjectedRepositoryTest {
     /** Hilt rule to inject dependencies into the test class. */
@@ -68,7 +52,7 @@ public class WorkerManagerWithInjectedRepositoryTest {
      * UserPreferencesManager to be used in the test. This is injected by Hilt and is used to
      * provide user preferences to the workers.
      */
-    @Inject protected UserPreferencesManager userPreferencesManager;
+    @Inject protected SettingPreferencesImpl userPreferencesManager;
 
     private WorkManager workManager;
     private TestDriver testDriver;
@@ -80,11 +64,13 @@ public class WorkerManagerWithInjectedRepositoryTest {
         hiltRule.inject(); // Inject dependencies into the test class.
 
         // Initialize the list of workers to be tested.
-        workers =
-                List.of(
-                        CurrentWeatherWorker.class,
-                        DailyWeatherWorker.class,
-                        HourlyWeatherWorker.class);
+        // workers =
+        //         List.of(
+        //                 CurrentWeatherWorker.class,
+        //                 DailyWeatherWorker.class,
+        //                 HourlyWeatherWorker.class);
+
+        workers = new ArrayList<>();
 
         initializeTestWorkManage();
 

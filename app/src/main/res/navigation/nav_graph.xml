@@ -7,11 +7,16 @@
 
     <fragment
         android:id="@+id/currentForecastFragment"
-        android:name="com.optlab.nimbus.ui.view.CurrentForecastFragment"
+        android:name="com.optlab.nimbus.ui.view.forecast.CurrentForecastFragment"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/weaklyForecastFragment"
-        android:name="com.optlab.nimbus.ui.view.WeaklyForecastFragment"
+        android:name="com.optlab.nimbus.ui.view.forecast.WeaklyForecastFragment"
         tools:layout="@layout/fragment_weakly_forecast" />
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.optlab.nimbus.ui.view.setting.SettingFragment"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

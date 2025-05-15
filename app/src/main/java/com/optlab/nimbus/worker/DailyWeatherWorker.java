@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.model.common.WeatherResponse;
+import com.optlab.nimbus.data.model.forecast.ForecastResponse;
 import com.optlab.nimbus.data.preferences.SettingPreferences;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
@@ -52,7 +52,7 @@ public class DailyWeatherWorker extends Worker {
         Timber.e("Error fetching daily weather data: %s", throwable.getMessage());
     }
 
-    private void onSuccess(List<WeatherResponse> weatherResponses) {
+    private void onSuccess(List<ForecastResponse> forecastRespons) {
         Timber.d("Daily weather data fetched successfully");
     }
 }

@@ -6,7 +6,7 @@
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
-    <string name="enter_city_name">ENTER CITY NAME</string>
+    <string name="enter_search_place">Search places...</string>
     <string name="updated_at">UPDATED AT</string>
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
@@ -54,4 +54,11 @@
     <string name="offering_slight_relief_from_the_heat">" , offering slight relief from the heat. "</string>
     <string name="daily_summary">Daily Summary</string>
     <string name="to">" to "</string>
+    <string name="settings">Settings</string>
+    <string name="units">Units</string>
+    <string name="temperature_unit">Temperature unit</string>
+    <string name="wind_unit">Wind Unit</string>
+    <string name="pressure_unit">Pressure Unit</string>
+    <string name="providers">Providers</string>
+    <string name="weather_data">Weather data</string>
 </resources>
