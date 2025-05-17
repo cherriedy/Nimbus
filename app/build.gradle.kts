@@ -17,7 +17,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner = "com.optlab.nimbus.di.CustomTestRunner"
     }
 
@@ -44,11 +43,11 @@ android {
     }
 }
 
-configurations.all {
-    exclude(group = "org.hamcrest", module = "hamcrest-core")
-    exclude(group = "org.hamcrest", module = "hamcrest-library")
-    exclude(group = "org.hamcrest", module = "hamcrest")
-}
+//configurations.all {
+//    exclude(group = "org.hamcrest", module = "hamcrest-core")
+//    exclude(group = "org.hamcrest", module = "hamcrest-library")
+//    exclude(group = "org.hamcrest", module = "hamcrest")
+//}
 
 dependencies {
     // --- Core AndroidX ---
@@ -119,14 +118,20 @@ dependencies {
     implementation(libs.timber)
 
     // --- Testing ---
-    testImplementation(libs.junit)
+    testImplementation(libs.junit) {
+        exclude(group = "org.hamcrest")
+    }
     testImplementation(libs.mockito.core)
     testImplementation(libs.hamcrest)
-    androidTestImplementation(libs.hamcrest.hamcrest)
+    testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.mockito.android)
-    androidTestImplementation(libs.awaitility)
+    androidTestImplementation(libs.awaitility) {
+        exclude(group = "org.hamcrest")
+    }
     androidTestImplementation(libs.hilt.android.testing)
     androidTestAnnotationProcessor(libs.hilt.android.compiler)
+
 }
+
