@@ -20,7 +20,7 @@ import androidx.navigation.Navigation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.model.common.Coordinates;
+import com.optlab.nimbus.data.model.Coordinates;
 import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.databinding.FragmentMainDashboardBinding;
 import com.optlab.nimbus.ui.adapter.HourlyForecastAdapater;
@@ -36,12 +36,12 @@ import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
+    @Inject protected UserPreferencesManager userPrefs;
+
     private FragmentMainDashboardBinding binding;
     private HomeViewModel viewModel;
     private HourlyForecastAdapater adapter;
     private FusedLocationProviderClient fusedLocationClient;
-
-    @Inject protected UserPreferencesManager userPrefs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,13 +86,9 @@ public class HomeFragment extends Fragment {
                 .addOnSuccessListener(
                         location -> {
                             if (location != null) {
-                                Timber.d(
-                                        "Location: %f, %f",
-                                        location.getLatitude(), location.getLongitude());
                                 Coordinates coordinates =
                                         new Coordinates(
-                                                String.valueOf(location.getLatitude()),
-                                                String.valueOf(location.getLongitude()));
+                                                location.getLatitude(), location.getLongitude());
                                 userPrefs.setLocation(coordinates);
                                 viewModel.fetchCurrentWeatherByLocation(coordinates);
                                 viewModel.fetchHourlyWeathersByLocation(coordinates);

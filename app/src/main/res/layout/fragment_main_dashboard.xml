@@ -35,10 +35,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xxxlarge"
-                android:text="@{viewModel.current.first.weatherDescription}"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:textColor="@color/persianIndigo" />
+                android:textColor="@color/persianIndigo"
+                app:text_resource="@{viewModel.current.first.weatherDescription}" />
 
             <ImageView
                 android:id="@+id/iv_icon"

@@ -8,7 +8,7 @@
 
         <variable
             name="response"
-            type="com.optlab.nimbus.data.model.common.WeatherResponse" />
+            type="com.optlab.nimbus.data.model.WeatherResponse" />
 
         <variable
             name="userPrefs"
@@ -49,11 +49,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_large"
-            android:text="@{response.weatherDescription}"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             app:layout_constraintBottom_toBottomOf="@id/iv_icon"
             app:layout_constraintStart_toEndOf="@id/iv_icon"
-            app:layout_constraintTop_toTopOf="@id/iv_icon" />
+            app:layout_constraintTop_toTopOf="@id/iv_icon"
+            app:text_resource="@{response.weatherDescription}" />
 
         <TextView
             android:id="@+id/tv_max_temperature"

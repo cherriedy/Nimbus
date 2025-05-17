@@ -1,4 +1,4 @@
-package com.optlab.nimbus.data.model.common;
+package com.optlab.nimbus.data.model;
 
 import lombok.Getter;
 

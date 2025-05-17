@@ -2,8 +2,8 @@ package com.optlab.nimbus.data.repository;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.WeatherResponse;
 
 import java.util.List;
 

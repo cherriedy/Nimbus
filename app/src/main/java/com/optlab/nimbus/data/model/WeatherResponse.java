@@ -1,4 +1,7 @@
-package com.optlab.nimbus.data.model.common;
+package com.optlab.nimbus.data.model;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,6 +36,6 @@ public class WeatherResponse {
     private double windSpeed;
     private double humidity;
     private int weatherCode;
-    private int weatherIcon;
-    private String weatherDescription;
+    @DrawableRes private int weatherIcon;
+    @StringRes private int weatherDescription;
 }

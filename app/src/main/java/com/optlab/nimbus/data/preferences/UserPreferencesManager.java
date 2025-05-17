@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.PressureUnit;
+import com.optlab.nimbus.data.model.TemperatureUnit;
+import com.optlab.nimbus.data.model.WindSpeedUnit;
 
 import timber.log.Timber;
 

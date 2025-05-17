@@ -1,6 +1,6 @@
 package com.optlab.nimbus.utility.convertor;
 
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.WindSpeedUnit;
 
 public final class WindSpeedConvertor {
     private WindSpeedConvertor() {

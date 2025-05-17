@@ -1,6 +1,6 @@
 package com.optlab.nimbus.utility.convertor;
 
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
+import com.optlab.nimbus.data.model.TemperatureUnit;
 
 public final class TemperatureConvertor {
     private TemperatureConvertor() {

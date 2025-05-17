@@ -1,20 +1,15 @@
 package com.optlab.nimbus.data.repository;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.optlab.nimbus.constant.ResponseConstant;
-import com.optlab.nimbus.constant.TagConstant;
-import com.optlab.nimbus.constant.TomorrowIoConstant;
 import com.optlab.nimbus.data.local.dao.WeatherDao;
 import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
-import com.optlab.nimbus.data.model.mapper.TomorrowIoMapper;
-import com.optlab.nimbus.data.model.tomorrowio.TomorrowIoResponse;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.WeatherResponse;
+import com.optlab.nimbus.data.model.TomorrowIoResponse;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
 import com.optlab.nimbus.data.preferences.SecurePrefsManager;
 import com.optlab.nimbus.utility.DateTimeUtil;
@@ -26,10 +21,10 @@ import timber.log.Timber;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 /** TomorrowIoRepository is responsible for fetching weather data from the Tomorrow.io API. */
 public class TomorrowIoRepository implements WeatherRepository {
-    private final Context context;
     private final TomorrowIoClient tomorrowIoClient;
     private final String tomorrowIoKey;
     private final WeatherDao weatherDao;
@@ -38,11 +33,9 @@ public class TomorrowIoRepository implements WeatherRepository {
 
     /** Constructor injection for TomorrowIoClient */
     public TomorrowIoRepository(
-            @NonNull Context context,
             @NonNull TomorrowIoClient tomorrowIoClient,
             @NonNull SecurePrefsManager securePrefsManager,
             @NonNull WeatherDao weatherDao) {
-        this.context = context;
         this.tomorrowIoClient = tomorrowIoClient;
         this.weatherDao = weatherDao;
 
@@ -66,12 +59,8 @@ public class TomorrowIoRepository implements WeatherRepository {
                 .flatMap(
                         cachedData -> {
                             if (!cachedData.isEmpty()) {
-                                Timber.tag(TagConstant.DATABASE)
-                                        .d("Daily: Returning cached daily weather data");
                                 return Observable.just(cachedData);
                             }
-                            Timber.tag(TagConstant.NETWORK)
-                                    .d("Daily: Fetching new daily weather data from API");
                             return fetchAndCacheDailyWeather(coordinates);
                         });
     }
@@ -88,15 +77,13 @@ public class TomorrowIoRepository implements WeatherRepository {
             @NonNull Coordinates coordinates) {
         WeatherEntity.Type type = WeatherEntity.Type.DAILY;
         return tomorrowIoClient
-                .getTomorrowIoService()
-                .getWeatherByLocationCode(
-                        coordinates.getLocationParameter(),
-                        TomorrowIoConstant.DAILY_WEATHER_FIELDS,
-                        TomorrowIoConstant.TIMESTEPS_ONE_DAY,
-                        TomorrowIoConstant.METRIC,
-                        TomorrowIoConstant.PLUS_1_DAYS_FROM_TODAY,
-                        TomorrowIoConstant.PLUS_5_DAYS_FROM_TODAY,
-                        DateTimeUtil.getTimeZoneId(),
+                .getForecast(
+                        coordinates,
+                        TomorrowIoClient.DAILY_WEATHER_FIELDS,
+                        TomorrowIoClient.TIMESTEPS_ONE_DAY,
+                        TomorrowIoClient.PLUS_1_DAYS_FROM_TODAY,
+                        TomorrowIoClient.PLUS_5_DAYS_FROM_TODAY,
+                        TimeZone.getDefault(),
                         tomorrowIoKey)
                 .map(response -> cacheWeatherDataLocally(response, type))
                 .onErrorResumeNext(throwable -> fallbackToEmptyList(throwable, type));
@@ -113,22 +100,15 @@ public class TomorrowIoRepository implements WeatherRepository {
                 () -> {
                     WeatherEntity entity = weatherDao.getLatestWeather(type);
                     if (entity == null) {
-                        Timber.tag(TagConstant.DATABASE)
-                                .e("%s: No cached weather data found", type.name());
                         return Collections.emptyList(); // Return an empty list if no data is found
                     }
 
                     if (entity.isExpired()) {
-                        Timber.tag(TagConstant.DATABASE)
-                                .e("%s: Cached weather data expired", type.name());
                         weatherDao.deleteExpiry(System.currentTimeMillis()); // Delete expired data
                         return Collections.emptyList(); // Return an empty list if data is expired
                     }
 
-                    List<WeatherResponse> data = gson.fromJson(entity.getData(), reflectType);
-                    Timber.tag(TagConstant.DATABASE)
-                            .d("%s: Cached weather data found, size: %s", type.name(), data.size());
-                    return data;
+                    return gson.fromJson(entity.getData(), reflectType);
                 });
     }
 
@@ -146,12 +126,8 @@ public class TomorrowIoRepository implements WeatherRepository {
                 .flatMap(
                         cachedWeather -> {
                             if (!cachedWeather.isEmpty()) {
-                                Timber.tag(TagConstant.DATABASE)
-                                        .d("Current: Returning cached current weather data");
                                 return Observable.just(cachedWeather);
                             }
-                            Timber.tag(TagConstant.NETWORK)
-                                    .d("Current: Fetching new current weather data from API");
                             return fetchAndCacheCurrentWeather(coordinates);
                         });
     }
@@ -168,13 +144,11 @@ public class TomorrowIoRepository implements WeatherRepository {
             @NonNull Coordinates coordinates) {
         WeatherEntity.Type type = WeatherEntity.Type.CURRENT;
         return tomorrowIoClient
-                .getTomorrowIoService()
-                .getWeatherByLocationCode(
-                        coordinates.getLocationParameter(),
-                        TomorrowIoConstant.CURRENT_WEATHER_FIELDS,
-                        TomorrowIoConstant.TIMESTEPS_CURRENT,
-                        TomorrowIoConstant.METRIC,
-                        DateTimeUtil.getTimeZoneId(),
+                .getForecast(
+                        coordinates,
+                        TomorrowIoClient.CURRENT_WEATHER_FIELDS,
+                        TomorrowIoClient.TIMESTEPS_CURRENT,
+                        TimeZone.getDefault(),
                         tomorrowIoKey)
                 .map(response -> cacheWeatherDataLocally(response, type))
                 .onErrorResumeNext(throwable -> fallbackToEmptyList(throwable, type));
@@ -193,13 +167,11 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     private List<WeatherResponse> cacheWeatherDataLocally(
             @NonNull TomorrowIoResponse response, @NonNull WeatherEntity.Type type) {
-        // Map the TomorrowIoResponse to a list of UnifiedWeatherResponse
-        List<WeatherResponse> weatherData = TomorrowIoMapper.map(context, response);
+        List<WeatherResponse> weatherData = TomorrowIoResponse.mapToResponses(response);
 
         switch (type) { // Delete expired weather data based on the type
             case CURRENT -> weatherDao.deleteExpiry(ResponseConstant.CURRENT_EXPIRY_TIME);
             case DAILY, HOURLY -> weatherDao.deleteExpiry(ResponseConstant.DAILY_EXPIRY_TIME);
-            default -> Timber.tag(TagConstant.DATABASE).e("Unknown weather type: %s", type.name());
         }
 
         // Insert the new weather data into the database
@@ -208,9 +180,9 @@ public class TomorrowIoRepository implements WeatherRepository {
         entity.setData(new Gson().toJson(weatherData));
         entity.setTimestamp(System.currentTimeMillis());
         if (weatherDao.insertWeather(entity) != -1) {
-            Timber.tag(TagConstant.DATABASE).d("%s: Weather data cached successfully", type.name());
+            Timber.d("%s: Weather data cached successfully", type.name());
         } else {
-            Timber.tag(TagConstant.DATABASE).e("%s: Failed to cache weather data", type.name());
+            Timber.e("%s: Failed to cache weather data", type.name());
         }
 
         return weatherData;
@@ -234,12 +206,8 @@ public class TomorrowIoRepository implements WeatherRepository {
                 .flatMap(
                         cachedData -> {
                             if (!cachedData.isEmpty()) {
-                                Timber.tag(TagConstant.DATABASE)
-                                        .d("Hourly: Returning cached hourly weather data");
                                 return Observable.just(cachedData);
                             }
-                            Timber.tag(TagConstant.NETWORK)
-                                    .d("Hourly: Fetching new hourly weather data from API");
                             return fetchAndCacheHourlyWeather(coordinates);
                         });
     }
@@ -259,15 +227,13 @@ public class TomorrowIoRepository implements WeatherRepository {
             @NonNull Coordinates coordinates) {
         WeatherEntity.Type type = WeatherEntity.Type.HOURLY;
         return tomorrowIoClient
-                .getTomorrowIoService()
-                .getWeatherByLocationCode(
-                        coordinates.getLocationParameter(),
-                        TomorrowIoConstant.HOURLY_WEATHER_FIELDS,
-                        TomorrowIoConstant.TIMESTEPS_ONE_HOUR,
-                        TomorrowIoConstant.METRIC,
+                .getForecast(
+                        coordinates,
+                        TomorrowIoClient.HOURLY_WEATHER_FIELDS,
+                        TomorrowIoClient.TIMESTEPS_ONE_HOUR,
                         DateTimeUtil.getAnHourLater(),
                         DateTimeUtil.getAnHourLaterTomorrow(),
-                        DateTimeUtil.getTimeZoneId(),
+                        TimeZone.getDefault(),
                         tomorrowIoKey)
                 .map(response -> cacheWeatherDataLocally(response, type))
                 .onErrorResumeNext(throwable -> fallbackToEmptyList(throwable, type));
@@ -284,7 +250,6 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     private Observable<List<WeatherResponse>> fallbackToEmptyList(
             @NonNull Throwable throwable, @NonNull WeatherEntity.Type type) {
-        Timber.tag(TagConstant.DATABASE).e("%s: %s", type.name(), throwable.getMessage());
         return Observable.just(Collections.emptyList());
     }
 }

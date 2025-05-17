@@ -1,18 +1,18 @@
 package com.optlab.nimbus.ui.binding;
 
 import android.annotation.SuppressLint;
-import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.PressureUnit;
+import com.optlab.nimbus.data.model.TemperatureUnit;
+import com.optlab.nimbus.data.model.WindSpeedUnit;
 import com.optlab.nimbus.utility.DateTimeUtil;
 import com.optlab.nimbus.utility.convertor.PressureConvertor;
 import com.optlab.nimbus.utility.convertor.TemperatureConvertor;
@@ -52,8 +52,7 @@ public class UnitBindingAdapter {
      * @param unit the unit to convert the pressure to
      */
     @BindingAdapter(value = {"pressure", "unit"})
-    public static void setPressure(
-            @NonNull TextView view, Double pressure, PressureUnit unit) {
+    public static void setPressure(@NonNull TextView view, Double pressure, PressureUnit unit) {
         if (pressure == null || unit == null) {
             view.setText("");
             return;
@@ -72,8 +71,7 @@ public class UnitBindingAdapter {
      * @param unit the unit to convert the wind speed to
      */
     @BindingAdapter(value = {"wind_speed", "unit"})
-    public static void setWindSpeed(
-            @NonNull TextView view, Double speed, WindSpeedUnit unit) {
+    public static void setWindSpeed(@NonNull TextView view, Double speed, WindSpeedUnit unit) {
         if (speed == null || unit == null) {
             view.setText("");
             return;
@@ -106,8 +104,7 @@ public class UnitBindingAdapter {
      * @param date the date string
      */
     @BindingAdapter(value = {"day", "style"})
-    public static void setDay(
-            @NonNull TextView view, String date, TextStyle style) {
+    public static void setDay(@NonNull TextView view, String date, TextStyle style) {
         if (date == null || date.isEmpty() || style == null) {
             view.setText("");
             return;
@@ -175,5 +172,14 @@ public class UnitBindingAdapter {
         }
         String updatedAt = view.getContext().getString(R.string.updated_at);
         view.setText(updatedAt + ": " + DateTimeUtil.getDayTime(dateTime));
+    }
+
+    @BindingAdapter("text_resource")
+    public static void setTextResource(@NonNull TextView view, @StringRes int stringRes) {
+        if (stringRes == 0) {
+            view.setText("");
+            return;
+        }
+        view.setText(view.getContext().getString(stringRes));
     }
 }
