@@ -33,7 +33,6 @@ public class TestRepositoryModule {
     @Provides
     @Singleton
     public static WeatherRepository provideRepository(
-            @ApplicationContext Context context,
             @NonNull WeatherProvider weatherProvider,
             @NonNull TomorrowIoClient tomorrowIoClient,
             @NonNull SecurePrefsManager securePrefsManager,
@@ -41,8 +40,7 @@ public class TestRepositoryModule {
         return switch (weatherProvider) {
             case OPEN_WEATHER -> null;
             case TOMORROW_IO ->
-                    new TomorrowIoRepository(
-                            context, tomorrowIoClient, securePrefsManager, weatherDao);
+                    new TomorrowIoRepository(tomorrowIoClient, securePrefsManager, weatherDao);
         };
     }
 }

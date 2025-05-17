@@ -37,7 +37,6 @@ public record TomorrowIoResponse(@SerializedName("data") Data data) {
      * Maps a TomorrowIoResponse to a list of WeatherResponse objects. Performs null and bounds
      * checks for safer operation.
      *
-     * @param context Android context for resource access
      * @param response The TomorrowIoResponse to map
      * @return List of WeatherResponse objects
      */
