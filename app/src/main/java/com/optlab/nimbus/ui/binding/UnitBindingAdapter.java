@@ -10,9 +10,10 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.optlab.nimbus.R;
-import com.optlab.nimbus.data.common.PressureUnit;
-import com.optlab.nimbus.data.common.TemperatureUnit;
-import com.optlab.nimbus.data.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.Pressure;
+import com.optlab.nimbus.data.model.Temperature;
+import com.optlab.nimbus.data.model.Wind;
+import com.optlab.nimbus.data.model.WindSpeed;
 import com.optlab.nimbus.utility.DateTimeUtil;
 import com.optlab.nimbus.utility.convertor.PressureConvertor;
 import com.optlab.nimbus.utility.convertor.TemperatureConvertor;
@@ -35,9 +36,12 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"temperature", "unit"})
     public static void setTemperature(
-            @NonNull TextView view, double temperature, @NonNull TemperatureUnit unit) {
-        int roundedTemperature = TemperatureConvertor.fromCelsius(temperature, unit);
-        view.setText(String.format(Locale.ENGLISH, "%d%s", roundedTemperature, unit.getName()));
+            @NonNull TextView view, Temperature temperature, Temperature.Unit unit) {
+        if (temperature == null || unit == null) {
+            return;
+        }
+        int intValue = (int) temperature.getValue(unit);
+        view.setText(String.format(Locale.getDefault(), "%d%s", intValue, unit.getSymbol()));
     }
 
     /**
@@ -49,11 +53,12 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"pressure", "unit"})
     public static void setPressure(
-            @NonNull TextView view, double pressure, @NonNull PressureUnit unit) {
-        if (unit != PressureUnit.HECTOPASCAL) {
-            pressure = PressureConvertor.fromHectopascal(pressure, unit);
+            @NonNull TextView view, Pressure pressure, @NonNull Pressure.Unit unit) {
+        if (pressure == null || unit == null) {
+            return;
         }
-        view.setText(String.format(Locale.ENGLISH, "%.1f %s", pressure, unit.getName()));
+        double pressureValue = pressure.getValue(unit);
+        view.setText(String.format(Locale.getDefault(), "%.1f %s", pressureValue, unit.getName()));
     }
 
     /**
@@ -65,11 +70,12 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"wind_speed", "unit"})
     public static void setWindSpeed(
-            @NonNull TextView view, double speed, @NonNull WindSpeedUnit unit) {
-        if (unit != WindSpeedUnit.METERS_PER_SECOND) {
-            speed = WindSpeedConvertor.fromMeterPerSecond(speed, unit);
+            @NonNull TextView view, Wind wind, @NonNull WindSpeed.Unit unit) {
+        if (wind == null || unit == null) {
+            return;
         }
-        view.setText(String.format(Locale.ENGLISH, "%.1f %s", speed, unit.getName()));
+        double speed = wind.getSpeedValue(unit);
+        view.setText(String.format(Locale.getDefault(), "%.1f %s", speed, unit.getName()));
     }
 
     /**
@@ -80,7 +86,7 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter("humidity")
     public static void setHumidity(@NonNull TextView view, double humidity) {
-        view.setText(String.format(Locale.ENGLISH, "%.1f%%", humidity));
+        view.setText(String.format(Locale.getDefault(), "%.1f%%", humidity));
     }
 
     /**

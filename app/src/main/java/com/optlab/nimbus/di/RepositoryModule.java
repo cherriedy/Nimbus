@@ -2,19 +2,18 @@ package com.optlab.nimbus.di;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.model.ForecastProvider;
 import com.optlab.nimbus.data.local.dao.ForecastDao;
 import com.optlab.nimbus.data.local.dao.LocationDao;
-import com.optlab.nimbus.data.network.openstreetmap.OpenStreetMapClient;
-import com.optlab.nimbus.data.network.openstreetmap.OpenStreetMapService;
-import com.optlab.nimbus.data.preferences.ForecastApiPreferences;
-import com.optlab.nimbus.data.preferences.SettingPreferences;
+import com.optlab.nimbus.data.network.openstreetmap.OpenStreetMapRetrofitClient;
+import com.optlab.nimbus.data.preferences.interfaces.ForecastApiPreferences;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
-import com.optlab.nimbus.data.repository.LocationRepository;
+import com.optlab.nimbus.data.repository.interfaces.ForecastRepository;
+import com.optlab.nimbus.data.repository.interfaces.LocationRepository;
 import com.optlab.nimbus.data.repository.LocationRepositoryImpl;
-import com.optlab.nimbus.data.repository.PreferencesRepository;
+import com.optlab.nimbus.data.repository.interfaces.PreferencesRepository;
 import com.optlab.nimbus.data.repository.PreferencesRepositoryImpl;
-import com.optlab.nimbus.data.repository.WeatherRepository;
 import com.optlab.nimbus.data.repository.TomorrowIoRepositoryImpl;
 
 import javax.inject.Singleton;
@@ -41,11 +40,11 @@ public class RepositoryModule {
     /** Inject WeatherRepository implementation based on the selected endpoint. */
     @Provides
     @Singleton
-    public static WeatherRepository provideWeatherRepository(
-            @NonNull ForecastProvider forecastProvider,
-            @NonNull TomorrowIoClient tomorrowIoClient,
-            @NonNull ForecastApiPreferences forecastApiPreferences,
-            @NonNull ForecastDao forecastDao) {
+    public static ForecastRepository provideWeatherRepository(
+            ForecastProvider forecastProvider,
+            TomorrowIoClient tomorrowIoClient,
+            ForecastApiPreferences forecastApiPreferences,
+            ForecastDao forecastDao) {
         return switch (forecastProvider) {
             case OPEN_WEATHER -> null;
             case TOMORROW_IO ->
@@ -64,7 +63,7 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public static LocationRepository provideLocationRepository(
-            LocationDao locationDao, OpenStreetMapClient openStreetMapClient) {
+            LocationDao locationDao, OpenStreetMapRetrofitClient openStreetMapClient) {
         return new LocationRepositoryImpl(locationDao, openStreetMapClient);
     }
 }

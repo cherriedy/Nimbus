@@ -7,21 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.preferences.SettingPreferences;
-import com.optlab.nimbus.data.repository.WeatherRepository;
-
-import java.util.concurrent.TimeUnit;
-
-import timber.log.Timber;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
+import com.optlab.nimbus.data.repository.interfaces.ForecastRepository;
 
 public class CurrentWeatherWorker extends Worker {
-    private final WeatherRepository repository;
+    private final ForecastRepository repository;
     private final SettingPreferences userPrefs;
 
     public CurrentWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
-            @NonNull WeatherRepository repository,
+            @NonNull ForecastRepository repository,
             @NonNull SettingPreferences userPrefs) {
         super(context, workerParams);
         this.repository = repository;

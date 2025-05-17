@@ -3,9 +3,9 @@ package com.optlab.nimbus.di;
 import android.content.Context;
 
 import com.optlab.nimbus.data.preferences.ForecastApiPreferencesImpl;
-import com.optlab.nimbus.data.preferences.SettingPreferences;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
 import com.optlab.nimbus.data.preferences.SettingPreferencesImpl;
-import com.optlab.nimbus.data.preferences.ForecastApiPreferences;
+import com.optlab.nimbus.data.preferences.interfaces.ForecastApiPreferences;
 
 import javax.inject.Singleton;
 

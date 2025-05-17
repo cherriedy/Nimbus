@@ -8,30 +8,33 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.optlab.nimbus.data.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.forecast.ForecastResponse;
+import com.optlab.nimbus.data.model.Forecast;
+import com.optlab.nimbus.data.model.Temperature;
 import com.optlab.nimbus.databinding.LayoutItemHourlyForecastBinding;
 
 import lombok.Setter;
 
+@Setter
 public class HourlyForecastAdapter
-        extends ListAdapter<ForecastResponse, HourlyForecastAdapter.ViewHolder> {
-    private static final DiffUtil.ItemCallback<ForecastResponse> CALL_BACK =
+        extends ListAdapter<Forecast.HourlyReport, HourlyForecastAdapter.ViewHolder> {
+    private static final DiffUtil.ItemCallback<Forecast.HourlyReport> CALL_BACK =
             new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(
-                        @NonNull ForecastResponse oldItem, @NonNull ForecastResponse newItem) {
-                    return oldItem.getDate().equals(newItem.getDate());
+                        @NonNull Forecast.HourlyReport oldItem,
+                        @NonNull Forecast.HourlyReport newItem) {
+                    return oldItem.getStartTime().equals(newItem.getStartTime());
                 }
 
                 @Override
                 public boolean areContentsTheSame(
-                        @NonNull ForecastResponse oldItem, @NonNull ForecastResponse newItem) {
+                        @NonNull Forecast.HourlyReport oldItem,
+                        @NonNull Forecast.HourlyReport newItem) {
                     return oldItem.equals(newItem);
                 }
             };
 
-    @Setter private TemperatureUnit temperatureUnit;
+    private Temperature.Unit temperatureUnit;
 
     public HourlyForecastAdapter() {
         super(CALL_BACK);
@@ -60,8 +63,8 @@ public class HourlyForecastAdapter
             this.binding = binding;
         }
 
-        public void bind(@NonNull ForecastResponse response) {
-            binding.setResponse(response);
+        public void bind(@NonNull Forecast.HourlyReport hourly) {
+            binding.setHourly(hourly);
             binding.executePendingBindings();
         }
     }

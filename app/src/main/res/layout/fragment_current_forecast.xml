@@ -42,12 +42,13 @@
                 android:layout_marginStart="@dimen/spacing_large"
                 android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                 android:textColor="@color/persianIndigo"
-                app:day_time="@{viewModel.current.first.date}" />
+                app:day_time="@{viewModel.current.startTime}" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
                 <TextView
                     android:id="@+id/tv_description"
@@ -57,7 +58,7 @@
                     android:layout_marginTop="@dimen/spacing_xmedium"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:textColor="@color/persianIndigo"
-                    app:text_resource="@{viewModel.current.first.weatherDescription}" />
+                    app:text_resource="@{viewModel.current.weatherDescription}" />
 
                 <ImageView
                     android:id="@+id/iv_icon"
@@ -66,7 +67,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/spacing_medium"
                     android:importantForAccessibility="no"
-                    app:weather_icon="@{viewModel.current.first.weatherIcon}" />
+                    app:weather_icon="@{viewModel.current.weatherIcon}" />
             </LinearLayout>
 
             <TextView
@@ -80,7 +81,7 @@
                 android:textSize="120sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:temperature="@{viewModel.current.first.temperature}"
+                app:temperature="@{viewModel.current.temperature}"
                 app:unit="@{viewModel.temperatureUnit}" />
 
             <LinearLayout
@@ -148,7 +149,7 @@
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="@color/white"
                             android:textStyle="bold"
-                            app:pressure="@{viewModel.current.first.pressure}"
+                            app:pressure="@{viewModel.current.pressure}"
                             app:unit="@{viewModel.pressureUnit}" />
 
                         <TextView
@@ -181,7 +182,7 @@
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             app:unit="@{viewModel.windSpeedUnit}"
-                            app:wind_speed="@{viewModel.current.first.windSpeed}" />
+                            app:wind_speed="@{viewModel.current.wind}" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -212,7 +213,7 @@
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="@color/white"
                             android:textStyle="bold"
-                            app:humidity="@{viewModel.current.first.humidity}" />
+                            app:humidity="@{viewModel.current.humidity}" />
 
                         <TextView
                             android:layout_width="wrap_content"

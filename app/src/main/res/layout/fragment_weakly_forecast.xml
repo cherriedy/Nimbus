@@ -37,7 +37,7 @@
                 android:importantForAccessibility="no"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:weather_icon="@{viewModel.weakly.first.weatherIcon}" />
+                />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -67,8 +67,7 @@
                     app:layout_constraintBottom_toTopOf="@id/tv_description"
                     app:layout_constraintStart_toStartOf="@id/tv_day"
                     app:layout_constraintTop_toBottomOf="@id/tv_day"
-                    app:temperature="@{viewModel.weakly.first.temperatureMax}"
-                    app:unit="@{viewModel.temperatureUnit}" />
+                    />
 
                 <TextView
                     android:id="@+id/tv_description"
@@ -80,7 +79,7 @@
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@id/tv_temperature"
                     app:layout_constraintTop_toBottomOf="@id/tv_temperature"
-                    app:text_resource="@{viewModel.weakly.first.weatherDescription}" />
+                    />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -113,8 +112,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:textColor="@color/white"
-                        app:pressure="@{viewModel.weakly.first.pressure}"
-                        app:unit="@{viewModel.pressureUnit}" />
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -144,8 +142,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:textColor="@color/white"
-                        app:unit="@{viewModel.windSpeedUnit}"
-                        app:wind_speed="@{viewModel.weakly.first.windSpeed}" />
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -175,7 +172,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                         android:textColor="@color/white"
-                        app:humidity="@{viewModel.weakly.first.humidity}" />
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"

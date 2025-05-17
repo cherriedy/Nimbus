@@ -10,7 +10,6 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleReactivestreams = "2.9.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
@@ -42,6 +41,7 @@ workRuntime = "2.10.1"
 workTesting = "2.10.1"
 awaitility = "4.3.0"
 preference = "1.2.0"
+lombokVersion = "1.18.34"
 
 [libraries]
 androidx-core = { module = "androidx.test:core", version.ref = "core" }
@@ -86,7 +86,6 @@ androidx-security-crypto = { group = "androidx.security", name = "security-crypt
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-recycler-margin = { group = "com.github.thekhaeng", name = "recycler-margin", version.ref = "recyclerMargin" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 androidx-room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "roomRxjava3" }
@@ -94,6 +93,7 @@ androidx-work-runtime = { group = "androidx.work", name = "work-runtime", versio
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "workTesting" }
 awaitility = { group = "org.awaitility", name = "awaitility", version.ref = "awaitility" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+projectlombok-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombokVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

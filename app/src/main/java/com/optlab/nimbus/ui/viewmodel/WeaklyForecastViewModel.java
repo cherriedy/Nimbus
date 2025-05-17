@@ -6,38 +6,40 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.common.PressureUnit;
-import com.optlab.nimbus.data.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.forecast.ForecastResponse;
-import com.optlab.nimbus.data.common.WindSpeedUnit;
-import com.optlab.nimbus.data.repository.PreferencesRepository;
-import com.optlab.nimbus.data.repository.WeatherRepository;
+import com.optlab.nimbus.data.model.Forecast;
+import com.optlab.nimbus.data.model.Pressure;
+import com.optlab.nimbus.data.model.Temperature;
+import com.optlab.nimbus.data.model.WindSpeed;
+import com.optlab.nimbus.data.repository.interfaces.ForecastRepository;
+import com.optlab.nimbus.data.repository.interfaces.PreferencesRepository;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+import timber.log.Timber;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import timber.log.Timber;
-
 @HiltViewModel
 public class WeaklyForecastViewModel extends ViewModel {
-    private final WeatherRepository weatherRepository;
+    private final ForecastRepository forecastRepository;
     private final PreferencesRepository preferencesRepository;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private final MutableLiveData<List<ForecastResponse>> weakly = new MutableLiveData<>();
-    private final MutableLiveData<TemperatureUnit> temperatureUnit = new MutableLiveData<>();
-    private final MutableLiveData<WindSpeedUnit> windSpeedUnit = new MutableLiveData<>();
-    private final MutableLiveData<PressureUnit> pressureUnit = new MutableLiveData<>();
+    private final MutableLiveData<List<Forecast>> weakly = new MutableLiveData<>();
+    private final MutableLiveData<Temperature.Unit> temperatureUnit = new MutableLiveData<>();
+    private final MutableLiveData<WindSpeed.Unit> windSpeedUnit = new MutableLiveData<>();
+    private final MutableLiveData<Pressure.Unit> pressureUnit = new MutableLiveData<>();
 
     @Inject
     public WeaklyForecastViewModel(
-            @NonNull WeatherRepository weatherRepository,
+            @NonNull ForecastRepository forecastRepository,
             @NonNull PreferencesRepository preferencesRepository) {
-        this.weatherRepository = weatherRepository;
+        this.forecastRepository = forecastRepository;
         this.preferencesRepository = preferencesRepository;
 
         temperatureUnit.setValue(preferencesRepository.getTemperatureUnit().blockingFirst());
@@ -51,29 +53,30 @@ public class WeaklyForecastViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public LiveData<List<ForecastResponse>> getWeakly() {
+    public LiveData<List<Forecast>> getWeakly() {
         return weakly;
     }
 
-    public LiveData<TemperatureUnit> getTemperatureUnit() {
+    public LiveData<Temperature.Unit> getTemperatureUnit() {
         return temperatureUnit;
     }
 
-    public LiveData<WindSpeedUnit> getWindSpeedUnit() {
+    public LiveData<WindSpeed.Unit> getWindSpeedUnit() {
         return windSpeedUnit;
     }
 
-    public LiveData<PressureUnit> getPressureUnit() {
+    public LiveData<Pressure.Unit> getPressureUnit() {
         return pressureUnit;
     }
 
     public void fetchDaily(@NonNull Coordinates coordinates) {
-        disposable.add(
-                weatherRepository
-                        .getWeaklyForecast(coordinates)
-                        .map(ForecastResponse::mapFromForecastEntity)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(weakly::setValue, e -> Timber.e("onError: %s", e.getMessage())));
+        // disposable.add(
+        //         forecastRepository
+        //                 .getForecast(coordinates)
+        //                 .map(Forecast::mapFromForecastEntity)
+        //                 .subscribeOn(Schedulers.io())
+        //                 .observeOn(AndroidSchedulers.mainThread())
+        //                 .subscribe(weakly::setValue, e -> Timber.e("onError: %s",
+        // e.getMessage())));
     }
 }

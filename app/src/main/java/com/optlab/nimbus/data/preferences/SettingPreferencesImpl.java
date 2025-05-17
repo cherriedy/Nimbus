@@ -5,19 +5,19 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.common.ForecastProvider;
-import com.optlab.nimbus.data.common.PressureUnit;
-import com.optlab.nimbus.data.common.TemperatureUnit;
-import com.optlab.nimbus.data.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.ForecastProvider;
+import com.optlab.nimbus.data.model.Pressure;
+import com.optlab.nimbus.data.model.Temperature;
+import com.optlab.nimbus.data.model.WindSpeed;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
 
 import java.util.Arrays;
 
 /**
  * UserPrefsManager is a class that manages the user preferences for the application. It uses
  * SharedPreferences to store the preferences and Gson to serialize and deserialize the data.
- *
- * @noinspection rawtypes
  */
+@SuppressWarnings("rawtypes")
 public class SettingPreferencesImpl implements SettingPreferences {
     public static final String TEMPERATURE_UNIT = "temperature_unit";
     public static final String WIND_SPEED_UNIT = "wind_speed_unit";
@@ -49,13 +49,13 @@ public class SettingPreferencesImpl implements SettingPreferences {
      */
     private void initUnits() {
         if (!settingsPrefs.contains(TEMPERATURE_UNIT)) {
-            setUnit(TEMPERATURE_UNIT, TemperatureUnit.CELSIUS);
-        }
-        if (!settingsPrefs.contains(WIND_SPEED_UNIT)) {
-            setUnit(WIND_SPEED_UNIT, WindSpeedUnit.METERS_PER_SECOND);
+            setUnit(TEMPERATURE_UNIT, Temperature.Unit.CELSIUS);
         }
         if (!settingsPrefs.contains(PRESSURE_UNIT)) {
-            setUnit(PRESSURE_UNIT, PressureUnit.HECTOPASCAL);
+            setUnit(PRESSURE_UNIT, Pressure.Unit.HECTOPASCAL);
+        }
+        if (!settingsPrefs.contains(WIND_SPEED_UNIT)) {
+            setUnit(WIND_SPEED_UNIT, WindSpeed.Unit.METERS_PER_SECOND);
         }
     }
 
@@ -103,19 +103,19 @@ public class SettingPreferencesImpl implements SettingPreferences {
         return switch (key) {
             case TEMPERATURE_UNIT ->
                     Enum.valueOf(
-                            TemperatureUnit.class,
+                            Temperature.Unit.class,
                             settingsPrefs.getString(
-                                    TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.name()));
+                                    TEMPERATURE_UNIT, Temperature.Unit.CELSIUS.name()));
             case WIND_SPEED_UNIT ->
                     Enum.valueOf(
-                            WindSpeedUnit.class,
+                            WindSpeed.Unit.class,
                             settingsPrefs.getString(
-                                    WIND_SPEED_UNIT, WindSpeedUnit.METERS_PER_SECOND.name()));
+                                    WIND_SPEED_UNIT, WindSpeed.Unit.METERS_PER_SECOND.name()));
             case PRESSURE_UNIT ->
                     Enum.valueOf(
-                            PressureUnit.class,
+                            Pressure.Unit.class,
                             settingsPrefs.getString(
-                                    PRESSURE_UNIT, PressureUnit.HECTOPASCAL.name()));
+                                    PRESSURE_UNIT, Pressure.Unit.HECTOPASCAL.name()));
             default -> throw new IllegalStateException("Unexpected value: " + key);
         };
     }
@@ -126,8 +126,8 @@ public class SettingPreferencesImpl implements SettingPreferences {
      * @return the temperature unit
      */
     @Override
-    public TemperatureUnit getTemperatureUnit() {
-        return (TemperatureUnit) getUnit(TEMPERATURE_UNIT);
+    public Temperature.Unit getTemperatureUnit() {
+        return (Temperature.Unit) getUnit(TEMPERATURE_UNIT);
     }
 
     /**
@@ -136,8 +136,8 @@ public class SettingPreferencesImpl implements SettingPreferences {
      * @return the wind speed unit
      */
     @Override
-    public WindSpeedUnit getWindSpeedUnit() {
-        return (WindSpeedUnit) getUnit(WIND_SPEED_UNIT);
+    public WindSpeed.Unit getWindSpeedUnit() {
+        return (WindSpeed.Unit) getUnit(WIND_SPEED_UNIT);
     }
 
     /**
@@ -146,8 +146,8 @@ public class SettingPreferencesImpl implements SettingPreferences {
      * @return the pressure unit
      */
     @Override
-    public PressureUnit getPressureUnit() {
-        return (PressureUnit) getUnit(PRESSURE_UNIT);
+    public Pressure.Unit getPressureUnit() {
+        return (Pressure.Unit) getUnit(PRESSURE_UNIT);
     }
 
     @Override

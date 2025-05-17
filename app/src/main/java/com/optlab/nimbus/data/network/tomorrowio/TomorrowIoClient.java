@@ -1,37 +1,47 @@
 package com.optlab.nimbus.data.network.tomorrowio;
 
-import com.optlab.nimbus.constant.TomorrowIoConstant;
-import com.optlab.nimbus.data.network.NetworkClient;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.network.BaseRetrofitClient;
+import com.optlab.nimbus.data.repository.interfaces.PreferencesRepository;
+
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
+import io.reactivex.rxjava3.core.Single;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /** TomorrowIoClient is a singleton class that provides an instance of TomorrowIoService */
-@Getter
-@Singleton
-public class TomorrowIoClient extends NetworkClient {
+public class TomorrowIoClient extends BaseRetrofitClient {
+    private static final String BASE_URL = "https://api.tomorrow.io/";
     private final TomorrowIoService tomorrowIoService;
 
-    @Inject
     public TomorrowIoClient() {
         Retrofit retrofit =
                 new Retrofit.Builder()
-                        .baseUrl(TomorrowIoConstant.BASE_URL)
-                        // Add RxJava3CallAdapterFactory for RxJava support
+                        .baseUrl(BASE_URL)
                         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                        // Add GsonConverterFactory for JSON parsing
                         .addConverterFactory(GsonConverterFactory.create())
-                        .client(okHttpClient) // Set the OkHttpClient instance
+                        .client(okHttpClient)
                         .build();
 
-        // Create an instance of TomorrowIoService using the Retrofit instance
         tomorrowIoService = retrofit.create(TomorrowIoService.class);
+    }
+
+    public Single<TomorrowIoResponse> getForecast(
+            Coordinates coordinates, TimeZone timeZone, String apiKey) {
+        return tomorrowIoService.getForecast(
+                coordinates.getCoordinates(),
+                TomorrowIoService.FIELDS,
+                TomorrowIoService.TIMESTEPS,
+                TomorrowIoService.METRIC,
+                TomorrowIoService.PLUS_1_DAYS_FROM_TODAY,
+                TomorrowIoService.PLUS_5_DAYS_FROM_TODAY,
+                timeZone.getID(),
+                apiKey);
     }
 }

@@ -1,6 +1,6 @@
 package com.optlab.nimbus.utility.convertor;
 
-import com.optlab.nimbus.data.common.PressureUnit;
+import com.optlab.nimbus.data.model.Pressure;
 
 /** Utility class for converting pressure values between different units. */
 public final class PressureConvertor {
@@ -17,7 +17,7 @@ public final class PressureConvertor {
      * @param unit the unit of the pressure value
      * @return the converted pressure value in hectopascal
      */
-    public static double fromHectopascal(double pressure, PressureUnit unit) {
+    public static double fromHectopascal(double pressure, Pressure.Unit unit) {
         return switch (unit) {
             case ATMOSPHERE -> pressure / 1013.25;
             case BAR -> pressure / 1000;

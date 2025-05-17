@@ -2,20 +2,17 @@ package com.optlab.nimbus.data.repository;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.optlab.nimbus.data.common.ForecastProvider;
-import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.common.PressureUnit;
-import com.optlab.nimbus.data.common.TemperatureUnit;
-import com.optlab.nimbus.data.common.WindSpeedUnit;
-import com.optlab.nimbus.data.preferences.ForecastApiPreferences;
-import com.optlab.nimbus.data.preferences.SettingPreferences;
+import com.optlab.nimbus.data.model.ForecastProvider;
+import com.optlab.nimbus.data.model.Pressure;
+import com.optlab.nimbus.data.model.Temperature;
+import com.optlab.nimbus.data.model.WindSpeed;
 import com.optlab.nimbus.data.preferences.SettingPreferencesImpl;
+import com.optlab.nimbus.data.preferences.interfaces.ForecastApiPreferences;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
+import com.optlab.nimbus.data.repository.interfaces.PreferencesRepository;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
-
-import timber.log.Timber;
 
 import java.util.Objects;
 
@@ -24,18 +21,15 @@ import javax.inject.Inject;
 public class PreferencesRepositoryImpl implements PreferencesRepository {
     private final SettingPreferences settingPreferences;
     private final ForecastApiPreferences forecastApiPreferences;
-    private final BehaviorSubject<TemperatureUnit> tempUnitSubject = BehaviorSubject.create();
-    private final BehaviorSubject<WindSpeedUnit> windSpeedUnitSubject = BehaviorSubject.create();
-    private final BehaviorSubject<PressureUnit> pressureUnitSubject = BehaviorSubject.create();
-    private final BehaviorSubject<Coordinates> lastLocationSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Temperature.Unit> tempUnitSubject = BehaviorSubject.create();
+    private final BehaviorSubject<WindSpeed.Unit> windSpeedUnitSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Pressure.Unit> pressureUnitSubject = BehaviorSubject.create();
     private final BehaviorSubject<ForecastProvider> providerSubject = BehaviorSubject.create();
     private final BehaviorSubject<String> apiKeySubject = BehaviorSubject.create();
-    private final Gson gson = new Gson();
 
     @Inject
     public PreferencesRepositoryImpl(
-            @NonNull SettingPreferences settingPreferences,
-            @NonNull ForecastApiPreferences forecastApiPreferences) {
+            SettingPreferences settingPreferences, ForecastApiPreferences forecastApiPreferences) {
         this.settingPreferences = settingPreferences;
         this.forecastApiPreferences = forecastApiPreferences;
 
@@ -43,13 +37,8 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
         windSpeedUnitSubject.onNext(settingPreferences.getWindSpeedUnit());
         pressureUnitSubject.onNext(settingPreferences.getPressureUnit());
         providerSubject.onNext(settingPreferences.getWeatherProvider());
-        apiKeySubject.onNext(forecastApiPreferences.getApiKey(ForecastProvider.TOMORROW_IO.name()));
-
-        Timber.d("Loaded temperature unit: %s", tempUnitSubject.getValue());
-        Timber.d("Loaded wind speed unit: %s", windSpeedUnitSubject.getValue());
-        Timber.d("Loaded pressure unit: %s", pressureUnitSubject.getValue());
-        Timber.d("Loaded weather provider: %s", providerSubject.getValue());
-        Timber.d("Loaded API key: %s", apiKeySubject.getValue());
+        apiKeySubject.onNext(forecastApiPreferences.getApiKey(
+                ForecastProvider.TOMORROW_IO.name()));
 
         observePreferences();
     }
@@ -90,17 +79,17 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public Observable<TemperatureUnit> getTemperatureUnit() {
+    public Observable<Temperature.Unit> getTemperatureUnit() {
         return tempUnitSubject.hide();
     }
 
     @Override
-    public Observable<WindSpeedUnit> getWindSpeedUnit() {
+    public Observable<WindSpeed.Unit> getWindSpeedUnit() {
         return windSpeedUnitSubject.hide();
     }
 
     @Override
-    public Observable<PressureUnit> getPressureUnit() {
+    public Observable<Pressure.Unit> getPressureUnit() {
         return pressureUnitSubject.hide();
     }
 
@@ -115,17 +104,17 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public void setTemperatureUnit(TemperatureUnit unit) {
+    public void setTemperatureUnit(Temperature.Unit unit) {
         settingPreferences.setUnit(SettingPreferencesImpl.TEMPERATURE_UNIT, unit);
     }
 
     @Override
-    public void setWindSpeedUnit(WindSpeedUnit unit) {
+    public void setWindSpeedUnit(WindSpeed.Unit unit) {
         settingPreferences.setUnit(SettingPreferencesImpl.WIND_SPEED_UNIT, unit);
     }
 
     @Override
-    public void setPressureUnit(PressureUnit unit) {
+    public void setPressureUnit(Pressure.Unit unit) {
         settingPreferences.setUnit(SettingPreferencesImpl.PRESSURE_UNIT, unit);
     }
 

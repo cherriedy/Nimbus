@@ -10,7 +10,7 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.optlab.nimbus.data.preferences.SettingPreferences;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
 import com.optlab.nimbus.worker.CurrentWeatherWorker;
 import com.optlab.nimbus.worker.DailyWeatherWorker;
 import com.optlab.nimbus.worker.FetchingWorkerFactory;

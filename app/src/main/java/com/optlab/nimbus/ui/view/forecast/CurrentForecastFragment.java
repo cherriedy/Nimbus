@@ -1,7 +1,5 @@
 package com.optlab.nimbus.ui.view.forecast;
 
-import static kotlinx.coroutines.flow.FlowKt.observeOn;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -29,25 +27,21 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.textfield.TextInputEditText;
 import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.model.forecast.ForecastResponse;
-import com.optlab.nimbus.data.model.openstreetmap.AddressResponse;
-import com.optlab.nimbus.data.repository.LocationRepository;
-import com.optlab.nimbus.data.repository.PreferencesRepository;
+import com.optlab.nimbus.data.model.Place;
+import com.optlab.nimbus.data.repository.interfaces.LocationRepository;
+import com.optlab.nimbus.data.repository.interfaces.PreferencesRepository;
 import com.optlab.nimbus.databinding.FragmentHomeBinding;
 import com.optlab.nimbus.ui.adapter.HourlyForecastAdapter;
 import com.optlab.nimbus.ui.adapter.LocationsAdapter;
 import com.optlab.nimbus.ui.decoration.LinearSpacingStrategy;
 import com.optlab.nimbus.ui.decoration.SpacingItemDecoration;
 import com.optlab.nimbus.ui.viewmodel.CurrentForecastViewModel;
-import com.optlab.nimbus.utility.WeatherSummary;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -124,33 +118,21 @@ public class CurrentForecastFragment extends Fragment {
                                         new Coordinates(
                                                 location.getLatitude(), location.getLongitude());
 
-                                Single<AddressResponse> addressResponse =
-                                        locationRepository.getLocationAddress(coordinates);
-                                addressResponse
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(
-                                                address -> {
-                                                    Timber.d(
-                                                            "Address fetched: %s",
-                                                            address.toString());
-                                                    String[] components =
-                                                            address.getAddress().getComponents();
-                                                    String displayName =
-                                                            components[1] + ", " + components[2];
-                                                    locationRepository.setLocation(
-                                                            coordinates, displayName, true);
-                                                    viewModel.fetchForecast(coordinates);
-                                                    binding.included.mtb.setSubtitle(displayName);
-                                                },
-                                                e -> {
-                                                    Timber.e(
-                                                            "Error fetching address: %s",
-                                                            e.getMessage());
-                                                });
+                                viewModel.fetchForecast(coordinates);
+
+                                // locationRepository
+                                //         .getLocationAddress(coordinates)
+                                //         .observeOn(AndroidSchedulers.mainThread())
+                                //         .subscribeOn(Schedulers.io())
+                                //         .subscribe(
+                                //                 response -> {
+                                //                     Place place = response.toPlace();
+                                //                     locationRepository.setLocation(
+                                //                             coordinates, place.name(), true);
+                                //                     viewModel.fetchForecast(coordinates);
+                                //                 });
                             }
-                        })
-                .addOnFailureListener(e -> Timber.e("Error fetching location: %s", e.getMessage()));
+                        });
     }
 
     @SuppressLint("CheckResult")
@@ -214,33 +196,12 @@ public class CurrentForecastFragment extends Fragment {
     private void fetchAndDisplayLocation() {}
 
     private void observeViewModels() {
-        viewModel.getHourly().observe(getViewLifecycleOwner(), hourlyForecastAdapter::submitList);
         viewModel
-                .getCurrent()
+                .getToday()
                 .observe(
                         getViewLifecycleOwner(),
-                        current -> {
-                            ForecastResponse response = current.get(0);
-                            binding.included.tvSummary.setText(
-                                    new WeatherSummary.Builder(requireContext())
-                                            .tempMax(response.getTemperatureMax())
-                                            .tempMin(response.getTemperatureMin())
-                                            .humidity(response.getHumidity())
-                                            .windSpeed(response.getWindSpeed())
-                                            .temperatureUnit(
-                                                    preferencesRepository
-                                                            .getTemperatureUnit()
-                                                            .blockingFirst())
-                                            .windSpeedUnit(
-                                                    preferencesRepository
-                                                            .getWindSpeedUnit()
-                                                            .blockingFirst())
-                                            .pressureUnit(
-                                                    preferencesRepository
-                                                            .getPressureUnit()
-                                                            .blockingFirst())
-                                            .build()
-                                            .generate());
+                        today -> {
+                            hourlyForecastAdapter.submitList(today.getHourly());
                         });
     }
 

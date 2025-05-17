@@ -7,22 +7,22 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.model.forecast.ForecastResponse;
-import com.optlab.nimbus.data.preferences.SettingPreferences;
-import com.optlab.nimbus.data.repository.WeatherRepository;
+import com.optlab.nimbus.data.model.Forecast;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
+import com.optlab.nimbus.data.repository.interfaces.ForecastRepository;
 
 import java.util.List;
 
 import timber.log.Timber;
 
 public class DailyWeatherWorker extends Worker {
-    private final WeatherRepository repository;
+    private final ForecastRepository repository;
     private final SettingPreferences userPrefs;
 
     public DailyWeatherWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams,
-            @NonNull WeatherRepository repository,
+            @NonNull ForecastRepository repository,
             @NonNull SettingPreferences userPrefs) {
         super(context, workerParams);
         this.repository = repository;
@@ -52,7 +52,7 @@ public class DailyWeatherWorker extends Worker {
         Timber.e("Error fetching daily weather data: %s", throwable.getMessage());
     }
 
-    private void onSuccess(List<ForecastResponse> forecastRespons) {
+    private void onSuccess(List<Forecast> forecastRespons) {
         Timber.d("Daily weather data fetched successfully");
     }
 }

@@ -9,7 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.common.ForecastProvider;
+import com.optlab.nimbus.data.model.ForecastProvider;
+import com.optlab.nimbus.data.preferences.interfaces.ForecastApiPreferences;
 
 import timber.log.Timber;
 

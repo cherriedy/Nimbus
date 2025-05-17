@@ -14,8 +14,8 @@ import androidx.navigation.Navigation;
 
 import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.repository.LocationRepository;
-import com.optlab.nimbus.data.repository.PreferencesRepository;
+import com.optlab.nimbus.data.repository.interfaces.LocationRepository;
+import com.optlab.nimbus.data.repository.interfaces.PreferencesRepository;
 import com.optlab.nimbus.databinding.FragmentWeaklyForecastBinding;
 import com.optlab.nimbus.ui.adapter.WeaklyForecastAdapter;
 import com.optlab.nimbus.ui.decoration.LinearSpacingStrategy;
@@ -94,6 +94,6 @@ public class WeaklyForecastFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        viewModel.getWeakly().observe(getViewLifecycleOwner(), adapter::submitList);
+        // viewModel.getWeakly().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 }

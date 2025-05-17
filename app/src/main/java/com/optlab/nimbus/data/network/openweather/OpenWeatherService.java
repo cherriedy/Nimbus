@@ -1,8 +1,7 @@
 package com.optlab.nimbus.data.network.openweather;
 
-import com.optlab.nimbus.data.model.openweather.OpenWeatherResponse;
-
 import io.reactivex.rxjava3.core.Observable;
+
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

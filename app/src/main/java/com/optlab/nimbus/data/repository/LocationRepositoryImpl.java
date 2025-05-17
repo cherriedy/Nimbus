@@ -1,30 +1,29 @@
 package com.optlab.nimbus.data.repository;
 
-import android.annotation.SuppressLint;
-
 import com.optlab.nimbus.data.local.dao.LocationDao;
 import com.optlab.nimbus.data.local.entity.LocationEntity;
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.model.openstreetmap.AddressResponse;
-import com.optlab.nimbus.data.network.openstreetmap.OpenStreetMapClient;
+import com.optlab.nimbus.data.network.openstreetmap.OpenStreetMapRetrofitClient;
+import com.optlab.nimbus.data.network.openstreetmap.OsmPlaceResponse;
+import com.optlab.nimbus.data.repository.interfaces.LocationRepository;
+
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+import timber.log.Timber;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import timber.log.Timber;
-
 public class LocationRepositoryImpl implements LocationRepository {
     private final LocationDao locationDao;
-    private final OpenStreetMapClient openStreetMapClient;
+    private final OpenStreetMapRetrofitClient openStreetMapClient;
 
     @Inject
     public LocationRepositoryImpl(
-            LocationDao locationDao, OpenStreetMapClient openStreetMapClient) {
+            LocationDao locationDao, OpenStreetMapRetrofitClient openStreetMapClient) {
         this.locationDao = locationDao;
         this.openStreetMapClient = openStreetMapClient;
     }
@@ -35,8 +34,7 @@ public class LocationRepositoryImpl implements LocationRepository {
     }
 
     @Override
-    @SuppressLint("CheckResult")
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "CheckResult"})
     public void setLocation(LocationEntity location) {
         locationDao
                 .insert(location)
@@ -45,11 +43,10 @@ public class LocationRepositoryImpl implements LocationRepository {
     }
 
     @Override
-    @SuppressLint("CheckResult")
     public void setLocation(Coordinates coordinates, String address, boolean isCurrent) {
         LocationEntity entity = new LocationEntity();
-        entity.setLongitude(coordinates.getDoubleLon());
-        entity.setLatitude(coordinates.getDoubleLat());
+        entity.setLongitude(coordinates.lon());
+        entity.setLatitude(coordinates.lat());
         entity.setCurrent(isCurrent);
         entity.setAddress(address);
         setLocation(entity);
@@ -78,10 +75,9 @@ public class LocationRepositoryImpl implements LocationRepository {
     }
 
     @Override
-    @SuppressLint("CheckResult")
-    public Single<AddressResponse> getLocationAddress(Coordinates coordinates) {
+    public Single<OsmPlaceResponse> getLocationAddress(Coordinates coordinates) {
         return openStreetMapClient
                 .getOpenStreetMapService()
-                .reverseGeocode(coordinates.getDoubleLat(), coordinates.getDoubleLon(), "json");
+                .reverseGeocode(coordinates.lat(), coordinates.lon(), "json");
     }
 }

@@ -8,30 +8,31 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.optlab.nimbus.data.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.forecast.ForecastResponse;
+import com.optlab.nimbus.data.model.Forecast;
+import com.optlab.nimbus.data.model.Temperature;
 import com.optlab.nimbus.databinding.LayoutItemWeaklyForecastBinding;
 
 import lombok.Setter;
 
+@Setter
 public class WeaklyForecastAdapter
-        extends ListAdapter<ForecastResponse, WeaklyForecastAdapter.ViewHolder> {
-    private static final DiffUtil.ItemCallback<ForecastResponse> CALL_BACK =
-            new DiffUtil.ItemCallback<>() {
+        extends ListAdapter<Forecast.Day, WeaklyForecastAdapter.ViewHolder> {
+    private static final DiffUtil.ItemCallback<Forecast.Day> CALL_BACK =
+            new DiffUtil.ItemCallback<Forecast.Day>() {
                 @Override
                 public boolean areItemsTheSame(
-                        @NonNull ForecastResponse oldItem, @NonNull ForecastResponse newItem) {
-                    return oldItem.getDate().equals(newItem.getDate());
+                        @NonNull Forecast.Day oldItem, @NonNull Forecast.Day newItem) {
+                    return oldItem.getStartTime().equals(newItem.getStartTime());
                 }
 
                 @Override
                 public boolean areContentsTheSame(
-                        @NonNull ForecastResponse oldItem, @NonNull ForecastResponse newItem) {
+                        @NonNull Forecast.Day oldItem, @NonNull Forecast.Day newItem) {
                     return oldItem.equals(newItem);
                 }
             };
 
-    @Setter private TemperatureUnit temperatureUnit;
+    private Temperature.Unit temperatureUnit;
 
     public WeaklyForecastAdapter() {
         super(CALL_BACK);
@@ -60,8 +61,8 @@ public class WeaklyForecastAdapter
             this.binding = binding;
         }
 
-        public void bind(@NonNull ForecastResponse response) {
-            binding.setResponse(response);
+        public void bind(@NonNull Forecast.Day day) {
+            binding.setDay(day);
             binding.executePendingBindings();
         }
     }

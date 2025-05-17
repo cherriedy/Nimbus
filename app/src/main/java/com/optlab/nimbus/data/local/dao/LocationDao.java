@@ -10,7 +10,6 @@ import com.optlab.nimbus.data.local.entity.LocationEntity;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.Single;
 
 import java.util.List;
 

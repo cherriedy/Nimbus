@@ -5,13 +5,12 @@
     <data>
 
         <variable
-            name="response"
-            type="com.optlab.nimbus.data.model.forecast.ForecastResponse" />
-
+            name="hourly"
+            type="com.optlab.nimbus.data.model.Forecast.HourlyReport" />
 
         <variable
             name="temperatureUnit"
-            type="com.optlab.nimbus.data.common.TemperatureUnit" />
+            type="com.optlab.nimbus.data.model.Temperature.Unit" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                app:hour="@{response.date}" />
+                app:hour="@{hourly.startTime}" />
 
             <ImageView
                 android:id="@+id/iv_icon"
@@ -46,7 +45,7 @@
                 android:layout_weight="0.33"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
-                app:weather_icon="@{response.weatherIcon}" />
+                app:weather_icon="@{hourly.weatherIcon}" />
 
             <TextView
                 android:id="@+id/tv_temperature"
@@ -55,10 +54,10 @@
                 android:layout_weight="0.33"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textStyle="bold"
-                app:temperature="@{response.temperature}"
+                app:temperature="@{hourly.temperature}"
                 app:unit="@{temperatureUnit}" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

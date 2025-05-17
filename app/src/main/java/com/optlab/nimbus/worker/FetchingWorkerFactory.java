@@ -8,8 +8,8 @@ import androidx.work.ListenableWorker;
 import androidx.work.WorkerFactory;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.preferences.SettingPreferences;
-import com.optlab.nimbus.data.repository.WeatherRepository;
+import com.optlab.nimbus.data.preferences.interfaces.SettingPreferences;
+import com.optlab.nimbus.data.repository.interfaces.ForecastRepository;
 
 import timber.log.Timber;
 
@@ -19,11 +19,11 @@ import timber.log.Timber;
  * createWorker method to instantiate the appropriate worker.
  */
 public class FetchingWorkerFactory extends WorkerFactory {
-    private final WeatherRepository repository;
+    private final ForecastRepository repository;
     private final SettingPreferences userPrefs;
 
     public FetchingWorkerFactory(
-            @NonNull WeatherRepository repository, @NonNull SettingPreferences userPrefs) {
+            @NonNull ForecastRepository repository, @NonNull SettingPreferences userPrefs) {
         this.repository = repository;
         this.userPrefs = userPrefs;
     }
