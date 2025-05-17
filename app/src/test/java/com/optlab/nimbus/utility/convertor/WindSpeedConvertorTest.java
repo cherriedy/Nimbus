@@ -2,10 +2,9 @@ package com.optlab.nimbus.utility.convertor;
 
 import static org.junit.Assert.*;
 
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.WindSpeedUnit;
 
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 

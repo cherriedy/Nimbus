@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import com.optlab.nimbus.data.model.common.PressureUnit;
+import com.optlab.nimbus.data.model.PressureUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

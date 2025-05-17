@@ -6,8 +6,8 @@ import static org.mockito.Mockito.*;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.WeatherResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins;

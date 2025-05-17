@@ -1,11 +1,9 @@
 package com.optlab.nimbus.worker;
 
 import static org.awaitility.Awaitility.await;
-import static org.awaitility.Awaitility.reset;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -21,7 +19,6 @@ import androidx.work.testing.TestDriver;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
 import com.optlab.nimbus.data.local.entity.WeatherEntity;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
 import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.data.repository.TomorrowIoRepository;
 import com.optlab.nimbus.data.repository.WeatherRepository;
@@ -34,11 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -46,10 +39,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
 import dagger.hilt.android.testing.UninstallModules;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.observers.TestObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import timber.log.Timber;
 
 @HiltAndroidTest
 @UninstallModules({DatabaseModule.class, SharedPreferencesModule.class, RepositoryModule.class})

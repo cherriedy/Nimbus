@@ -10,9 +10,9 @@ import static org.mockito.Mockito.when;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.optlab.nimbus.data.model.common.PressureUnit;
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
-import com.optlab.nimbus.data.model.common.WindSpeedUnit;
+import com.optlab.nimbus.data.model.PressureUnit;
+import com.optlab.nimbus.data.model.TemperatureUnit;
+import com.optlab.nimbus.data.model.WindSpeedUnit;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -3,7 +3,7 @@ package com.optlab.nimbus.utility.convertor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.optlab.nimbus.data.model.common.TemperatureUnit;
+import com.optlab.nimbus.data.model.TemperatureUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

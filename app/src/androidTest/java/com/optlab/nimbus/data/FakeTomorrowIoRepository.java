@@ -2,8 +2,8 @@ package com.optlab.nimbus.data;
 
 import androidx.annotation.NonNull;
 
-import com.optlab.nimbus.data.model.common.Coordinates;
-import com.optlab.nimbus.data.model.common.WeatherResponse;
+import com.optlab.nimbus.data.model.Coordinates;
+import com.optlab.nimbus.data.model.WeatherResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import java.util.ArrayList;
@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableSource;
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.functions.Supplier;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FakeTomorrowIoRepository implements WeatherRepository {
