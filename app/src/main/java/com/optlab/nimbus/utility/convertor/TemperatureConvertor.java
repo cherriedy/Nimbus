@@ -9,14 +9,14 @@ public final class TemperatureConvertor {
                 "This is a utility class and cannot be instantiated.");
     }
 
-    /** Convert temperature to Fahrenheit or Kelvin based on the Celsius value. */
+    /**
+     * Convert temperature to Fahrenheit or Kelvin based on the Celsius value.
+     */
     public static int fromCelsius(double temperature, TemperatureUnit unit) {
-        return (int)
-                Math.round(
-                        switch (unit) {
-                            case CELSIUS -> temperature;
-                            case KELVIN -> temperature - 273.15;
-                            case FAHRENHEIT -> (temperature - 32) * 5 / 9;
-                        });
+        return (int) switch (unit) {
+            case FAHRENHEIT -> (temperature - 32) * 5 / 9;
+            case KELVIN -> temperature - 273.15;
+            case CELSIUS -> temperature;
+        };
     }
 }

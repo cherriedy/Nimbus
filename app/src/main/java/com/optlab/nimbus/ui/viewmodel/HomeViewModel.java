@@ -52,11 +52,10 @@ public class HomeViewModel extends ViewModel {
         Timber.e("Current: %s", throwable.getMessage());
     }
 
-    private void onCurrentWeatherFetchSuccessful(
-            List<WeatherResponse> weatherRespons) {
-        if (weatherRespons != null && !weatherRespons.isEmpty()) {
-            current.postValue(weatherRespons);
-            Timber.d("Current: %s", weatherRespons.size());
+    private void onCurrentWeatherFetchSuccessful(List<WeatherResponse> weatherResponses) {
+        if (weatherResponses != null && !weatherResponses.isEmpty()) {
+            current.setValue(weatherResponses);
+            Timber.d("Current: %s", weatherResponses.size());
         } else {
             Timber.e("Current: No data received");
         }
@@ -73,11 +72,10 @@ public class HomeViewModel extends ViewModel {
                                 this::onHourlyWeathersFetchFail));
     }
 
-    private void onHourlyWeatherFetchSuccessful(
-            List<WeatherResponse> weatherRespons) {
-        if (weatherRespons != null && !weatherRespons.isEmpty()) {
-            hourly.postValue(weatherRespons);
-            Timber.d("Hourly: %s", weatherRespons.size());
+    private void onHourlyWeatherFetchSuccessful(List<WeatherResponse> weatherResponses) {
+        if (weatherResponses != null && !weatherResponses.isEmpty()) {
+            hourly.setValue(weatherResponses);
+            Timber.d("Hourly: %s", weatherResponses.size());
         } else {
             Timber.e("Hourly: No data received");
         }

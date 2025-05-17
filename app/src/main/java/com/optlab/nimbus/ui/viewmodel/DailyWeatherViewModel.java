@@ -51,13 +51,13 @@ public class DailyWeatherViewModel extends ViewModel {
 
     private void onDailyFetchedFail(Throwable throwable) {
         Timber.e("onError: %s", throwable.getMessage());
-        daily.postValue(null);
+        daily.setValue(null);
     }
 
-    private void onDailyFetchedSuccessful(List<WeatherResponse> weatherRespons) {
-        if (weatherRespons != null && !weatherRespons.isEmpty()) {
-            daily.postValue(weatherRespons);
-            Timber.d("onSuccess: %s", weatherRespons.size());
+    private void onDailyFetchedSuccessful(List<WeatherResponse> weatherResponses) {
+        if (weatherResponses != null && !weatherResponses.isEmpty()) {
+            daily.setValue(weatherResponses);
+            Timber.d("onSuccess: %s", weatherResponses.size());
         } else {
             Timber.d("onSuccess: response is null or empty");
         }

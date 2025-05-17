@@ -35,7 +35,11 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"temperature", "unit"})
     public static void setTemperature(
-            @NonNull TextView view, double temperature, @NonNull TemperatureUnit unit) {
+            @NonNull TextView view, Double temperature, TemperatureUnit unit) {
+        if (temperature == null || unit == null) {
+            view.setText("");
+            return;
+        }
         int roundedTemperature = TemperatureConvertor.fromCelsius(temperature, unit);
         view.setText(String.format(Locale.ENGLISH, "%d%s", roundedTemperature, unit.getName()));
     }
@@ -49,7 +53,11 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"pressure", "unit"})
     public static void setPressure(
-            @NonNull TextView view, double pressure, @NonNull PressureUnit unit) {
+            @NonNull TextView view, Double pressure, PressureUnit unit) {
+        if (pressure == null || unit == null) {
+            view.setText("");
+            return;
+        }
         if (unit != PressureUnit.HECTOPASCAL) {
             pressure = PressureConvertor.fromHectopascal(pressure, unit);
         }
@@ -65,7 +73,11 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"wind_speed", "unit"})
     public static void setWindSpeed(
-            @NonNull TextView view, double speed, @NonNull WindSpeedUnit unit) {
+            @NonNull TextView view, Double speed, WindSpeedUnit unit) {
+        if (speed == null || unit == null) {
+            view.setText("");
+            return;
+        }
         if (unit != WindSpeedUnit.METERS_PER_SECOND) {
             speed = WindSpeedConvertor.fromMeterPerSecond(speed, unit);
         }
@@ -79,7 +91,11 @@ public class UnitBindingAdapter {
      * @param humidity the humidity value in percentage
      */
     @BindingAdapter("humidity")
-    public static void setHumidity(@NonNull TextView view, double humidity) {
+    public static void setHumidity(@NonNull TextView view, Double humidity) {
+        if (humidity == null) {
+            view.setText("");
+            return;
+        }
         view.setText(String.format(Locale.ENGLISH, "%.1f%%", humidity));
     }
 
@@ -91,7 +107,11 @@ public class UnitBindingAdapter {
      */
     @BindingAdapter(value = {"day", "style"})
     public static void setDay(
-            @NonNull TextView view, @NonNull String date, @NonNull TextStyle style) {
+            @NonNull TextView view, String date, TextStyle style) {
+        if (date == null || date.isEmpty() || style == null) {
+            view.setText("");
+            return;
+        }
         view.setText(DateTimeUtil.getDayOfWeek(date, style));
     }
 
@@ -102,8 +122,9 @@ public class UnitBindingAdapter {
      * @param date the date string
      */
     @BindingAdapter("day_time")
-    public static void setDayTime(@NonNull TextView view, @NonNull String date) {
-        if (TextUtils.isEmpty(date)) {
+    public static void setDayTime(@NonNull TextView view, String date) {
+        if (date == null || date.isEmpty()) {
+            view.setText("");
             return;
         }
         view.setText(DateTimeUtil.getDayTime(date));
@@ -116,8 +137,9 @@ public class UnitBindingAdapter {
      * @param icon the resource ID of the weather icon
      */
     @BindingAdapter("weather_icon")
-    public static void setWeatherIcon(@NonNull ImageView view, int icon) {
-        if (icon == 0) {
+    public static void setWeatherIcon(@NonNull ImageView view, Integer icon) {
+        if (icon == null || icon == 0) {
+            view.setImageDrawable(null);
             return;
         }
         Glide.with(view.getContext()).load(icon).centerCrop().into(view);
@@ -130,7 +152,11 @@ public class UnitBindingAdapter {
      * @param dateTime the date time string
      */
     @BindingAdapter("hour")
-    public static void setHour(@NonNull TextView view, @NonNull String dateTime) {
+    public static void setHour(@NonNull TextView view, String dateTime) {
+        if (dateTime == null || dateTime.isEmpty()) {
+            view.setText("");
+            return;
+        }
         view.setText(DateTimeUtil.getHours(dateTime));
     }
 
@@ -142,7 +168,11 @@ public class UnitBindingAdapter {
      */
     @SuppressLint("SetTextI18n")
     @BindingAdapter("updated_at")
-    public static void setUpdatedAt(@NonNull TextView view, @NonNull String dateTime) {
+    public static void setUpdatedAt(@NonNull TextView view, String dateTime) {
+        if (dateTime == null || dateTime.isEmpty()) {
+            view.setText("");
+            return;
+        }
         String updatedAt = view.getContext().getString(R.string.updated_at);
         view.setText(updatedAt + ": " + DateTimeUtil.getDayTime(dateTime));
     }
