@@ -12,7 +12,6 @@ import com.optlab.nimbus.data.preferences.UserPreferences;
 import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
