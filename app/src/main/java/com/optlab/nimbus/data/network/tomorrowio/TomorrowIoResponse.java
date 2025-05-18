@@ -1,38 +1,16 @@
-package com.optlab.nimbus.data.model;
+package com.optlab.nimbus.data.network.tomorrowio;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
 import com.google.gson.annotations.SerializedName;
 import com.optlab.nimbus.R;
+import com.optlab.nimbus.data.network.WeatherResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record TomorrowIoResponse(@SerializedName("data") Data data) {
-    public record Values(
-            @SerializedName("temperature") float temperature,
-            @SerializedName("temperatureMax") float temperatureMax,
-            @SerializedName("temperatureMin") float temperatureMin,
-            @SerializedName("weatherCode") int weatherCode,
-            @SerializedName("sunriseTime") String sunriseTime,
-            @SerializedName("sunsetTime") String sunsetTime,
-            @SerializedName("uvIndex") int uvIndex,
-            @SerializedName("windSpeed") float windSpeed,
-            @SerializedName("windDirection") int windDirection,
-            @SerializedName("humidity") float humidity,
-            @SerializedName("pressure") float pressureSurfaceLevel) {}
-
-    public record Interval(
-            @SerializedName("startTime") String startTime,
-            @SerializedName("values") Values values) {}
-
-    public record Data(@SerializedName("timelines") List<Timeline> timelines) {}
-
-    public record Timeline(
-            @SerializedName("timestep") String timeStep,
-            @SerializedName("intervals") List<Interval> intervals) {}
-
     /**
      * Maps a TomorrowIoResponse to a list of WeatherResponse objects. Performs null and bounds
      * checks for safer operation.
@@ -43,7 +21,8 @@ public record TomorrowIoResponse(@SerializedName("data") Data data) {
     public static List<WeatherResponse> mapToResponses(TomorrowIoResponse response) {
         List<WeatherResponse> responses = new ArrayList<>();
 
-        if (response.data() == null
+        if (response == null
+                || response.data() == null
                 || response.data().timelines() == null
                 || response.data().timelines().isEmpty()) {
             return responses;
@@ -132,5 +111,46 @@ public record TomorrowIoResponse(@SerializedName("data") Data data) {
             case 8000 -> R.drawable.ic_large_2x_80000_thunderstorm;
             default -> throw new IllegalStateException("Invalid weather code: " + code);
         };
+    }
+
+    public record Values(
+            @SerializedName("temperature") double temperature,
+            @SerializedName("temperatureMax") double temperatureMax,
+            @SerializedName("temperatureMin") double temperatureMin,
+            @SerializedName("weatherCode") int weatherCode,
+            @SerializedName("sunriseTime") String sunriseTime,
+            @SerializedName("sunsetTime") String sunsetTime,
+            @SerializedName("uvIndex") int uvIndex,
+            @SerializedName("windSpeed") double windSpeed,
+            @SerializedName("windDirection") int windDirection,
+            @SerializedName("humidity") double humidity,
+            @SerializedName("pressureSurfaceLevel") double pressureSurfaceLevel) {
+        public Values(Values values) {
+            this(
+                    values.temperature,
+                    values.temperatureMax,
+                    values.temperatureMin,
+                    values.weatherCode,
+                    values.sunriseTime,
+                    values.sunsetTime,
+                    values.uvIndex,
+                    values.windSpeed,
+                    values.windDirection,
+                    values.humidity,
+                    values.pressureSurfaceLevel);
+        }
+    }
+
+    public record Interval(
+            @SerializedName("startTime") String startTime,
+            @SerializedName("values") Values values) {
+    }
+
+    public record Data(@SerializedName("timelines") List<Timeline> timelines) {
+    }
+
+    public record Timeline(
+            @SerializedName("timestep") String timeStep,
+            @SerializedName("intervals") List<Interval> intervals) {
     }
 }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.optlab.nimbus.data.model.WeatherResponse;
+import com.optlab.nimbus.data.network.WeatherResponse;
 import com.optlab.nimbus.data.preferences.UserPreferencesManager;
 import com.optlab.nimbus.databinding.LayoutItemDailyWeatherBinding;
 

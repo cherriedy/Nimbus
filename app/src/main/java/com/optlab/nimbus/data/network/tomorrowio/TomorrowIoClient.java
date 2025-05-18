@@ -1,7 +1,6 @@
 package com.optlab.nimbus.data.network.tomorrowio;
 
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.model.TomorrowIoResponse;
 
 import java.util.TimeZone;
 

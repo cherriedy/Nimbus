@@ -1,19 +1,18 @@
 package com.optlab.nimbus.data.repository;
 
-import androidx.annotation.NonNull;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.optlab.nimbus.constant.ResponseConstant;
 import com.optlab.nimbus.data.local.dao.WeatherDao;
 import com.optlab.nimbus.data.local.entity.WeatherEntity;
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.model.WeatherResponse;
-import com.optlab.nimbus.data.model.TomorrowIoResponse;
+import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoResponse;
+import com.optlab.nimbus.data.network.WeatherResponse;
 import com.optlab.nimbus.data.network.tomorrowio.TomorrowIoClient;
 import com.optlab.nimbus.data.preferences.SecurePrefsManager;
 import com.optlab.nimbus.utility.DateTimeUtil;
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 
 import timber.log.Timber;
@@ -33,9 +32,9 @@ public class TomorrowIoRepository implements WeatherRepository {
 
     /** Constructor injection for TomorrowIoClient */
     public TomorrowIoRepository(
-            @NonNull TomorrowIoClient tomorrowIoClient,
-            @NonNull SecurePrefsManager securePrefsManager,
-            @NonNull WeatherDao weatherDao) {
+            TomorrowIoClient tomorrowIoClient,
+            SecurePrefsManager securePrefsManager,
+            WeatherDao weatherDao) {
         this.tomorrowIoClient = tomorrowIoClient;
         this.weatherDao = weatherDao;
 
@@ -54,7 +53,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      * @return an Observable that emits a list of UnifiedWeatherResponse
      */
     public @NonNull Observable<List<WeatherResponse>> getDailyWeatherByLocation(
-            @NonNull Coordinates coordinates) {
+            @androidx.annotation.NonNull Coordinates coordinates) {
         return getCachedWeather(WeatherEntity.Type.DAILY)
                 .flatMap(
                         cachedData -> {
@@ -74,7 +73,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     @Override
     public Observable<List<WeatherResponse>> fetchAndCacheDailyWeather(
-            @NonNull Coordinates coordinates) {
+            @androidx.annotation.NonNull @NonNull Coordinates coordinates) {
         WeatherEntity.Type type = WeatherEntity.Type.DAILY;
         return tomorrowIoClient
                 .getForecast(
@@ -121,7 +120,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     @Override
     public @NonNull Observable<List<WeatherResponse>> getCurrentWeatherByLocation(
-            @NonNull Coordinates coordinates) {
+            @androidx.annotation.NonNull @NonNull Coordinates coordinates) {
         return getCachedWeather(WeatherEntity.Type.CURRENT)
                 .flatMap(
                         cachedWeather -> {
@@ -141,7 +140,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     @Override
     public Observable<List<WeatherResponse>> fetchAndCacheCurrentWeather(
-            @NonNull Coordinates coordinates) {
+            @androidx.annotation.NonNull @NonNull Coordinates coordinates) {
         WeatherEntity.Type type = WeatherEntity.Type.CURRENT;
         return tomorrowIoClient
                 .getForecast(
@@ -201,7 +200,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     @Override
     public Observable<List<WeatherResponse>> getHourlyWeatherByLocation(
-            @NonNull Coordinates coordinates) {
+            @androidx.annotation.NonNull @NonNull Coordinates coordinates) {
         return getCachedWeather(WeatherEntity.Type.HOURLY)
                 .flatMap(
                         cachedData -> {
@@ -224,7 +223,7 @@ public class TomorrowIoRepository implements WeatherRepository {
      */
     @Override
     public Observable<List<WeatherResponse>> fetchAndCacheHourlyWeather(
-            @NonNull Coordinates coordinates) {
+            @androidx.annotation.NonNull @NonNull Coordinates coordinates) {
         WeatherEntity.Type type = WeatherEntity.Type.HOURLY;
         return tomorrowIoClient
                 .getForecast(

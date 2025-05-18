@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.optlab.nimbus.data.model.WeatherResponse;
+import com.optlab.nimbus.data.network.WeatherResponse;
 import com.optlab.nimbus.data.preferences.UserPreferences;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 

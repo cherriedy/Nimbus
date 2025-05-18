@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.model.WeatherResponse;
+import com.optlab.nimbus.data.network.WeatherResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import java.util.List;

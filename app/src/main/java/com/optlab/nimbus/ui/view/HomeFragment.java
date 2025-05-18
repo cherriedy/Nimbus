@@ -1,24 +1,17 @@
 package com.optlab.nimbus.ui.view;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.optlab.nimbus.R;
 import com.optlab.nimbus.data.model.Coordinates;
 import com.optlab.nimbus.data.preferences.UserPreferencesManager;
@@ -28,73 +21,53 @@ import com.optlab.nimbus.ui.decoration.LinearSpacingStrategy;
 import com.optlab.nimbus.ui.decoration.SpacingItemDecoration;
 import com.optlab.nimbus.ui.decoration.SpacingStrategy;
 import com.optlab.nimbus.ui.viewmodel.HomeViewModel;
+import com.optlab.nimbus.utility.LocationProvider;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import timber.log.Timber;
 
-import javax.inject.Inject;
-
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
-    @Inject protected UserPreferencesManager userPrefs;
+    @Inject
+    protected UserPreferencesManager userPrefs;
 
     private FragmentMainDashboardBinding binding;
     private HomeViewModel viewModel;
     private HourlyForecastAdapater adapter;
-    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
         initViewModel();
         initAdapter();
-        requestLocationPermission();
+        initLocationServices();
     }
 
-    private void requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                        requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            Timber.d("Location permission granted");
-            fetchLocation();
-        } else {
-            Timber.d("Location permission not granted, requesting permission");
-            ActivityResultLauncher<String> requestPermissionLauncher =
-                    registerForActivityResult(
-                            new ActivityResultContracts.RequestPermission(),
-                            isGranted -> {
-                                if (Boolean.TRUE.equals(isGranted)) {
-                                    Timber.d("Location permission granted");
-                                    fetchLocation();
-                                } else {
-                                    Timber.d("Location permission denied");
-                                }
-                            });
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-    }
+    private void initLocationServices() {
+        @SuppressLint("MissingPermission")
+        LocationProvider locationProvider = new LocationProvider(this, requireContext());
+        getLifecycle().addObserver(locationProvider);
+        locationProvider.requestLocation(
+                new LocationProvider.Callback() {
+                    @Override
+                    public void onLocationResult(Coordinates coordinates) {
+                        userPrefs.setLocation(coordinates);
+                        viewModel.fetchCurrentWeatherByLocation(coordinates);
+                        viewModel.fetchHourlyWeathersByLocation(coordinates);
+                    }
 
-    @RequiresPermission(
-            allOf = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            })
-    private void fetchLocation() {
-        fusedLocationClient
-                .getLastLocation()
-                .addOnSuccessListener(
-                        location -> {
-                            if (location != null) {
-                                Coordinates coordinates =
-                                        new Coordinates(
-                                                location.getLatitude(), location.getLongitude());
-                                userPrefs.setLocation(coordinates);
-                                viewModel.fetchCurrentWeatherByLocation(coordinates);
-                                viewModel.fetchHourlyWeathersByLocation(coordinates);
-                            }
-                        })
-                .addOnFailureListener(e -> Timber.e("Error fetching location: %s", e.getMessage()));
+                    @Override
+                    public void onLocationError(Exception e) {
+                        Timber.e("Error fetching location: %s", e.getMessage());
+                    }
+
+                    @Override
+                    public void onPermissionDenied() {
+                        Timber.d("Location permission denied");
+                    }
+                });
     }
 
     private void initAdapter() {

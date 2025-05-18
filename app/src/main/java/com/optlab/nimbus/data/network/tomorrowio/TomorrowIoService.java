@@ -1,7 +1,5 @@
 package com.optlab.nimbus.data.network.tomorrowio;
 
-import com.optlab.nimbus.data.model.TomorrowIoResponse;
-
 import io.reactivex.rxjava3.core.Observable;
 
 import retrofit2.http.GET;
