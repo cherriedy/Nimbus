@@ -13,7 +13,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.optlab.nimbus.data.model.Coordinates;
-import com.optlab.nimbus.data.model.WeatherResponse;
+import com.optlab.nimbus.data.network.WeatherResponse;
 import com.optlab.nimbus.data.repository.WeatherRepository;
 
 import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins;
@@ -85,7 +85,7 @@ public class HomeViewModelTest {
         viewModel.getHourly().observeForever(hourlyObserver);
 
         // Test data setup: use new objects for each test
-        coordinates = new Coordinates("1.0", "2.0");
+        coordinates = new Coordinates(1.0, 2.0);
         currentResponses = List.of(new WeatherResponse(), new WeatherResponse());
         hourlyResponses = List.of(new WeatherResponse());
     }
