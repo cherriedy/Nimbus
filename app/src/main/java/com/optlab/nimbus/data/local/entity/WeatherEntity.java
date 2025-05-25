@@ -29,9 +29,9 @@ public class WeatherEntity {
 
     public boolean isExpired() {
         return switch (type) {
-            case DAILY, HOURLY ->
+            case DAILY ->
                     System.currentTimeMillis() - timestamp > ResponseConstant.DAILY_EXPIRY_TIME;
-            case CURRENT ->
+            case CURRENT, HOURLY ->
                     System.currentTimeMillis() - timestamp > ResponseConstant.CURRENT_EXPIRY_TIME;
         };
     }

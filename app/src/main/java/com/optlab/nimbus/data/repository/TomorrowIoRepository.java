@@ -99,12 +99,24 @@ public class TomorrowIoRepository implements WeatherRepository {
                 () -> {
                     WeatherEntity entity = weatherDao.getLatestWeather(type);
                     if (entity == null) {
-                        return Collections.emptyList(); // Return an empty list if no data is found
+                        return Collections.emptyList();
                     }
 
                     if (entity.isExpired()) {
-                        weatherDao.deleteExpiry(System.currentTimeMillis()); // Delete expired data
-                        return Collections.emptyList(); // Return an empty list if data is expired
+                        long expiryTime;
+                        switch (type) {
+                            case CURRENT, HOURLY ->
+                                    expiryTime =
+                                            System.currentTimeMillis()
+                                                    - ResponseConstant.CURRENT_EXPIRY_TIME;
+                            case DAILY ->
+                                    expiryTime =
+                                            System.currentTimeMillis()
+                                                    - ResponseConstant.DAILY_EXPIRY_TIME;
+                            default -> expiryTime = System.currentTimeMillis();
+                        }
+                        weatherDao.deleteExpiryByType(expiryTime, type);
+                        return Collections.emptyList();
                     }
 
                     return gson.fromJson(entity.getData(), reflectType);
@@ -168,10 +180,16 @@ public class TomorrowIoRepository implements WeatherRepository {
             @NonNull TomorrowIoResponse response, @NonNull WeatherEntity.Type type) {
         List<WeatherResponse> weatherData = TomorrowIoResponse.mapToResponses(response);
 
-        switch (type) { // Delete expired weather data based on the type
-            case CURRENT -> weatherDao.deleteExpiry(ResponseConstant.CURRENT_EXPIRY_TIME);
-            case DAILY, HOURLY -> weatherDao.deleteExpiry(ResponseConstant.DAILY_EXPIRY_TIME);
+        // Improved: Delete only expired weather data for the specific type
+        long expiryTime;
+        switch (type) {
+            case CURRENT ->
+                    expiryTime = System.currentTimeMillis() - ResponseConstant.CURRENT_EXPIRY_TIME;
+            case DAILY, HOURLY ->
+                    expiryTime = System.currentTimeMillis() - ResponseConstant.DAILY_EXPIRY_TIME;
+            default -> expiryTime = System.currentTimeMillis();
         }
+        weatherDao.deleteExpiryByType(expiryTime, type);
 
         // Insert the new weather data into the database
         WeatherEntity entity = new WeatherEntity();
