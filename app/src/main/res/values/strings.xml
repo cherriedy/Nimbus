@@ -2,7 +2,6 @@
     <string name="app_name">Nimbus</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="mic_desc" translatable="false">mic for search</string>
     <string name="day">day</string>
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>

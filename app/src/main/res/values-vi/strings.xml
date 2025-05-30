@@ -3,7 +3,6 @@
     <string name="app_name">Nimbus</string>
     <string name="hello_blank_fragment">Xin chào fragment trống</string>
 
-    <string name="mic_desc" translatable="false">mic để tìm kiếm</string>
     <string name="day">ngày</string>
     <string name="pressure">Áp suất</string>
     <string name="wind">Tốc độ gió</string>

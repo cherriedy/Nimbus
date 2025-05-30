@@ -30,81 +30,61 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_description"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/mtb"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xxxlarge"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:textColor="@color/persianIndigo"
-                app:text_resource="@{viewModel.current.first.weatherDescription}" />
+                android:layout_height="wrap_content" />
 
-            <ImageView
-                android:id="@+id/iv_icon"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:importantForAccessibility="no"
-                app:weather_icon="@{viewModel.current.first.weatherIcon}" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="@color/persianIndigo"
+                    app:text_resource="@{viewModel.current.first.weatherDescription}" />
+
+                <ImageView
+                    android:id="@+id/iv_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:importantForAccessibility="no"
+                    app:weather_icon="@{viewModel.current.first.weatherIcon}" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_date_time"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:textAlignment="center"
+                android:layout_marginStart="@dimen/spacing_large"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:textColor="@color/persianIndigo"
                 app:day_time="@{viewModel.current.first.date}" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_temperature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_large"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.Material3.DisplayLarge"
-                    android:textColor="@color/persianIndigo"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:temperature="@{viewModel.current.first.temperature}"
-                    app:unit="@{userPrefs.getTemperatureUnit()}" />
-
-                <TextView
-                    android:id="@+id/tv_min_temperature"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:textColor="@color/persianIndigo"
-                    app:layout_constraintStart_toStartOf="@id/tv_temperature"
-                    app:layout_constraintTop_toBottomOf="@id/tv_temperature"
-                    app:temperature="@{viewModel.current.first.temperatureMin}"
-                    app:unit="@{userPrefs.getTemperatureUnit()}" />
-
-                <TextView
-                    android:id="@+id/tv_max_temperature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_middle"
-                    android:layout_toEndOf="@id/tv_min_temperature"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:textColor="@color/persianIndigo"
-                    app:layout_constraintEnd_toEndOf="@id/tv_temperature"
-                    app:layout_constraintTop_toTopOf="@id/tv_min_temperature"
-                    app:temperature="@{viewModel.current.first.temperatureMin}"
-                    app:unit="@{userPrefs.getTemperatureUnit()}" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:textAlignment="center"
+                android:textColor="@color/persianIndigo"
+                android:textSize="120sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:temperature="@{viewModel.current.first.temperature}"
+                app:unit="@{userPrefs.getTemperatureUnit()}" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -112,7 +92,8 @@
                 android:layout_marginStart="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_mlarge"
                 android:layout_marginEnd="@dimen/spacing_large"
-                android:background="@drawable/bg_light_gradient_20dp">
+                android:background="@drawable/bg_light_gradient_20dp"
+                android:elevation="3dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -240,6 +221,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/today"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                     android:textColor="@color/persianIndigo"
@@ -250,15 +232,13 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/tv_more"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:onClick="@{fragment::onMoreTextClick}"
-                    android:text="More>"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:textColor="@color/persianIndigo"
-                    android:textStyle="bold" />
+                    android:src="@drawable/ic_long_arrow"
+                    app:tint="?attr/colorPrimary" />
 
             </LinearLayout>
 

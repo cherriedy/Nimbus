@@ -3,7 +3,6 @@
     <string name="app_name">Nimbus</string>
     <string name="hello_blank_fragment">空のフラグメント</string>
 
-    <string name="mic_desc" translatable="false">検索用マイク</string>
     <string name="day">日</string>
     <string name="pressure">気圧</string>
     <string name="wind">風</string>
