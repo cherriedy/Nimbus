@@ -27,7 +27,7 @@ public class FakeUserPreferenceManager implements UserPreferences {
 
     public FakeUserPreferenceManager() {
         // Initialize with some default values
-        locations.add(new Gson().toJson(new Coordinates("10.8231", "106.6297"))); // HCM City
+        locations.add(new Gson().toJson(new Coordinates(10.8231, 106.6297))); // HCM City
         units.put(UserPreferencesManager.TEMPERATURE_UNIT, TemperatureUnit.CELSIUS);
         units.put(UserPreferencesManager.WIND_SPEED_UNIT, WindSpeedUnit.METERS_PER_SECOND);
         units.put(UserPreferencesManager.PRESSURE_UNIT, PressureUnit.HECTOPASCAL);
