@@ -9,19 +9,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.optlab.nimbus.data.model.Coordinates;
+
+import timber.log.Timber;
 
 public class LocationProvider implements DefaultLifecycleObserver {
     /**
-     * Callback interface to be implemented by the client to receive location updates and errors. This
-     * interface provides methods to handle location results, errors, and permission denial.
+     * Callback interface to be implemented by the client to receive location updates and errors.
+     * This interface provides methods to handle location results, errors, and permission denial.
      */
     public interface Callback {
         void onLocationResult(Coordinates coordinates);
@@ -41,8 +43,8 @@ public class LocationProvider implements DefaultLifecycleObserver {
     private final FusedLocationProviderClient fusedLocationClient;
 
     /**
-     * ActivityResultLauncher is a class that provides a way to launch an activity for a result using
-     * the new Activity Result API. It is used to request permissions in a more modern way.
+     * ActivityResultLauncher is a class that provides a way to launch an activity for a result
+     * using the new Activity Result API. It is used to request permissions in a more modern way.
      */
     private final ActivityResultLauncher<String> permissionLauncher;
 
@@ -51,8 +53,8 @@ public class LocationProvider implements DefaultLifecycleObserver {
 
     @RequiresPermission(
             allOf = {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             })
     public LocationProvider(@NonNull ActivityResultCaller caller, @NonNull Context context) {
         this.context = context;
@@ -85,8 +87,8 @@ public class LocationProvider implements DefaultLifecycleObserver {
      */
     @RequiresPermission(
             allOf = {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             })
     @Override
     public void onResume(@NonNull LifecycleOwner owner) {
@@ -106,47 +108,78 @@ public class LocationProvider implements DefaultLifecycleObserver {
      * <p>
      *
      * <ul>
-     *   <li>ACCESS_FINE_LOCATION: Allows an app to access precise location from location sources such
-     *       as GPS.
+     *   <li>ACCESS_FINE_LOCATION: Allows an app to access precise location from location sources
+     *       such as GPS.
      *   <li>ACCESS_COARSE_LOCATION: Allows an app to access approximate location from location
      *       sources such as Wi-Fi and cell towers.
      * </ul>
      */
     private boolean hasLocationPermission() {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(
+                                context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
     }
 
     /**
      * fetchLocationInternal is a private method that fetches the last known location using the
-     * FusedLocationProviderClient. It checks if the location permission is granted before attempting
-     * to fetch the location. If the location is successfully fetched, it calls the onLocationResult
-     * method of the callback with the coordinates. If there is an error, it calls the onLocationError
-     * method of the callback with the exception.
+     * FusedLocationProviderClient. If the last known location is null, it requests a fresh location
+     * update. It handles success and failure cases by invoking the appropriate methods on the
+     * callback interface.
      */
     @RequiresPermission(
             allOf = {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
             })
     private void fetchLocationInternal() {
-        if (!hasLocationPermission()) return;
+        if (!hasLocationPermission()) {
+            return;
+        }
+
         fusedLocationClient
                 .getLastLocation()
                 .addOnSuccessListener(
                         location -> {
-                            if (location != null && callback != null) {
-                                callback.onLocationResult(
-                                        new Coordinates(location.getLatitude(), location.getLongitude()));
-                            } else if (callback != null) {
-                                callback.onLocationError(new Exception("Location is null"));
+                            if (callback == null) {
+                                Timber.e("Callback is null, cannot handle location result");
+                                return;
+                            }
+
+                            if (location == null) {
+                                getNewLocation();
+                            } else {
+                                Coordinates coordinates =
+                                        new Coordinates(
+                                                location.getLatitude(), location.getLongitude());
+                                callback.onLocationResult(coordinates);
                             }
                         })
-                .addOnFailureListener(
-                        e -> {
-                            if (callback != null) callback.onLocationError(e);
-                        });
+                .addOnFailureListener(e -> callback.onLocationError(e));
+    }
+
+    @RequiresPermission(
+            allOf = {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            })
+    private void getNewLocation() {
+        fusedLocationClient
+                .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(
+                        newLocation -> {
+                            if (newLocation != null) {
+                                callback.onLocationResult(
+                                        new Coordinates(
+                                                newLocation.getLatitude(),
+                                                newLocation.getLongitude()));
+                            } else {
+                                callback.onLocationError(
+                                        new Exception(
+                                                "Location is null after requesting current location"));
+                            }
+                        })
+                .addOnFailureListener(e -> callback.onLocationError(e));
     }
 }

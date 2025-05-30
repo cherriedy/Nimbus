@@ -1,5 +1,6 @@
 package com.optlab.nimbus.ui.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -30,8 +32,7 @@ import timber.log.Timber;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
-    @Inject
-    protected UserPreferencesManager userPrefs;
+    @Inject protected UserPreferencesManager userPrefs;
 
     private FragmentMainDashboardBinding binding;
     private HomeViewModel viewModel;
@@ -82,7 +83,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMainDashboardBinding.inflate(inflater, container, false);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
         binding.setUserPrefs(userPrefs);
         binding.setFragment(this);
