@@ -116,8 +116,6 @@ Reports will be available at: `app/build/reports/coverage/`
 | 4 | **Mock dependencies** to isolate the unit being tested                   |
 | 5 | Use **parameterized tests** for multiple inputs with the same logic      |
 
-## 🔄 Continuous Integration
-
 ---
 
 <div align="center">
