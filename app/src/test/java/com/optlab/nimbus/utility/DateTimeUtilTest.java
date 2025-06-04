@@ -1,5 +1,6 @@
 package com.optlab.nimbus.utility;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
@@ -13,6 +14,8 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -636,4 +639,32 @@ public class DateTimeUtilTest {
             assertEquals(expected, result);
         }
     }
+    @Test
+    public void testGetStartOfDay_formatAndTimezone() {
+        String result = DateTimeUtil.getStartOfDay();
+        assertNotNull(result);
+
+        Instant instant = Instant.parse(result);
+        // Kiểm tra rằng thời điểm là 00:00 UTC của ngày hiện tại theo múi giờ hệ thống
+        ZonedDateTime expected = LocalDate.now(DateTimeUtil.getTimeZone())
+                .atStartOfDay(DateTimeUtil.getTimeZone())
+                .toInstant()
+                .atZone(ZoneId.of("UTC"));
+        assertEquals(expected.toInstant(), instant);
+    }
+
+    @Test
+    public void testGetEndOfDay_formatAndTimezone() {
+        String result = DateTimeUtil.getEndOfDay();
+        assertNotNull(result);
+
+        Instant instant = Instant.parse(result);
+        ZonedDateTime expected = LocalDate.now(DateTimeUtil.getTimeZone())
+                .atTime(23, 59, 59)
+                .atZone(DateTimeUtil.getTimeZone())
+                .toInstant()
+                .atZone(ZoneId.of("UTC"));
+        assertEquals(expected.toInstant(), instant);
+    }
+
 }
